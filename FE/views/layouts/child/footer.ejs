@@ -1,0 +1,109 @@
+<footer id="footer-site" class="wow fadeInUp" style="visibility: visible; animation-name: fadeInUp;">
+  <div class="top-footer">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+          <div class="top-footer-left">
+            <h2 style="    text-align: center;" class="title-1">BAMBOOPHOTO Real Estate Photo Editing Company</h2>
+            <p style="text-align: center;"><strong>Photo full services - We work from the heart&nbsp;</strong></p>
+            <p style="text-align: center;"><strong>Website&nbsp;bamboophoto.com&nbsp;&nbsp;Workingtime 24/7</strong>
+            </p>
+            <p style="text-align: center;"><strong>Hotline: <span id="hotline"></span></strong></p>
+            <p style="text-align: center;"><strong>Email:&nbsp;<span id="email"></span></strong></p>
+            <p style="text-align: center;"><strong>Spype:&nbsp;<span id="skype"></span></strong></p>
+            <p style="text-align: center;">&nbsp;</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="copy-right">
+    <div class="container">
+      <div class="wp-copy text-center1">
+        Copyright BAMBOOPHOTO Real Estate Photo Editing Company design by <a href="https://redoapp.com/"
+          target="_blank">ReDo</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+<a id="return-to-top" class="td-scroll-up td-scroll-up-visible"><img src="/images/GUI/back-to-top.png"
+    alt="return to top" /></a>
+
+<script src="/dist/bootstrap/bootstrap.min.js"></script>
+<script src="/js/jquery.mmenu.js"></script>
+<script src="/js/owl.carousel.min.js"></script>
+<script src="/js/jquery.lazy.min.js"></script>
+<script src="/js/common.js"></script>
+<script>
+  $(document).ready(function () {
+    GetContactInfo('hotline','phone')
+    GetContactInfo('email','contact')
+    GetContactInfo('skype','skype')
+    
+  })
+
+  $("#return-to-top").click(function () {
+    $("html, body").animate({ scrollTop: 0 }, 1000);
+  });
+
+
+  function GetContactInfo(id,key){
+    $.ajax({
+      url:'/contact',
+      type:'get',
+      data:{
+        key
+      },
+      success:function(data){
+        $('#'+id).text(data.config.value);
+      },
+      error:function(err){
+        console.log(err);
+      }
+    })
+  }
+
+</script>
+
+<style>
+  #footer-site {
+    background: #d9e0e8;
+    margin-top: 50px;
+  }
+
+  .top-footer {
+    padding-top: 60px;
+  }
+
+  .copy-right .wp-copy {
+    text-align: center;
+  }
+
+  .top-footer-left .title-1 {
+    font-family: 'Montserrat-ExtraBold';
+    font-size: 28px;
+    text-transform: uppercase;
+    /* color: #174c8c; */
+    color: var(--default-color);
+    margin-top: 0;
+  }
+
+  .copy-right {
+    background: #174c8c;
+    padding: 10px;
+    text-align: center;
+    margin-top: 55px;
+  }
+
+  .text-center1 {
+    text-align: left;
+    color: #c4c9cd;
+    font-size: 14px;
+  }
+
+  .copy-right .wp-copy a {
+    color: #fff;
+  }
+</style>

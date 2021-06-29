@@ -1,0 +1,118 @@
+<header>
+  <!-- Desktop -->
+
+  <div class="d-none d-lg-block">
+    <div class="header">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-2 d-flex align-items-center">
+            <div class="logo">
+              <a href="/">
+                <img
+                  src="/images/GUI/logo.png"
+                  alt="BAMBOOPHOTO.COM"
+                  style="width: 70px; height: auto;"
+                />
+              </a>
+            </div>
+          </div>
+
+          <%-include('navbar')%>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile -->
+
+  <div class="d-lg-none">
+    <div
+      class="block-mobile-nav d-flex justify-content-between align-items-center"
+    >
+      <a class="p-3 btn-menu" href="#menu-mobi"
+        ><i class="fa fa-bars"></i><span class="sr-only">Menu</span></a
+      >
+
+      <a class="p-2" href="/"
+        ><img src="/images/GUI/logo.png" alt="FOTORULER-REAL-ESTATE-EDITING"
+      /></a>
+
+      <a
+        class="p-3"
+        data-toggle="collapse"
+        href="#collapseMBsearch"
+        role="button"
+        aria-expanded="false"
+        aria-controls="collapseMBsearch"
+        ><i class="fa fa-search" aria-hidden="true"></i
+        ><span class="sr-only">Search</span></a
+      >
+    </div>
+
+    <div class="dropfrm-search collapse" id="collapseMBsearch">
+      <div class="nav-search">
+        <form action="https://fotoruler.com/tim-kiem" method="GET">
+          <div class="input-group">
+            <input
+              type="text"
+              name="keyword"
+              class="form-control"
+              placeholder="Từ khóa..."
+              value=""
+            />
+
+            <div class="input-group-append">
+              <button class="btn" type="submit">
+                <i class="fa fa-search" aria-hidden="true"></i>
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <nav id="menu-mobi">
+      <div id="panel-menu">
+        <ul>
+          <li>
+            <a href="https://fotoruler.com/">HOME</a>
+          </li>
+
+          <li>
+            <a href="https://fotoruler.com/services/photo">SERVICES</a>
+
+            <ul>
+              <li>
+                <a href="https://fotoruler.com/services/photo">PHOTO</a>
+              </li>
+
+              <li>
+                <a href="https://fotoruler.com/services/floor-plan"
+                  >FLOOR PLAN</a
+                >
+              </li>
+
+              <li>
+                <a href="https://fotoruler.com/services/video">VIDEO</a>
+              </li>
+            </ul>
+          </li>
+
+          <li>
+            <a href="https://fotoruler.com/material">MATERIAL</a>
+          </li>
+
+          <li>
+            <a href="https://fotoruler.com/ordering">ORDERING</a>
+          </li>
+
+          <li>
+            <a href="/admin/login">
+              <i class="fa fa-sign-in mr-1" aria-hidden="true"></i>Login
+            </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+</header>

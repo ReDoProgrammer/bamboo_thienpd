@@ -1,0 +1,261 @@
+<div class="row">
+  <!-- pagination -->
+  <div class="col-sm-7">
+    <!-- <nav aria-label="Page navigation example">
+      <ul class="pagination">
+        <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+        <li class="page-item"><a class="page-link" href="#">1</a></li>
+        <li class="page-item"><a class="page-link" href="#">2</a></li>
+        <li class="page-item"><a class="page-link" href="#">3</a></li>
+        <li class="page-item"><a class="page-link" href="#">Next</a></li>
+      </ul>
+    </nav> -->
+  </div>
+  <!-- end pagination -->
+
+  <!-- phần tìm kiếm -->
+  <div class="col-sm-4">
+    <div class="input-group">
+      <input
+        type="text"
+        class="form-control"
+        placeholder="Keyword ..."
+        id="txtSearch"
+      />
+      <div class="input-group-btn">
+        <button class="btn btn-dark" type="submit" id="btnSearch">
+          <i class="fa fa-search" aria-hidden="true"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+  <!-- kết thúc phần tìm kiếm -->
+
+  <div class="col-sm-1 text-right">
+    <button id="btnFAQ" class="btn btn-success">+</button>
+  </div>
+</div>
+
+<table class="table table-dark mt-2">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Question</th>
+      <th scope="col"></th>
+    </tr>
+  </thead>
+  <tbody id="faq_list"></tbody>
+</table>
+
+<div class="modal" tabindex="-1" role="dialog" id="modalFAQ">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Add or update a FAQ</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <textarea
+          name="question"
+          id="question"
+          rows="2"
+          class="form-control"
+          placeholder="Question"
+        ></textarea>
+        <textarea
+          name="answer"
+          id="answer"
+          rows="2"
+          class="form-control mt-2"
+          placeholder="Answer"
+        ></textarea>
+        <label
+          id="faq_error_msg"
+          class="text-danger font-weight-bold mt-2"
+        ></label>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="btnSaveFAQ">
+          <i class="fa fa-floppy-o pr-2" aria-hidden="true"></i>
+          Save changes
+        </button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  var faqId = "";
+  var page = 1;
+  var search = "";
+
+  $(document).ready(function () {
+    LoadFAQs();
+  });
+
+  $("#btnFAQ").click(function () {
+    faqId = "";
+    $("#modalFAQ").modal();
+  });
+
+  $(document).on("show.bs.modal", ".modal", function () {
+    $("#question").val("");
+    $("#answer").val("");
+    $("#faq_error_msg").hide();  
+  });
+
+  $("#btnSaveFAQ").click(function () {
+    let question = $("#question").val().trim();
+    let answer = $("#answer").val().trim();
+
+    let ACCESS_TOKEN = getACCESS_TOKEN();
+
+    if (faqId.trim().length == 0) {
+      $.ajax({
+        url: "/admin/faq/",
+        type: "post",
+        headers: {
+          Authorization: "Bamboo " + ACCESS_TOKEN,
+        },
+        data: {        
+          question,
+          answer
+        },
+        success: function (data) {
+          alert(data.msg);
+          $("#modalFAQ").modal("hide");
+          LoadFAQs();
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+          $("#faq_error_msg").show();
+          $("#faq_error_msg").text("* " + XMLHttpRequest.responseJSON.msg);
+        },
+      });
+    } else {
+      $.ajax({
+        url: "/admin/faq/",
+        type: "put",
+        headers: {
+          Authorization: "Bamboo " + ACCESS_TOKEN,
+        },
+        data: {
+          id: faqId,
+          question,
+          answer,
+        },
+        success: function (data) {
+          alert(data.msg);
+          $("#modalFAQ").modal("hide");
+          LoadFAQs();
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+          $("#faq_error_msg").show();
+          $("#faq_error_msg").text("* " + XMLHttpRequest.responseJSON.msg);
+        },
+      });
+    }
+  });
+
+  function LoadFAQs() {
+    let ACCESS_TOKEN = getACCESS_TOKEN();
+    let idx = 1;
+    $.ajax({
+      url: "/admin/faq/list",
+      type: "get",
+      headers: {
+        Authorization: "Bamboo " + ACCESS_TOKEN,
+      },
+      data: {
+        page,
+        search,
+      },
+      success: function (data) {
+        $("#faq_list").empty();
+        console.log(data);
+        data.faqs.forEach((faq) => {
+          let tr = "<tr id='" + faq._id + "' data-name='" + faq.question + "'>";
+          tr += "<td>";
+          tr += idx++;
+          tr += "</td>";
+          tr += "<td class='font-weight-bold text-danger'>";
+          tr += faq.question;
+          tr += "</td>";
+          tr +=
+            '<td class="text-right"><button class="btn btn-sm btn-warning" name="update"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>';
+          tr +=
+            '<button class="btn btn-sm btn-danger ml-2" name="delete"><i class="fa fa-trash" aria-hidden="true"></i></button></td>';
+          tr += "</td>";
+          tr += "</tr>";
+          $("#faq_list").append(tr);
+        });
+      },
+      error: function (XMLHttpRequest, textStatus, errorThrown) {
+        alert(XMLHttpRequest.responseJSON.msg);
+      },
+    });
+  }
+
+  $(document).on("click", "button[name='delete']", function () {
+    var r = confirm(
+      "Are you sure to delete " + $(this).closest("tr").data("name") + "?"
+    );
+    if (r == true) {
+      $.ajax({
+        url: "/admin/faq",
+        type: "delete",
+        headers: {
+          authorization: "Bamboo " + getACCESS_TOKEN(),
+        },
+        data: {
+          id: $(this).closest("tr").attr("id"),
+        },
+        success: function (data, textStatus, xhr) {
+          alert(data.msg);
+          LoadFAQs();
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+          alert(jqXHR.responseJSON.msg);
+        },
+      });
+    }
+  });
+
+  $(document).on("click", "button[name='update']", function () {
+    faqId = $(this).closest("tr").attr("id");
+
+    $.ajax({
+      url: "/admin/faq/detail",
+      type: "get",
+      headers: {
+        authorization: "Bamboo " + getACCESS_TOKEN(),
+      },
+      data: {
+        id: faqId,
+      },
+      success: function (data, textStatus, xhr) {
+        $("#modalFAQ").modal();
+        $("#question").val(data.faq.question);
+        $("#answer").val(data.faq.answer);      
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+        alert(jqXHR.responseJSON.msg);
+      },
+    });
+  });
+
+ $('#btnSearch').click(function(){
+   search = $('#txtSearch').val();
+   page = 1;
+   LoadFAQs();
+ })
+</script>

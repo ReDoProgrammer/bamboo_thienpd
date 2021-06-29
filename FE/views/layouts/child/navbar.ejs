@@ -1,0 +1,47 @@
+<div class="col-lg-10 d-flex align-items-center justify-content-start">
+  <nav class="menu-top">
+    <ul class="nav-menu d-flex justify-content-center" id="navbar"></ul>
+  </nav>
+</div>
+
+<script>
+  $(document).ready(function () {
+    LoadGroups();
+  });
+
+  function LoadGroups() {
+    $.ajax({
+      url: "/group",
+      type: "get",
+      success: function (data) {
+        $("#navbar").empty();
+        data.groups.forEach((group) => {
+          let li = "";
+          if (group.subs.length == 0) {
+            li =
+              '<li><a href="/group/' +
+              group.metatitle +
+              '">' +
+              group.name +
+              "</a></li>";
+          } else {
+            li = '  <li class="parent">';
+            li +=
+              '<a href="">'+group.name+'</a>';
+            li += '<ul class="submenu">';
+            group.subs.forEach((sg) => {
+              li += "<li>";
+              li += '<a href="/category/'+group.metatitle+'/'+sg.metatitle+'"><span>' + sg.name + "</span></a>";
+              li += "</li>";
+            });
+
+            li += "</ul>";
+            li += "</li>";
+          }
+          $("#navbar").append(li);
+        });
+        console.log(data);
+      },
+    });
+  }
+</script>

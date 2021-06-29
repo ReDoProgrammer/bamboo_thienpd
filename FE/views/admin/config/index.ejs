@@ -1,0 +1,233 @@
+<table class="table table-dark mt-2">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Key</th>
+      <th scope="col">Description</th>
+      <th scope="col">Value</th>
+      <th scope="col">Active</th>
+      <th scope="col"></th>
+    </tr>
+  </thead>
+  <tbody id="configs_list"></tbody>
+</table>
+
+<div class="modal" tabindex="-1" role="dialog" id="modalconfig">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Add or update a config</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <input
+          type="text"
+          name="key"
+          id="key"
+          class="form-control"
+          placeholder="Config key"
+          readonly
+        />
+        <input
+          type="text"
+          name="description"
+          id="description"
+          class="form-control mt-2"
+          placeholder="Description"
+          required
+        />
+        <input
+          type="text"
+          name="value"
+          id="value"
+          class="form-control mt-2"
+          placeholder="Config value"
+        />
+        <label class="form-control mt-2 font-weight-bold text-success">
+          Active
+          <input type="checkbox" name="active" id="active" class="ml-2" />
+        </label>
+        <label
+          id="config_error_msg"
+          class="text-danger font-weight-bold mt-2"
+        ></label>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="btnSaveconfig">
+          <i class="fa fa-floppy-o pr-2" aria-hidden="true"></i>
+          Save changes
+        </button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  var configId = "";
+
+  $(document).ready(function () {
+    LoadConfigs();
+  });
+
+  $("#btnCreateconfig").click(function () {
+    configId = "";
+    $("#modalconfig").modal();
+  });
+
+  $(document).on("show.bs.modal", ".modal", function () {
+    $("#name").val("");
+    $("#metatitle").val("");
+    $("#config_error_msg").hide();
+    $("#order").val(1);
+  });
+
+  $("#btnSaveconfig").click(function () {
+    let key = $("#key").val().trim();
+    let description = $("#description").val().trim();
+    let value = $("#value").val().trim();
+    let active = $("#active").is(":checked");
+    console.log({ key, description, value, active });
+    let ACCESS_TOKEN = getACCESS_TOKEN();
+
+    $.ajax({
+      url: "/admin/config/",
+      type: "put",
+      headers: {
+        Authorization: "Bamboo " + ACCESS_TOKEN,
+      },
+      data: {
+        id: configId,
+        key,
+        description,
+        value,
+        active
+      },
+      success: function (data) {
+        alert(data.msg);
+        $("#modalconfig").modal("hide");
+        LoadConfigs();
+      },
+      error: function (XMLHttpRequest, textStatus, errorThrown) {
+        $("#config_error_msg").show();
+        $("#config_error_msg").text("* " + XMLHttpRequest.responseJSON.msg);
+      },
+    });
+  });
+
+  function LoadConfigs() {
+    let ACCESS_TOKEN = getACCESS_TOKEN();
+    let idx = 1;
+    $.ajax({
+      url: "/admin/config/list",
+      type: "get",
+      headers: {
+        Authorization: "Bamboo " + ACCESS_TOKEN,
+      },
+      success: function (data) {
+        $("#configs_list").empty();
+        data.configs.forEach((config) => {
+          let tr =
+            "<tr id='" + config._id + "' data-name='" + config.key + "'>";
+          tr += "<td>";
+          tr += idx++;
+          tr += "</td>";
+          tr += "<td>";
+          tr += config.key;
+          tr += "</td>";
+          tr += "<td>";
+          tr += config.description;
+          tr += "</td>";
+          tr += "<td>";
+          tr += config.value;
+          tr += "</td>";
+          tr += "<td>";
+          if (config.active) {
+            tr +=
+              '<i class="fa fa-check font-weight-bold text-success" aria-hidden="true"></i>';
+          } else {
+            tr +=
+              '<i class="fa fa-times font-weight-bold text-danger" aria-hidden="true"></i>';
+          }
+          tr += "</td>";
+          tr += "<td>";
+          tr +=
+            '<td class="text-right"><button class="btn btn-sm btn-warning" name="update"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>';         
+          tr += "</td>";
+          tr += "</tr>";
+          $("#configs_list").append(tr);
+        });
+      },
+      failed(err) {
+        console.log(err);
+      },
+    });
+  }
+
+  $(document).on("click", "button[name='delete']", function () {
+    var r = confirm(
+      "Are you sure to delete " + $(this).closest("tr").data("name") + "?"
+    );
+    if (r == true) {
+      $.ajax({
+        url: "/admin/config",
+        type: "delete",
+        headers: {
+          authorization: "Bamboo " + getACCESS_TOKEN(),
+        },
+        data: {
+          id: $(this).closest("tr").attr("id"),
+        },
+        success: function (data, textStatus, xhr) {
+          alert(data.msg);
+          LoadConfigs();
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+          alert(jqXHR.responseJSON.msg);
+        },
+      });
+    }
+  });
+
+  $(document).on("click", "button[name='update']", function () {
+    configId = $(this).closest("tr").attr("id");
+
+    $.ajax({
+      url: "/admin/config/detail",
+      type: "get",
+      headers: {
+        authorization: "Bamboo " + getACCESS_TOKEN(),
+      },
+      data: {
+        id: configId,
+      },
+      success: function (data, textStatus, xhr) {
+        $("#modalconfig").modal();
+        $("#key").val(data.config.key);
+        $("#description").val(data.config.description);
+        $("#value").val(data.config.value);
+        if (data.config.active) {
+          $("#active").prop("checked", true);
+        } else {
+          $("#active").prop("checked", false);
+        }
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+        alert(jqXHR.responseJSON.msg);
+      },
+    });
+  });
+
+  $("#name").keyup(function () {
+    $("#metatitle").val(getMeta($("#name").val()));
+  });
+</script>

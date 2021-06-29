@@ -1,0 +1,189 @@
+<div class="row">
+  <div class="col-sm-3">
+    <select name="slGroups" id="slGroups" class="form-control"></select>
+  </div>
+  <div class="col-sm-4">
+    <select name="slSubGroups" id="slSubGroups" class="form-control"></select>
+  </div>
+
+  <!-- phần tìm kiếm -->
+  <div class="col-sm-4">
+    <div class="input-group">
+      <input
+        type="text"
+        class="form-control"
+        placeholder="Keyword ..."
+        id="txtSearch"
+      />
+      <div class="input-group-btn">
+        <button class="btn btn-dark" type="submit" id="btnSearch">
+          <i class="fa fa-search" aria-hidden="true"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+  <!-- kết thúc phần tìm kiếm -->
+
+  <div class="col-sm-1 text-right">
+    <button id="btnAddPost" class="btn btn-success">+</button>
+  </div>
+</div>
+
+<table class="table table-dark mt-2">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Caption</th>
+      <th scope="col">Before</th>
+      <th scope="col">After</th>
+      <th scope="col">Handle</th>
+    </tr>
+  </thead>
+  <tbody id="posts_list"></tbody>
+</table>
+
+<%-include('form')%> <%-include('detail')%>
+
+<script>
+  var page = 1;
+  var search = "";
+  $(document).ready(function () {
+    loadGroups();
+  });
+
+  $("#btnAddPost").click(function () {
+    $("#modalPost").modal();
+  });
+
+  $(document).on("click", "button[name='btnView']", function () {
+    loadPostDetail($(this).closest("tr").attr("id"));
+  });
+
+  function loadPostDetail(postId) {
+    $.ajax({
+      url: "/admin/post/detail",
+      type: "get",
+      headers: {
+        Authorization: "Bamboo " + getACCESS_TOKEN(),
+      },
+      data: {
+        postId,
+      },
+      success: function (data) {
+        console.log(data);
+        $("#modalPostDetail").modal();
+        $("#img_before").attr("src", data.post.img_before);
+        $("#img_after").attr("src", data.post.img_after);
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+        alert(jqXHR.responseJSON.msg);
+      },
+    });
+  }
+
+  $("#modalPost").on("hidden.bs.modal", function () {
+    loadPosts($("#slSubGroups").val(), page, search);
+  });
+
+  function loadPosts(subGroupId, page, search) {
+    $.ajax({
+      url: "/admin/post/list",
+      type: "get",
+      headers: {
+        Authorization: "Bamboo " + getACCESS_TOKEN(),
+      },
+      data: {
+        page,
+        search,
+        subGroupId,
+      },
+      success: function (data) {
+        $("#posts_list").empty();
+        let idx = 1;
+        data.posts.forEach((p) => {
+          let tr = '<tr id="' + p._id + '">';
+          tr += "<td>" + idx++ + "</td>";
+          tr += '<td class="font-weight-bold">' + p.caption + "</td>";
+          tr +=
+            '<td> <img src="' +
+            p.img_before_thumbnail +
+            '" class="img-thumbnail img-fluid"></td>';
+          tr +=
+            '<td> <img src="' +
+            p.img_after_thumbnail +
+            '" class="img-thumbnail img-fluid"></td>';
+          tr +=
+            '<td class="align-middle"><button class="btn btn-sm btn-info" name="btnView"><i class="fa fa-eye" aria-hidden="true"></i></button><br>';
+          tr +=
+            '<button class="btn btn-sm btn-warning mt-2" name="btnUpdate"><i class="fa fa-refresh" aria-hidden="true"></i></button><br>';
+          tr +=
+            '<button class="btn btn-sm btn-danger mt-2" name="btnDelete"><i class="fa fa-trash" aria-hidden="true"></i></button></td>';
+          tr += "</tr>";
+          $("#posts_list").append(tr);
+        });
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+        alert(jqXHR.responseJSON.msg);
+      },
+    });
+  }
+
+  function loadGroups() {
+    $.ajax({
+      url: "/admin/group/list",
+      type: "get",
+      headers: {
+        Authorization: "Bamboo " + getACCESS_TOKEN(),
+      },
+      success: function (data) {
+        $("#slGroups").empty();
+        data.groups.forEach((group) => {
+          let opt =
+            '<option value = "' + group._id + '">' + group.name + "</option>";
+          $("#slGroups").append(opt);
+        });
+        loadSubGroupsByGroupId($("#slGroups").val());
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+        alert(jqXHR.responseJSON.msg);
+      },
+    });
+  }
+
+  $("#slGroups").on("change", function () {
+    page = 1;
+    search = $("#txtSearch").val();
+    loadSubGroupsByGroupId($("#slGroups").val());
+  });
+
+  function loadSubGroupsByGroupId(groupId) {
+    $.ajax({
+      url: "/admin/sub-group/listById",
+      type: "get",
+      headers: {
+        Authorization: "Bamboo " + getACCESS_TOKEN(),
+      },
+      data: {
+        groupId,
+      },
+      success: function (data) {
+        $("#slSubGroups").empty();
+        data.sgs.forEach((sg) => {
+          let opt = '<option value = "' + sg._id + '">' + sg.name + "</option>";
+          $("#slSubGroups").append(opt);
+        });
+        loadPosts($("#slSubGroups").val(), page, search);
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+        alert(jqXHR.responseJSON.msg);
+      },
+    });
+  }
+</script>
+
+<style>
+  .img-thumbnail {
+    width: 300px !important;
+    height: 188px !important;
+  }
+</style>

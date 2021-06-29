@@ -1,0 +1,229 @@
+<button id="btnServicePack" class="btn btn-success">+ Add a new service pack</button>
+
+
+<table class="table table-dark mt-2">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Price</th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody id="sp_list"></tbody>
+</table>
+
+<div class="modal" tabindex="-1" role="dialog" id="modalServicePack">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add or update a Service pack</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="text" name="name" id="name" class="form-control" placeholder="Service pack name">
+                <textarea name="description" id="description" rows="2" class="form-control mt-2"
+                    placeholder="Service pack description"></textarea>
+                <div class="form-group mt-10">
+                    <label for="price">Price($)</label>
+                    <input type="number" name="price" id="price" class="form-control" onkeypress='validate(event)'>
+                </div>
+                <label id="sp_error_msg" class="text-danger font-weight-bold mt-2"></label>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="btnSaveSP">
+                    <i class="fa fa-floppy-o pr-2" aria-hidden="true"></i>
+                    Save changes
+                </button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var spId = "";
+
+
+    $(document).ready(function () {
+        LoadServicePacks();
+    });
+
+    $("#btnServicePack").click(function () {
+        spId = "";
+        $("#modalServicePack").modal();
+    });
+
+    $(document).on("show.bs.modal", ".modal", function () {
+        $("#name").val("");
+        $("#description").val("");
+        $("#price").val("0");
+        $("#sp_error_msg").hide();
+    });
+
+    $("#btnSaveSP").click(function () {
+        let name = $("#name").val().trim();
+        let description = $("#description").val().trim();
+        let price = $('#price').val();
+
+        let ACCESS_TOKEN = getACCESS_TOKEN();
+
+        if (spId.trim().length == 0) {
+            $.ajax({
+                url: "/admin/service-pack/",
+                type: "post",
+                headers: {
+                    Authorization: "Bamboo " + ACCESS_TOKEN,
+                },
+                data: {
+                    name,
+                    description,
+                    price
+                },
+                success: function (data) {
+                    alert(data.msg);
+                    $("#modalServicePack").modal("hide");
+                    LoadServicePacks();
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    $("#sp_error_msg").show();
+                    $("#sp_error_msg").text("* " + XMLHttpRequest.responseJSON.msg);
+                },
+            });
+        } else {
+            $.ajax({
+                url: "/admin/service-pack/",
+                type: "put",
+                headers: {
+                    Authorization: "Bamboo " + ACCESS_TOKEN,
+                },
+                data: {
+                    id: spId,
+                    name,
+                    description,
+                    price
+                },
+                success: function (data) {
+                    alert(data.msg);
+                    $("#modalServicePack").modal("hide");
+                    LoadServicePacks();
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    $("#faq_error_msg").show();
+                    $("#faq_error_msg").text("* " + XMLHttpRequest.responseJSON.msg);
+                },
+            });
+        }
+    });
+
+    function LoadServicePacks() {
+        let ACCESS_TOKEN = getACCESS_TOKEN();
+        let idx = 1;
+        $.ajax({
+            url: "/admin/service-pack/list",
+            type: "get",
+            headers: {
+                Authorization: "Bamboo " + ACCESS_TOKEN,
+            },
+            success: function (data) {
+                $("#sp_list").empty();
+                console.log(data);
+                data.sps.forEach((sp) => {
+                    let tr = "<tr id='" + sp._id + "' data-name='" + sp.name + "'>";
+                    tr += "<td>";
+                    tr += idx++;
+                    tr += "</td>";
+                    tr += "<td class='font-weight-bold text-primary'>";
+                    tr += sp.name;
+                    tr += "</td>";
+                    tr += "<td class='font-weight-bold text-danger'>";
+                    tr += sp.price;
+                    tr += "</td>";
+                    tr +=
+                        '<td class="text-right"><button class="btn btn-sm btn-warning" name="update"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>';
+                    tr +=
+                        '<button class="btn btn-sm btn-danger ml-2" name="delete"><i class="fa fa-trash" aria-hidden="true"></i></button></td>';
+                    tr += "</td>";
+                    tr += "</tr>";
+                    $("#sp_list").append(tr);
+                });
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert(XMLHttpRequest.responseJSON.msg);
+            },
+        });
+    }
+
+    $(document).on("click", "button[name='delete']", function () {
+        var r = confirm(
+            "Are you sure to delete " + $(this).closest("tr").data("name") + "?"
+        );
+        if (r == true) {
+            $.ajax({
+                url: "/admin/service-pack",
+                type: "delete",
+                headers: {
+                    authorization: "Bamboo " + getACCESS_TOKEN(),
+                },
+                data: {
+                    id: $(this).closest("tr").attr("id"),
+                },
+                success: function (data, textStatus, xhr) {
+                    alert(data.msg);
+                    LoadServicePacks();
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert(jqXHR.responseJSON.msg);
+                },
+            });
+        }
+    });
+
+    $(document).on("click", "button[name='update']", function () {
+        spId = $(this).closest("tr").attr("id");
+
+        $.ajax({
+            url: "/admin/service-pack/detail",
+            type: "get",
+            headers: {
+                authorization: "Bamboo " + getACCESS_TOKEN(),
+            },
+            data: {
+                id: spId,
+            },
+            success: function (data, textStatus, xhr) {
+                $("#modalServicePack").modal();
+                $("#name").val(data.sp.name);
+                $("#description").val(data.sp.description);
+                $("#price").val(data.sp.price);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                alert(jqXHR.responseJSON.msg);
+            },
+        });
+    });
+
+
+
+    function validate(evt) {
+        var theEvent = evt || window.event;
+
+        // Handle paste
+        if (theEvent.type === 'paste') {
+            key = event.clipboardData.getData('text/plain');
+        } else {
+            // Handle key press
+            var key = theEvent.keyCode || theEvent.which;
+            key = String.fromCharCode(key);
+        }
+        var regex = /[0-9]|\./;
+        if (!regex.test(key)) {
+            theEvent.returnValue = false;
+            if (theEvent.preventDefault) theEvent.preventDefault();
+        }
+    }
+</script>

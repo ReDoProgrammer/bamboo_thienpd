@@ -1,0 +1,240 @@
+<div class="row">
+  <div class="col-sm-2">
+    <button class="btn btn-success" id="btnCreateGroup">
+      <i class="fa fa-plus" aria-hidden="true"></i>
+      Create
+    </button>
+  </div>
+  <div class="col-sm-5"></div>
+  <div class="col-sm-5"></div>
+</div>
+<table class="table table-dark mt-2">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Name</th>
+      <th scope="col">Meta title</th>
+      <th scope="col">Order</th>
+      <th scope="col">Handle</th>
+    </tr>
+  </thead>
+  <tbody id="groups_list"></tbody>
+</table>
+
+<div class="modal" tabindex="-1" role="dialog" id="modalGroup">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Add or update a group</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <input
+          type="text"
+          name="name"
+          id="name"
+          class="form-control"
+          placeholder="Group name"
+          required
+        />
+        <input
+          type="text"
+          name="metatitle"
+          id="metatitle"
+          class="form-control mt-2"
+          placeholder="Meta title"
+        />
+        <div>                       
+          <input type="number" id="order" min="1" placeholder="order" data-bind="value:replyNumber" class="form-control mt-2"/>
+      </div>
+        <label
+          id="group_error_msg"
+          class="text-danger font-weight-bold mt-2"
+        ></label>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="btnSaveGroup">
+          <i class="fa fa-floppy-o pr-2" aria-hidden="true"></i>
+          Save changes
+        </button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  var groupId = "";
+
+  $(document).ready(function () {
+    LoadGroups();
+  });
+
+  $("#btnCreateGroup").click(function () {
+    groupId = "";
+    $("#modalGroup").modal();
+  });
+
+  $(document).on("show.bs.modal", ".modal", function () {
+    $("#name").val("");
+    $("#metatitle").val("");
+    $("#group_error_msg").hide();
+    $('#order').val(1);
+  });
+
+  $("#btnSaveGroup").click(function () {
+    let name = $("#name").val().trim();
+    let metatitle = $("#metatitle").val().trim();
+    let order = $('#order').val();
+    let ACCESS_TOKEN = getACCESS_TOKEN();
+    if (groupId.length == 0) {
+      $.ajax({
+        url: "/admin/group",
+        type: "post",
+        headers: {
+          Authorization: "Bamboo " + ACCESS_TOKEN,
+        },
+        data: {
+          name,
+          metatitle,
+          order
+        },
+        success: function (data) {
+          alert(data.msg);
+          $("#modalGroup").modal("hide");
+          LoadGroups();
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+          $("#group_error_msg").show();
+          $("#group_error_msg").text("* " + XMLHttpRequest.responseJSON.msg);
+        },
+      });
+    } else {
+      $.ajax({
+        url:'/admin/group/',
+        type:'put',
+        headers: {
+          Authorization: "Bamboo " + ACCESS_TOKEN,
+        },
+        data: {
+          id:groupId,
+          name,
+          metatitle,
+          order
+        },
+        success: function (data) {
+          alert(data.msg);
+          $("#modalGroup").modal("hide");
+          LoadGroups();
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+          $("#group_error_msg").show();
+          $("#group_error_msg").text("* " + XMLHttpRequest.responseJSON.msg);
+        },
+      })
+    }
+  });
+
+  function LoadGroups() {
+    let ACCESS_TOKEN = getACCESS_TOKEN();
+    let idx = 1;
+    $.ajax({
+      url: "/admin/group/list",
+      type: "get",
+      headers: {
+        Authorization: "Bamboo " + ACCESS_TOKEN,
+      },
+      success: function (data) {
+        $("#groups_list").empty();
+        data.groups.forEach((group) => {
+          let tr = "<tr id='" + group._id + "' data-name='" + group.name + "'>";
+          tr += "<td>";
+          tr += idx++;
+          tr += "</td>";
+          tr += "<td>";
+          tr += group.name;
+          tr += "</td>";
+          tr += "<td>";
+          tr += group.metatitle;
+          tr += "</td>";
+          tr += "<td>";
+          tr += group.order;
+          tr += "</td>";
+          tr += "<td>";
+          tr +=
+            '<td class="text-right"><button class="btn btn-sm btn-warning" name="update"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>';
+          tr +=
+            '<button class="btn btn-sm btn-danger ml-2" name="delete"><i class="fa fa-trash" aria-hidden="true"></i></button></td>';
+          tr += "</td>";
+          tr += "</tr>";
+          $("#groups_list").append(tr);
+        });
+      },
+      failed(err) {
+        console.log(err);
+      },
+    });
+  }
+
+  $(document).on("click", "button[name='delete']", function () {
+    var r = confirm(
+      "Are you sure to delete " + $(this).closest("tr").data("name") + "?"
+    );
+    if (r == true) {
+      $.ajax({
+        url: "/admin/group",
+        type: "delete",
+        headers: {
+          authorization: "Bamboo " + getACCESS_TOKEN(),
+        },
+        data: {
+          id: $(this).closest("tr").attr("id"),
+        },
+        success: function (data, textStatus, xhr) {
+          alert(data.msg);
+          LoadGroups();
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+          alert(jqXHR.responseJSON.msg);
+        },
+      });
+    }
+  });
+
+  $(document).on("click", "button[name='update']", function () {
+    groupId = $(this).closest("tr").attr("id");
+
+    $.ajax({
+      url: "/admin/group/detail",
+      type: "get",
+      headers: {
+        authorization: "Bamboo " + getACCESS_TOKEN(),
+      },
+      data: {
+        id: groupId,
+      },
+      success: function (data, textStatus, xhr) {
+        $("#modalGroup").modal();
+        $("#name").val(data.group.name);
+        $("#metatitle").val(data.group.metatitle);
+        $('#order').val(data.group.order)
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+        alert(jqXHR.responseJSON.msg);
+      },
+    });
+  });
+
+  $('#name').keyup(function(){
+    $('#metatitle').val(getMeta($('#name').val()));
+  })
+</script>

@@ -1,0 +1,124 @@
+<div class="container" id="posts" data-post="<%=sgId%>"></div>
+
+
+
+  <link rel="stylesheet" href="/dist/twenty-twenty/css/twentytwenty.css" />
+
+  <script src="https://code.jquery.com/jquery-3.2.1.js" integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
+    crossorigin="anonymous"></script>
+  <script src="/dist/twenty-twenty/js/jquery.event.move.js"></script>
+  <script src="/dist/twenty-twenty/js/jquery.twentytwenty.js"></script>
+  <script>
+    $(document).ready(function () {
+      LoadPost($("#posts").data("post"));
+    });
+
+    function LoadPost(sgId) {
+      $.ajax({
+        url: "/post",
+        type: "get",
+        data: {
+          sgId,
+        },
+        success: function (data) {
+          for (i = 0; i < data.posts.length; i = i + 3) {
+            let tr = '<div class="row mt-20">';
+            tr += '<div class="col-sm-4 text-center" id="' + data.posts[i]._id + '" data-before="' + data.posts[i].img_before + '" data-after="' + data.posts[i].img_after + '">';
+            tr += '<div class="comparision">';
+            tr +=
+              ' <img src="' +
+              data.posts[i].img_before_thumbnail +
+              '" class="img-thumbnail w-100">';
+            tr +=
+              ' <img src="' +
+              data.posts[i].img_after_thumbnail +
+              '" class="img-thumbnail w-100">';
+            tr += "</div>";
+            tr +=
+              '<h4 class="text-info font-weight-bold mt-2 text-uppercase">' +
+              data.posts[i].caption +
+              "<span><button class='ml-20 btn btn-sm btn-info btnViewLarger' name='btnViewLarger'><i class='fa fa-eye pr-10' aria-hidden='true'></i>Larger</button></span></h4>";
+            tr += "</div>";
+
+            if (i + 1 < data.posts.length) {
+              tr += '<div class="col-sm-4 text-center" id="' + data.posts[i]._id + '" data-before="' + data.posts[i + 1].img_before + '" data-after="' + data.posts[i + 1].img_after + '">';
+              tr += '<div class="comparision">';
+              tr +=
+                ' <img src="' +
+                data.posts[i + 1].img_before_thumbnail +
+                '" class="img-thumbnail w-100">';
+              tr +=
+                ' <img src="' +
+                data.posts[i + 1].img_after_thumbnail +
+                '" class="img-thumbnail w-100">';
+              tr += "</div>";
+              tr +=
+                '<h4 class="text-info font-weight-bold mt-2 text-uppercase">' +
+                data.posts[i + 1].caption +
+                "<span><button class='ml-20 btn btn-sm btn-info btnViewLarger' name='btnViewLarger'><i class='fa fa-eye pr-10' aria-hidden='true'></i>Larger</button></span></h4>";
+              tr += "</div>";
+            }
+            if (i + 2 < data.posts.length) {
+              tr += '<div class="col-sm-4 text-center" id="' + data.posts[i]._id + '" data-before="' + data.posts[i + 2].img_before + '" data-after="' + data.posts[i + 2].img_after + '">';
+              tr += '<div class="comparision">';
+              tr +=
+                ' <img src="' +
+                data.posts[i + 2].img_before_thumbnail +
+                '" class="img-thumbnail w-100">';
+              tr +=
+                ' <img src="' +
+                data.posts[i + 2].img_after_thumbnail +
+                '" class="img-thumbnail w-100">';
+              tr += "</div>";
+              tr +=
+                '<h4 class="text-info font-weight-bold mt-2 text-uppercase">' +
+                data.posts[i + 2].caption +
+                "<span><button class='ml-20 btn btn-sm btn-info btnViewLarger' name='btnViewLarger'><i class='fa fa-eye pr-10' aria-hidden='true'></i>Larger</button></span></h4>";
+              tr += "</div>";
+            }
+
+            tr += "</div>";
+            $("#posts").append(tr);
+          }
+          $(function () {
+            $(".comparision[data-orientation!='vertical']").twentytwenty({
+              default_offset_pct: 0.5,
+            });
+          });
+        },
+      });
+    }
+
+    $(document).on("click", "button[name='btnViewLarger']", async function () {
+      let img_before = $(this).closest("div").data("before");
+      let img_after = $(this).closest("div").data('after');
+      await $('#img_before').attr('src', img_before);
+      await $('#img_after').attr('src', img_after);
+      $('#modalLarger').modal();
+    })
+
+
+    $(window).on('shown.bs.modal', function () {
+      $(function () {
+        $("#twenty-twenty[data-orientation!='vertical']").twentytwenty({
+          default_offset_pct: 0.5,
+        });
+      });
+    });
+  </script>
+
+  <style>
+    .comparision img {
+      min-height: 240px;
+      max-height: 240px;
+      min-width: 320px !important;
+    }
+
+    #twenty-twenty img {
+      min-height: 480px;
+      max-height: 480px;
+      min-width: 720px !important;
+    }
+  </style>
+
+<%-include('modal')%>

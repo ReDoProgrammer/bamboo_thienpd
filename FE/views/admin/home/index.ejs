@@ -1,0 +1,56 @@
+<button class="btn btn-danger" id="btnDropSubGroup">Drop SubGroup Collection</button>
+<button class="btn btn-danger" id="btnDropPost">Drop Post Collection</button>
+<button class="btn btn-danger" id="btnDropSlider">Drop Slider Collection</button>
+
+<script>
+    $(document).ready(function () {
+        $('#btnDropSubGroup').click(function () {
+            $.ajax({
+                url: '/admin/sub-group/drop-collection',
+                type: 'post',
+                headers: {
+                    Authorization: "Bamboo " + getACCESS_TOKEN()
+                },
+                success:function(data){
+                    alert(data.msg)
+                }
+            })
+        })
+    })
+</script>
+
+
+
+<script>
+    $(document).ready(function () {
+        $('#btnDropPost').click(function () {
+            $.ajax({
+                url: '/admin/post/drop-collection',
+                type: 'post',
+                headers: {
+                    Authorization: "Bamboo " + getACCESS_TOKEN()
+                },
+                success:function(data){
+                    alert(data.msg)
+                }
+            })
+        })
+    })
+</script>
+
+<script>
+    $(document).ready(function () {
+        $('#btnDropSlider').click(function () {
+            $.ajax({
+                url: '/admin/slider/drop-collection',
+                type: 'post',
+                headers: {
+                    Authorization: "Bamboo " + getACCESS_TOKEN()
+                },
+                success:function(data){
+                    alert(data.msg)
+                }
+            })
+        })
+    })
+</script>

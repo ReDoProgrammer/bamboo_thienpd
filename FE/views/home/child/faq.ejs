@@ -1,0 +1,58 @@
+<div class="qaHome py-40">
+  <div class="container">
+    <h1 class="text-center primary-color">
+      <strong><span class="mr-3"><i class="fa fa-question-circle text-danger" aria-hidden="true"></i></span> FREQUENTLY ASKED QUESTIONS</strong>
+    </h1>
+
+    <div id="faq" class="mt-30"></div>
+  </div>
+</div>
+
+<script>
+  $(document).ready(function () {
+    LoadFAQ();
+  });
+
+  function LoadFAQ() {
+    $.ajax({
+      url: "/faq",
+      type: "get",
+      success: function (data) {
+        $("#faq").empty();
+        let idx = 0;
+        data.faqs.forEach((faq) => {
+          let l = '<div class="card">';
+          l +=
+            '<div class="btn-link collapsed" data-toggle="collapse" data-target="#collapse' +
+            idx +
+            '" aria-expanded="false" aria-controls="collapse' +
+            idx +
+            '">';
+          l += faq.question;
+          l += "</div>";
+
+          l +=
+            '<div id="collapse' +
+            idx++ +
+            '" class="collapse" data-parent="#faq" style="">';
+          l += '<div class="card-body">';
+          l += "<p>" + faq.answer + "</p>";
+          l += "</div>";
+          l += "</div>";
+          l += "</div>";
+
+          $("#faq").append(l);
+        });
+      },
+    });
+  }
+</script>
+
+<style>
+  #faq{
+    border: solid 1px var(--primary-color);
+    padding:10px;
+    padding-left: 30px;
+    border-radius: 5px;
+  }
+</style>

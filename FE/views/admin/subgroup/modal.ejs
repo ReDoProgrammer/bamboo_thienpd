@@ -1,0 +1,162 @@
+<div
+  class="modal fade"
+  id="modalSubGroup"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">
+          Add or group subgroup
+        </h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="">Group</label>
+          <select name="group" id="group" class="form-control"></select>
+        </div>
+
+        <input
+          type="text"
+          name="name"
+          id="name"
+          class="form-control"
+          placeholder="Subgroup name"
+        />
+
+        <input
+          type="text"
+          name="metatitle"
+          id="metatitle"
+          class="form-control mt-2"
+          placeholder="Subgroup metatitle"
+        />
+
+        <div class="form-group">
+          <textarea
+          name="description"
+          id="description"
+          rows="3"
+          class="form-control mt-2"
+          placeholder="Subgroup description"
+        ></textarea>
+        </div>
+
+        <div class="form-group mt-10">
+          <input type="file" onchange="readURL(this,'thumbnail');" id="fThumbnail"/>
+          <div class="text-center">
+            <img id="thumbnail" src="/images/GUI/no_image.png" class="img-thumbnail"/>
+          </div>
+        </div>
+
+        <div class="form-group mt-10">
+          <input type="file" onchange="readURL(this,'banner');" id="fBanner"/>
+          <div class="text-center">
+            <img id="banner" src="/images/GUI/no_image.png" class="img-thumbnail"/>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          Close
+        </button>
+        <button type="button" class="btn btn-primary" id="btnSaveSubGroup">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+  $(document).ready(function () {
+    $("#thumbnail").hide();
+    $('#banner').hide();    
+  });
+  
+
+  $("#btnSaveSubGroup").on("click", async function(e) {
+      let group = $('#group option:selected').val();
+      let name = $('#name').val();
+      let metatitle = $('#metatitle').val();
+      let description = $('#description').val();
+
+
+      let thumbnail = document.getElementById("fThumbnail").files[0];
+      let banner = document.getElementById("fBanner").files[0];
+
+
+      let fData = new FormData();
+      fData.append("group",group);
+      fData.append("name", name);
+      fData.append("metatitle", metatitle);
+      fData.append("description", description);
+      fData.append("thumbnail", thumbnail);
+      fData.append("banner", banner);
+      var contentType = {
+          headers:{
+            "content-type":"multipart/form-data",
+            authorization: "BamBoo " + getACCESS_TOKEN()
+          }
+        }
+      axios
+        .post("/admin/sub-group",fData,contentType     
+        )
+        .then(function (data) {
+          alert(data.data.msg);
+          $('#modalSubGroup').modal('hide');    
+          subGroupId= '';           
+        })
+        .catch(function (error) {
+          console.log(error.response);
+          alert(error.response.data.msg);
+        });
+        
+    });
+
+
+
+
+
+
+  $('#name').keyup(function(){
+    $('#metatitle').val(getMeta($('#name').val()));
+  })
+
+  function readURL(input, img) {
+    if (input.files && input.files[0]) {
+      var reader = new FileReader();
+
+      reader.onload = function (e) {
+        $("#" + img).attr("src", e.target.result);
+        $("#" + img).show(1000);
+      };
+      reader.readAsDataURL(input.files[0]);
+    }
+  }
+</script>
+
+<style>
+  #thumbnail {
+    max-width: 240px !important;
+    height: 160px !important;
+  }
+
+  #banner {
+    width: 100% !important;
+    height: 180px !important;
+  }
+</style>

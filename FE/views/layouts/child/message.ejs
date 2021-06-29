@@ -1,0 +1,62 @@
+<div class="col-md-6">
+    <div class="content">
+        <div class="box-form-footer">
+            <div class="form-group">
+                <input type="text" name="foo-name" class="form-control" placeholder="Your name (*)" />
+            </div>
+
+            <div class="form-group">
+                <input type="email" name="foo-email" class="form-control" placeholder="Your email (*)" />
+            </div>
+
+            <div class="form-group">
+                <textarea rows="5" placeholder="Your message (*)" name="foo-message" class="form-control"></textarea>
+            </div>
+
+            <div class="messFooter"></div>
+
+            <div class="text-center">
+                <button type="button" class="btn btn-foo text-white bg-primary-color py-10 px-40 w150">
+                    SUBMIT
+                </button>
+            </div>
+        </div>
+
+        <script type="text/javascript">
+            $(".btn-foo").click(function () {
+                $(".messFooter").html("");
+                var name = $("input[name='foo-name']").val();
+                var email = $("input[name='foo-email']").val();
+                var message = $("textarea[name='foo-message']").val();
+                $.ajax({
+                    type: "post",
+                    url: "/message",
+                    data: {
+                        name,
+                        email,
+                        message,
+                    },
+                    success: function (data) {
+                        $(".btn-foo").html("SUBMIT");
+                        $(".btn-foo").prop("disabled", false);
+                        $("input[name='foo-name']").val("");
+                        $("input[name='foo-email']").val("");
+                        $("input[name='foo-message']").val("");
+                        $(".messFooter").html(
+                            '<div class="alert alert-success text-center mt-15 font-weight-bold"><i class="fa fa-check pr-3"></i>' +
+                            data.msg +
+                            "</div>"
+                        );
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        $(".messFooter").html(
+                            '<div class="alert alert-danger text-center mt-15">' +
+                            XMLHttpRequest.responseJSON.msg +
+                            "</div>"
+                        );
+                    }
+                });
+            });
+        </script>
+    </div>
+</div>

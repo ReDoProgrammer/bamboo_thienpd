@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="../../dist/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="../../dist/font-awesome/font-awesome.min.css">
+
+    <script src="../../js/jquery.min.js"></script>
+    <script src="../../dist/bootstrap/bootstrap.min.js"></script>
+    <script src="../../js/common.js"></script>    
+
+    
+    <title>Admin Dashboard</title>
+  </head>
+  <body>
+    <%-include('admin_child/navbar')%>
+    <div class="container mt-4">
+      <div class="card">
+        <h5 class="card-header"><%=name%></h5>
+        <div class="card-body">
+            <%-body%>
+        </div>
+      </div>
+    </div>
+  
+    <%-include('admin_child/footer')%>
+  </body>
+</html>

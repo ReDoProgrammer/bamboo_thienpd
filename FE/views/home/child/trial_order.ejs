@@ -1,0 +1,105 @@
+<div class="tryHome py-40">
+  <div class="container">
+    <h1 class="text-center yellow-color">
+      <strong>START YOUR TRIAL ORDER</strong>
+    </h1>
+
+   
+
+    <div class="formTryHome mt-30">
+      <div class="form-group">
+        <input
+          type="text"
+          placeholder="Your name (*)"
+          name="nameTry"
+          class="form-control"
+        />
+      </div>
+
+      <div class="form-group">
+        <input
+          type="text"
+          placeholder="Your email (*)"
+          name="emailTry"
+          class="form-control"
+        />
+      </div>
+
+      <div class="form-group">
+        <input
+          type="text"
+          placeholder="Link of Input-material (*)"
+          name="linkTry"
+          class="form-control"
+        />
+      </div>
+
+      <div class="form-group">
+        <textarea
+          rows="5"
+          placeholder="Description"
+          name="commentTry"
+          class="form-control"
+        ></textarea>
+      </div>
+
+      <div class="form-group text-center">
+        <div class="messTry"></div>
+        <button
+          type="button"
+          class="btn btn-try text-white bg-yellow py-10 px-40 w150"
+        >
+          SEND
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    $(".btn-try").click(function () {
+      $(".messTry").html("");
+
+      var name = $("input[name='nameTry']").val();
+
+      var email = $("input[name='emailTry']").val();
+
+      var link = $("input[name='linkTry']").val();
+
+      var comment = $("textarea[name='commentTry']").val();
+
+      $.ajax({
+        type: "post",
+        url: "/trial-order",
+        data: {
+          name,
+          email,
+          link,
+          comment,
+        },      
+        success: function (data, textStatus, xhr) {
+          if (xhr.status == 201) {
+            $(".btn-try").html("Send");
+            $(".btn-try").prop("disabled", false);
+            $("input[name='nameTry']").val("");
+            $("input[name='emailTry']").val("");
+            $("input[name='linkTry']").val("");
+            $("textarea[name='commentTry']").val("");
+            $(".messTry").html(
+              '<div class="alert alert-success text-center mt-15 font-weight-bold"><i class="fa fa-check pr-2"></i>' +
+                data.msg +
+                "</div>"
+            );
+            $(".messTry").hide(3000);
+          }
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+          $(".messTry").html(
+            '<div class="alert alert-danger text-center mt-15">' +
+              XMLHttpRequest.responseJSON.msg +
+              "</div>"
+          );
+        }     
+      });
+    });
+  </script>
+</div>

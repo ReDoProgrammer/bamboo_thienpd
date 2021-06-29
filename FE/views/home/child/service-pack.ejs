@@ -1,0 +1,43 @@
+<div class="container">
+    <h1 class="text-center yellow-color">
+        <strong>ENTER</strong>
+      </h1>
+    <div class="row mt-30" id="service_pack">
+
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $.ajax({
+            url: '/service-pack',
+            type: 'get',
+            success: function (data) {
+                $('#service_pack').empty();
+                data.sps.forEach(sp => {
+                    let item = '<div class="col-sm-3">'
+                    item += '<div class="card text-white bg-info mb-3">'
+                    item += '<div class="card-header">'
+                    item += '<h4 class="text-uppercase font-weight-bold text-center">'+sp.name+'</h4>'
+                    item += '</div>'
+                    item += '<div class="card-body sp-detail">'
+                        item +='<h2 class="text-center font-weight-bold yellow-color">FROM: '+sp.price+'$</h2>'
+                    item += "<p class='card-text mt-20'>"+sp.description+"</p>"
+                    item += '</div>'
+                    item += '</div>'                    
+                    item += '</div>'
+                    $('#service_pack').append(item);
+                })
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        })
+    })
+</script>
+
+<style>
+    .sp-detail {
+        height: 250px;
+    }
+</style>
