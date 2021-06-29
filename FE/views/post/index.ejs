@@ -1,4 +1,8 @@
-<div class="container" id="posts" data-post="<%=sgId%>"></div>
+<div class="container">
+  <img src="" id="banner">
+  <h4 id="description" class="text-info text-center mt-10"></h4>
+</div>
+<div class="container mt-20" id="posts" data-post="<%=sgId%>"></div>
 
 
 
@@ -21,6 +25,8 @@
           sgId,
         },
         success: function (data) {
+          $('#banner').attr('src',data.sg.banner);
+          $('#description').text(data.sg.description);
           for (i = 0; i < data.posts.length; i = i + 3) {
             let tr = '<div class="row mt-20">';
             tr += '<div class="col-sm-4 text-center" id="' + data.posts[i]._id + '" data-before="' + data.posts[i].img_before + '" data-after="' + data.posts[i].img_after + '">';
@@ -118,6 +124,10 @@
       min-height: 480px;
       max-height: 480px;
       min-width: 720px !important;
+    }
+    #banner{
+      width: 100% !important;
+      height: 275px !important;
     }
   </style>
 

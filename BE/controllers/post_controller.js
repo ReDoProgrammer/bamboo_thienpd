@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const SubGroup = require('../models/sub_group_model');
 const Post = require('../models/post_model');
 router.get('/',(req,res)=>{
     let {sgId} = req.query;
@@ -9,10 +10,24 @@ router.get('/',(req,res)=>{
     })
     .exec()
     .then(posts=>{
-        return res.status(200).json({
-            msg:`Load posts list successfully!`,
-            posts:posts
+        SubGroup.findById(sgId,(err,sg)=>{
+            if(err){
+                return res.status(500).json({
+                    msg:`${new Error(err.message)}`
+                })
+            }
+            if(!sg){
+                return res.status(404).json({
+                    msg:`Subgroup not found`                    
+                })
+            }
+            return res.status(200).json({
+                msg:`Load posts list successfully!`,
+                posts:posts,
+                sg:sg
+            })
         })
+       
     })
     .catch(err=>{
         return res.status(500).json({
