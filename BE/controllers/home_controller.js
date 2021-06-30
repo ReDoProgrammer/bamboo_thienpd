@@ -162,4 +162,10 @@ router.get('/sub-group-with-avatar', (req, res) => {
         })
 })
 
+router.get('/frequently-asked-questions',(req,res)=>{
+    res.render('FAQs/index', {
+        layout: 'layouts/fe_layout'
+    });
+})
+
 module.exports = router;

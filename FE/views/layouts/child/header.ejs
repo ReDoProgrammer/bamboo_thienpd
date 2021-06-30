@@ -1,118 +1,116 @@
-<header>
-  <!-- Desktop -->
-
-  <div class="d-none d-lg-block">
-    <div class="header">
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-2 d-flex align-items-center">
-            <div class="logo">
-              <a href="/">
-                <img
-                  src="/images/GUI/logo.png"
-                  alt="BAMBOOPHOTO.COM"
-                  style="width: 70px; height: auto;"
-                />
-              </a>
-            </div>
-          </div>
-
-          <%-include('navbar')%>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Mobile -->
-
-  <div class="d-lg-none">
-    <div
-      class="block-mobile-nav d-flex justify-content-between align-items-center"
+<nav class="navbar navbar-expand-md navbar-dark" id="navbar">
+  <div class="container">
+    <a href="/" class="navbar-brand" style="font-size: 1.6rem">
+      <img src="/images/GUI/logo.png" id="logo" />
+    </a>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-toggle="collapse"
+      data-target="#collapsibleNavbar"
     >
-      <a class="p-3 btn-menu" href="#menu-mobi"
-        ><i class="fa fa-bars"></i><span class="sr-only">Menu</span></a
-      >
-
-      <a class="p-2" href="/"
-        ><img src="/images/GUI/logo.png" alt="FOTORULER-REAL-ESTATE-EDITING"
-      /></a>
-
-      <a
-        class="p-3"
-        data-toggle="collapse"
-        href="#collapseMBsearch"
-        role="button"
-        aria-expanded="false"
-        aria-controls="collapseMBsearch"
-        ><i class="fa fa-search" aria-hidden="true"></i
-        ><span class="sr-only">Search</span></a
-      >
-    </div>
-
-    <div class="dropfrm-search collapse" id="collapseMBsearch">
-      <div class="nav-search">
-        <form action="https://fotoruler.com/tim-kiem" method="GET">
-          <div class="input-group">
-            <input
-              type="text"
-              name="keyword"
-              class="form-control"
-              placeholder="Từ khóa..."
-              value=""
-            />
-
-            <div class="input-group-append">
-              <button class="btn" type="submit">
-                <i class="fa fa-search" aria-hidden="true"></i>
-              </button>
-            </div>
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div
+      class="collapse navbar-collapse justify-content-end"
+      id="collapsibleNavbar"
+    >
+      <ul class="navbar-nav justify-content-end" id="top-menu">
+        <li class="position-relative">
+          <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown"
+            >MORE</a
+          >
+          <div class="dropdown-menu float-right position-absolute">
+            <a href="#" class="dropdown-item">Merchandise</a>
+            <a href="#" class="dropdown-item">Extras</a>
+            <a href="#" class="dropdown-item">Media</a>
           </div>
-        </form>
-      </div>
+        </li>
+        <li class="nav-item">
+          <a href="/frequently-asked-questions" class="nav-link">FAQs</a>
+        </li>
+      </ul>
     </div>
-
-    <nav id="menu-mobi">
-      <div id="panel-menu">
-        <ul>
-          <li>
-            <a href="https://fotoruler.com/">HOME</a>
-          </li>
-
-          <li>
-            <a href="https://fotoruler.com/services/photo">SERVICES</a>
-
-            <ul>
-              <li>
-                <a href="https://fotoruler.com/services/photo">PHOTO</a>
-              </li>
-
-              <li>
-                <a href="https://fotoruler.com/services/floor-plan"
-                  >FLOOR PLAN</a
-                >
-              </li>
-
-              <li>
-                <a href="https://fotoruler.com/services/video">VIDEO</a>
-              </li>
-            </ul>
-          </li>
-
-          <li>
-            <a href="https://fotoruler.com/material">MATERIAL</a>
-          </li>
-
-          <li>
-            <a href="https://fotoruler.com/ordering">ORDERING</a>
-          </li>
-
-          <li>
-            <a href="/admin/login">
-              <i class="fa fa-sign-in mr-1" aria-hidden="true"></i>Login
-            </a>
-          </li>
-        </ul>
-      </div>
-    </nav>
   </div>
-</header>
+</nav>
+
+<script>
+  $(document).ready(function () {
+    LoadNavbar();
+  });
+
+  function LoadNavbar() {
+    $.ajax({
+      url: "/group",
+      type: "get",
+      success: function (data) {
+        $("#top-menu").empty();
+        let home = ' <li class="nav-item">';
+        home += '<a href="/" class="nav-link active">HOME</a>';
+        home += "</li> ";
+        $("#top-menu").append(home);
+        data.groups.forEach(group=>{
+          let li = ' <li class="position-relative">';
+            li += '<a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">'+group.name+'</a>';
+            li += '<div class="dropdown-menu float-right position-absolute">';
+              group.subs.forEach(sub=>{
+                li += '<a href="/category/'+group.metatitle+'/'+sub.metatitle+'" class="dropdown-item">'+sub.name+'</a>';
+              })
+            li += '</div></li>';
+          $('#top-menu').append(li);
+        })
+        let faq = ' <li class="nav-item"><a href="/frequently-asked-questions" class="nav-link">FAQs</a></li>';
+        $('#top-menu').append(faq);
+      },
+    });
+  }
+</script>
+
+<style>
+  #logo {
+    width: 70px;
+    height: 70px;
+  }
+  #navbar {
+    background-color: var(--base-color);
+  }
+
+  a,
+  a:hover,
+  .nav-item a,
+  .nav-item a:hover {
+    color: #fff;
+  }
+
+  .navbar {
+    padding: 0 2rem 0 3rem;
+    position: fixed !important;
+    z-index: 1;
+    width: 100vw;
+    opacity: 0.8;
+  }
+  nav a {
+    letter-spacing: 0.3rem;
+    font-size: 0.8rem;
+  }
+  nav .dropdown-menu {
+    left: -6rem;
+    top: 2.7rem;
+  }
+  nav .dropdown-menu a:hover {
+    color: #fff;
+    background-color: var(--primary-color);
+  }
+  nav li {
+    margin: 0 0.7rem;
+  }
+  @media (max-width: 767px) {
+    .navbar-nav li:nth-last-of-type(1) {
+      padding-bottom: 1rem;
+    }
+    nav .dropdown-menu {
+      left: 0rem;
+      top: 2.7rem;
+    }
+  }
+</style>

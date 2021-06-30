@@ -420,21 +420,7 @@ body.modal-open .mm-slideout {
   z-index: inherit;
 }
 
-#menu-mobi:not(.mm-menu) {
-  display: none;
-}
 
-.block-mobile-nav {
-  border-bottom: 1px solid var(--bg-color);
-}
-
-.block-mobile-nav img {
-  height: 50px;
-}
-
-.block-mobile-nav i {
-  color: var(--base-color);
-}
 
 /*Breadcrumb*/
 
