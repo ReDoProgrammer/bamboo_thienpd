@@ -53,6 +53,7 @@ const adminPostController = require('./BE/controllers/admin/post_controller');
 const adminServicePackController = require('./BE/controllers/admin/service_pack_controller');
 const adminSliderController = require('./BE/controllers/admin/slider_controller');
 const adminSubGroupController = require('./BE/controllers/admin/sub_group_controller');
+const adminTrialOrderController = require('./BE/controllers/admin/trial_order_controller');
 
 
 app.use('/',homeController);
@@ -75,6 +76,7 @@ app.use('/admin/post',adminPostController);
 app.use('/admin/service-pack',adminServicePackController);
 app.use('/admin/slider',adminSliderController);
 app.use('/admin/sub-group',adminSubGroupController);
+app.use('/admin/trial-order',adminTrialOrderController);
 
 
 app.listen(process.env.PORT, (_) => {
