@@ -1,78 +1,95 @@
 <div class="container">
-    <h1 class="text-center yellow-color">
-        <strong>PRICING</strong>
-      </h1>
-      <div class="horizontal_slider mt-10">
-        <div class="slider_container">
-            <div class="item">
-                <img src="https://i.pinimg.com/originals/83/12/8a/83128aeb3b471540b1d823c637a2541e.jpg" alt="">
-            </div>
-            <div class="item">
-                <img src="https://i.pinimg.com/236x/50/be/74/50be74a2d34a4d12462a43fc7af023b6.jpg" alt="">
-            </div>
-            <div class="item">
-                <img src="https://i.pinimg.com/236x/6a/88/a5/6a88a52040d8bff4e11a60af80c3c243.jpg" alt="">
-            </div>
-            <div class="item">
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQgppaFDyQC0sD0Q3PEb6_Bw7ZIC63mdR91GBw-uMPERLWce3mjkfqM_8OdbFJndXSJTLxvjXjdeGA&usqp=CAU" alt="">
-            </div>
-            <div class="item">
-                <img src="https://i.pinimg.com/474x/57/64/a7/5764a70152ea26d515a0f3a49422867b.jpg" alt="">
-            </div>
-        </div>
+  <h1 class="text-center yellow-color">
+    <strong>PRICING</strong>
+  </h1>
+  <div class="horizontal_slider mt-10">
+    <div class="slider_container">
+      <div class="item">
+        <img
+          src="https://i.pinimg.com/originals/83/12/8a/83128aeb3b471540b1d823c637a2541e.jpg"
+        />
+      </div>
+      <div class="item">
+        <img
+          src="https://i.pinimg.com/236x/50/be/74/50be74a2d34a4d12462a43fc7af023b6.jpg"
+        />
+      </div>
+      <div class="item">
+        <img
+          src="https://i.pinimg.com/236x/6a/88/a5/6a88a52040d8bff4e11a60af80c3c243.jpg"
+        />
+      </div>
+      <div class="item">
+        <img
+          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQgppaFDyQC0sD0Q3PEb6_Bw7ZIC63mdR91GBw-uMPERLWce3mjkfqM_8OdbFJndXSJTLxvjXjdeGA&usqp=CAU"
+        />
+      </div>
+      <div class="item">
+        <img
+          src="https://i.pinimg.com/474x/57/64/a7/5764a70152ea26d515a0f3a49422867b.jpg"
+        />
+      </div>
     </div>
+  </div>
 </div>
 
 <script>
-    $(document).ready(function () {
-        $.ajax({
-            url: '/pricing',
-            type: 'get',
-            success: function (data) {
-                $('#service_pack').empty();
-                data.sps.forEach(sp => {
-                    let item = '<div class="col-sm-3">'
-                    item += '<div class="card text-white bg-info mb-3">'
-                    item += '<div class="card-header">'
-                    item += '<h4 class="text-uppercase font-weight-bold text-center">'+sp.name+'</h4>'
-                    item += '</div>'
-                    item += '<div class="card-body sp-detail">'
-                        item +='<h2 class="text-center font-weight-bold yellow-color">FROM: '+sp.price+'$</h2>'
-                    item += "<p class='card-text mt-20'>"+sp.description+"</p>"
-                    item += '</div>'
-                    item += '</div>'                    
-                    item += '</div>'
-                    $('#service_pack').append(item);
-                })
-            },
-            error: function (err) {
-                console.log(err);
-            }
-        })
-    })
+  $(document).ready(function () {
+    $.ajax({
+      url: "/pricing",
+      type: "get",
+      success: function (data) {
+        $("#service_pack").empty();
+        data.sps.forEach((sp) => {
+          let item = '<div class="col-sm-3">';
+          item += '<div class="card text-white bg-info mb-3">';
+          item += '<div class="card-header">';
+          item +=
+            '<h4 class="text-uppercase font-weight-bold text-center">' +
+            sp.name +
+            "</h4>";
+          item += "</div>";
+          item += '<div class="card-body sp-detail">';
+          item +=
+            '<h2 class="text-center font-weight-bold yellow-color">FROM: ' +
+            sp.price +
+            "$</h2>";
+          item += "<p class='card-text mt-20'>" + sp.description + "</p>";
+          item += "</div>";
+          item += "</div>";
+          item += "</div>";
+          $("#service_pack").append(item);
+        });
+      },
+      error: function (err) {
+        console.log(err);
+      },
+    });
+  });
 </script>
 
-
 <style>
-    .horizontal_slider{
-        display: block;
-        width: 100%;
-        overflow-x: scroll;
-        padding:20px;
-        box-sizing: border-box;
-        background-color: ;
-
-    }   
-    .slider_container{
-        display: block;
-        white-space: nowrap;
-    }
-    .item{
-        display: inline-block;
-        margin-right: 10px;
-    }
-    .item img{
-        width: 265px;
-        height: 300px;
-    }
+  .horizontal_slider {
+    display: block;
+    width: 100%;
+    overflow-x: scroll;
+    padding: 20px;
+    box-sizing: border-box;
+    background-color: ;
+  }
+  .slider_container {
+    display: block;
+    white-space: nowrap;
+  }
+  .item {
+    display: inline-block;
+    margin-right: 10px;
+  }
+  .item img {
+    width: 265px !important;
+    height: 300px !important;
+    border-radius: 3%;
+    padding: 3px;
+    border: 1px solid #ddd;
+  }
 </style>
