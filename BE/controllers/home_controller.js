@@ -5,7 +5,7 @@ const SubGroup = require('../models/sub_group_model');
 const Post = require('../models/post_model');
 const FAQ = require('../models/faq_model');
 const Config = require('../models/config_model');
-const ServicePack = require('../models/service_pack_model');
+const Pricing = require('../models/Pricing');
 
 
 router.get('/', (req, res) => {
@@ -112,8 +112,8 @@ router.get('/group', (req, res) => {
         })
 })
 
-router.get('/service-pack', (req, res) => {
-    ServicePack.find()
+router.get('/pricing', (req, res) => {
+    Pricing.find()
         .exec()
         .then(sps => {
             return res.status(200).json({

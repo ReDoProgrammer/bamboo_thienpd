@@ -1,27 +1,27 @@
 const router = require("express").Router();
 const { authenticateToken } = require("../../middlewares/authenticate");
-const ServicePackage = require("../../models/service_pack_model");
+const Pricing = require("../../models/Pricing");
 
 router.get('/', (req, res) => {
-    res.render('admin/service_pack/index', {
-        name: 'Service Pack',
+    res.render('admin/pricing/index', {
+        name: 'Pricing',
         layout: 'layouts/admin_layout'
     });
 })
 
 router.get('/list', authenticateToken, (req, res) => {
-    ServicePackage
+    Pricing
         .find({})
         .exec()
         .then(sps => {
             return res.status(200).json({
-                msg: `Load service packs list successfully`,
+                msg: `Load pricing list successfully`,
                 sps: sps
             })
         })
         .catch(err => {
             return res.status(500).json({
-                msg: `Can not load service packs. ${new Error(err.message)}`,
+                msg: `Can not load pricing. ${new Error(err.message)}`,
                 error: `${new Error(err.message)}`
             })
         })
@@ -29,7 +29,7 @@ router.get('/list', authenticateToken, (req, res) => {
 
 router.get('/detail', authenticateToken, (req, res) => {
     let { id } = req.query;
-    ServicePackage
+    Pricing
         .findById(id)
         .exec()
         .then(sp => {
@@ -54,7 +54,7 @@ router.get('/detail', authenticateToken, (req, res) => {
 
 router.post('/', authenticateToken, (req, res) => {
     let { name, description, price } = req.body;
-    let sp = new ServicePackage({
+    let sp = new Pricing({
         name,
         description,
         price
@@ -77,7 +77,7 @@ router.post('/', authenticateToken, (req, res) => {
 
 router.put('/', authenticateToken, (req, res) => {
     let {id,name,description,price} = req.body;
-    ServicePackage.findByIdAndUpdate(id,{
+    Pricing.findByIdAndUpdate(id,{
         name,
         description,
         price
@@ -103,7 +103,7 @@ router.put('/', authenticateToken, (req, res) => {
 
 router.delete('/', authenticateToken, (req, res) => {
     let {id} = req.body;
-    ServicePackage.findOneAndDelete(id,(err,sp)=>{
+    Pricing.findOneAndDelete(id,(err,sp)=>{
         if(err){
             return res.status(500).json({
                 msg:`Can not delete service pack. ${new Error(err.message)}`,

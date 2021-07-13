@@ -74,7 +74,7 @@
 
         if (spId.trim().length == 0) {
             $.ajax({
-                url: "/admin/service-pack/",
+                url: "/admin/pricing/",
                 type: "post",
                 headers: {
                     Authorization: "Bamboo " + ACCESS_TOKEN,
@@ -96,7 +96,7 @@
             });
         } else {
             $.ajax({
-                url: "/admin/service-pack/",
+                url: "/admin/pricing/",
                 type: "put",
                 headers: {
                     Authorization: "Bamboo " + ACCESS_TOKEN,
@@ -124,7 +124,7 @@
         let ACCESS_TOKEN = getACCESS_TOKEN();
         let idx = 1;
         $.ajax({
-            url: "/admin/service-pack/list",
+            url: "/admin/pricing/list",
             type: "get",
             headers: {
                 Authorization: "Bamboo " + ACCESS_TOKEN,
@@ -164,7 +164,7 @@
         );
         if (r == true) {
             $.ajax({
-                url: "/admin/service-pack",
+                url: "/admin/pricing",
                 type: "delete",
                 headers: {
                     authorization: "Bamboo " + getACCESS_TOKEN(),
@@ -187,7 +187,7 @@
         spId = $(this).closest("tr").attr("id");
 
         $.ajax({
-            url: "/admin/service-pack/detail",
+            url: "/admin/pricing/detail",
             type: "get",
             headers: {
                 authorization: "Bamboo " + getACCESS_TOKEN(),

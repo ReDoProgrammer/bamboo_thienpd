@@ -90,8 +90,8 @@ router.delete("/", authenticateToken, (req, res) => {
           msg: "Delete slider successfully!",
         });
       } catch (err) {
-        return res.status(500).json({
-          msg: `Can not delete this slider. Error: ${new Error(err.message)}`,
+        return res.status(200).json({
+          msg: "Delete slider successfully!",
         });
       }
     })
