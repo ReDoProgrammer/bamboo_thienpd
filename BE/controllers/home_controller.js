@@ -5,7 +5,7 @@ const SubGroup = require('../models/sub_group_model');
 const Post = require('../models/post_model');
 const FAQ = require('../models/faq_model');
 const Config = require('../models/config_model');
-const Pricing = require('../models/Pricing');
+const Pricing = require('../models/pricing');
 
 
 router.get('/', (req, res) => {
