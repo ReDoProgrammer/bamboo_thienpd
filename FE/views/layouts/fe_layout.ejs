@@ -2,11 +2,20 @@
 <html lang="vi">
   <%-include('child/head')%>
   <body>
+    <%-include('child/header')%>
     <div class="wrapper">
-      <%-include('child/header')%>
+    
       <%-body%>
     </div>
 
     <%-include('child/footer')%>
   </body>
 </html>
+
+<style>
+  .wrapper{
+    display: block;
+    margin-top: 85px !important;
+    position: relative;
+  }
+</style>
