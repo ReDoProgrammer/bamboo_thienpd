@@ -85,7 +85,27 @@ router.post("/", authenticateToken, async (req, res) => {
       });
     }
 
-    console.log(req.body);
+    let {name,description} = req.body;
+    let thumbnail = req.file.filename;
+    let pricing = new Pricing({
+        name,
+        description,
+        thumbnail: THUMBNAIL_ROOT+thumbnail
+    });
+
+    pricing.save()
+    .then(price=>{
+        return res.status(201).json({
+            msg:'Create a new pricing successfully!',
+            price:price
+        });
+    })
+    .catch(err=>{
+        return res.status(500).json({
+            msg:`Price can not created. ${new Error(err.message)}`            
+        })
+    })
+   
   });
 });
 
@@ -122,23 +142,23 @@ router.put("/", authenticateToken, (req, res) => {
 
 router.delete("/", authenticateToken, (req, res) => {
   let { id } = req.body;
-  Pricing.findOneAndDelete(id, (err, sp) => {
-    if (err) {
-      return res.status(500).json({
-        msg: `Can not delete service pack. ${new Error(err.message)}`,
-        error: `${new Error(err.message)}`,
-      });
-    }
-
-    if (!sp) {
-      return res.status(404).json({
-        msg: `Service pack not found!`,
-      });
-    } else {
+  Pricing.findOneAndDelete({ _id: id })
+  .then((price) => {
+    try {
+      fs.unlinkSync("./public" + price.thumbnail);
       return res.status(200).json({
-        msg: `Deleted service pack successfully!`,
+        msg: "Delete price successfully!",
+      });
+    } catch (err) {
+      return res.status(200).json({
+        msg: "Delete price successfully!",
       });
     }
+  })
+  .catch((err) => {
+    return res.status(500).json({
+      msg: `Can not delete this price. Error: ${new Error(err.message)}`,
+    });
   });
 });
 

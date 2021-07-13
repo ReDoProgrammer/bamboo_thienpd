@@ -3,7 +3,7 @@
     <strong>PRICING</strong>
   </h1>
   <div class="horizontal_slider mt-10">
-    <div class="slider_container">
+    <div class="slider_container" id="pricing">
       <div class="item">
         <img
           src="https://i.pinimg.com/originals/83/12/8a/83128aeb3b471540b1d823c637a2541e.jpg"
@@ -39,27 +39,17 @@
       url: "/pricing",
       type: "get",
       success: function (data) {
-        $("#service_pack").empty();
-        data.sps.forEach((sp) => {
-          let item = '<div class="col-sm-3">';
-          item += '<div class="card text-white bg-info mb-3">';
-          item += '<div class="card-header">';
-          item +=
-            '<h4 class="text-uppercase font-weight-bold text-center">' +
-            sp.name +
-            "</h4>";
-          item += "</div>";
-          item += '<div class="card-body sp-detail">';
-          item +=
-            '<h2 class="text-center font-weight-bold yellow-color">FROM: ' +
-            sp.price +
-            "$</h2>";
-          item += "<p class='card-text mt-20'>" + sp.description + "</p>";
-          item += "</div>";
-          item += "</div>";
-          item += "</div>";
-          $("#service_pack").append(item);
+        if(data.sps.length > 0){
+          $("#pricing").empty();
+          data.sps.forEach((sp) => {
+            let item =  '<div class="item">'
+            item +=   '<img src="'+sp.thumbnail+'"/>'
+            item += '</div>'
+          $("#pricing").append(item);
         });
+        }
+       
+       
       },
       error: function (err) {
         console.log(err);

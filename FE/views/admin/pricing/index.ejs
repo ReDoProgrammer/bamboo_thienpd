@@ -5,7 +5,7 @@
     <tr>
       <th scope="col">#</th>
       <th scope="col">Name</th>
-      <th scope="col">Price</th>
+      <th scope="col">Thumbnail</th>
       <th scope="col"></th>
     </tr>
   </thead>
@@ -69,7 +69,7 @@
               </div>
             </div>
           </div>
-          <div class="ml-2 col-sm-12">
+          <div class="ml-2 col-sm-12 text-center">
             <img
               src="../../images/gui/no_image.png"
               id="preview"
@@ -103,6 +103,10 @@
   .preview {
     width: 265px!important;
     height: 300px!important ;
+  }
+  .img-thumbnail{
+      width: 265px !important;
+      height: 300px !important;
   }
 </style>
 
@@ -179,14 +183,14 @@
           tr += "<td>";
           tr += idx++;
           tr += "</td>";
-          tr += "<td class='font-weight-bold text-primary'>";
+          tr += "<td class='font-weight-bold text-primary align-middle'>";
           tr += sp.name;
           tr += "</td>";
           tr += "<td class='font-weight-bold text-danger'>";
-          tr += sp.price;
+          tr += '<img src="'+sp.thumbnail+'" class="img-thumbnail">';
           tr += "</td>";
           tr +=
-            '<td class="text-right"><button class="btn btn-sm btn-warning" name="update"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>';
+            '<td class="text-right align-middle"><button class="btn btn-sm btn-warning" name="update"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>';
           tr +=
             '<button class="btn btn-sm btn-danger ml-2" name="delete"><i class="fa fa-trash" aria-hidden="true"></i></button></td>';
           tr += "</td>";
