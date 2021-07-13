@@ -31,9 +31,23 @@
           <a class="nav-link" href="/admin/trial-order">Trial orders</a>
         </li>
       </ul>
-      <!-- <form class="form-inline my-2 my-lg-0">
-        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-      </form> -->
+       
+        <button class="btn btn-warning btn-sm my-2" id="btnChangePassword">Change Password</button>
+        <button class="btn btn-danger btn-sm my-2 ml-3" id="btnLogout">Logout</button>
+
     </div>
   </nav>
+
+  <%-include('change_password')%>
+  <script>
+    $('#btnChangePassword').click(function(){
+      $('#modalChangePassword').modal();
+    })
+
+    $('#btnLogout').click(function(){
+      window.localStorage.removeItem('ACCESS_TOKEN');
+      alert('You have logout');
+      let baseUrl =getBaseUrl();
+      $(location).attr('href', baseUrl+'/login');
+    })
+  </script>
