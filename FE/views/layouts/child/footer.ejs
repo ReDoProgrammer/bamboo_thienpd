@@ -1,17 +1,28 @@
-<footer id="footer-site" class="wow fadeInUp" style="visibility: visible; animation-name: fadeInUp;">
+<footer
+  id="footer-site"
+  class="wow fadeInUp"
+  style="visibility: visible; animation-name: fadeInUp"
+>
   <div class="top-footer">
     <div class="container">
       <div class="row">
         <div class="col-md-12 col-sm-12 col-xs-12">
           <div class="top-footer-left">
-            <h2 style="    text-align: center;" class="title-1">BAMBOOPHOTO Real Estate Photo Editing Company</h2>
-            <p style="text-align: center;"><strong>Photo full services - We work from the heart&nbsp;</strong></p>
-            <p style="text-align: center;"><strong>Website&nbsp;bamboophoto.com&nbsp;&nbsp;Workingtime 24/7</strong>
+            <h2 style="text-align: center" class="title-1">
+              BAMBOOPHOTO Real Estate Photo Editing Company
+            </h2>
+            <p style="text-align: center">
+              <strong
+                >Photo full services - We work from the heart&nbsp;</strong
+              >
             </p>
-            <p style="text-align: center;"><strong>Hotline: <span id="hotline"></span></strong></p>
-            <p style="text-align: center;"><strong>Email:&nbsp;<span id="email"></span></strong></p>
-            <p style="text-align: center;"><strong>Spype:&nbsp;<span id="skype"></span></strong></p>
-            <p style="text-align: center;">&nbsp;</p>
+            <p style="text-align: center">
+              <strong
+                >Website&nbsp;bamboophoto.com&nbsp;&nbsp;Workingtime
+                24/7</strong
+              >
+            </p>
+            <div id="contact"></div>
           </div>
         </div>
       </div>
@@ -20,16 +31,16 @@
   <div class="copy-right">
     <div class="container">
       <div class="wp-copy text-center1">
-        Copyright BAMBOOPHOTO Real Estate Photo Editing Company design by <a href="https://redoapp.com/"
-          target="_blank">ReDo</a>
+        Copyright BAMBOOPHOTO Real Estate Photo Editing Company design by
+        <a href="https://redoapp.com/" target="_blank">ReDo</a>
       </div>
     </div>
   </div>
 </footer>
 
-
-<a id="return-to-top" class="td-scroll-up td-scroll-up-visible"><img src="/images/GUI/back-to-top.png"
-    alt="return to top" /></a>
+<a id="return-to-top" class="td-scroll-up td-scroll-up-visible"
+  ><img src="/images/GUI/back-to-top.png" alt="return to top"
+/></a>
 
 <script src="/dist/bootstrap/bootstrap.min.js"></script>
 <script src="/js/jquery.mmenu.js"></script>
@@ -38,33 +49,36 @@
 <script src="/js/common.js"></script>
 <script>
   $(document).ready(function () {
-    GetContactInfo('hotline','phone')
-    GetContactInfo('email','contact')
-    GetContactInfo('skype','skype')
-    
-  })
+    GetContactInfo();
+  });
 
   $("#return-to-top").click(function () {
     $("html, body").animate({ scrollTop: 0 }, 1000);
   });
 
-
-  function GetContactInfo(id,key){
+  function GetContactInfo() {
     $.ajax({
-      url:'/contact',
-      type:'get',
-      data:{
-        key
+      url: "/contact",
+      type: "get",
+      success: function (data) {
+        $("#contact").empty();
+        data.config.forEach((cf) => {
+          if (cf.active) {
+            let item =
+              '<p style="text-align: center;"><strong>' +
+              cf.description +
+              ': <span id="hotline">' +
+              cf.value +
+              "</span></strong></p>";
+            $("#contact").append(item);
+          }
+        });
       },
-      success:function(data){
-        $('#'+id).text(data.config.value);
-      },
-      error:function(err){
+      error: function (err) {
         console.log(err);
-      }
-    })
+      },
+    });
   }
-
 </script>
 
 <style>
@@ -82,7 +96,7 @@
   }
 
   .top-footer-left .title-1 {
-    font-family: 'Montserrat-ExtraBold';
+    font-family: "Montserrat-ExtraBold";
     font-size: 28px;
     text-transform: uppercase;
     /* color: #174c8c; */

@@ -52,8 +52,7 @@ router.get('/category/:group/:sub_group', (req, res) => {
 })
 
 router.get('/contact', (req, res) => {
-    let { key } = req.query;
-    Config.findOne({ key: key })
+    Config.find({active:true})
         .exec()
         .then(config => {
             if (!config) {
@@ -61,6 +60,7 @@ router.get('/contact', (req, res) => {
                     msg: `Contact not found!`
                 })
             }
+
             return res.status(200).json({
                 msg: `Load contact info successfully`,
                 config: config
