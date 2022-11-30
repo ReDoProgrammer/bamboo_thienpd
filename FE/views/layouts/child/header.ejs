@@ -1,119 +1,38 @@
-<nav class="navbar navbar-expand-md navbar-dark" id="navbar">
-  <div class="container">
-    <a href="/" class="navbar-brand" style="font-size: 1.6rem">
-      <img src="/images/GUI/logo.png" id="logo" />
-    </a>
-    <button
-      class="navbar-toggler"
-      type="button"
-      data-toggle="collapse"
-      data-target="#collapsibleNavbar"
-    >
+<nav class="navbar navbar-expand-lg navbar-light">
+  <a class="navbar-brand d-lg-none" href="#"><img src="/images/GUI/logo.png"></a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#myNavbarToggler7"
+      aria-controls="myNavbarToggler7" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
-    </button>
-    <div
-      class="collapse navbar-collapse justify-content-end"
-      id="collapsibleNavbar"
-    >
-      <ul class="navbar-nav justify-content-end" id="top-menu">
-        <li class="position-relative">
-          <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown"
-            >MORE</a
-          >
-          <div class="dropdown-menu float-right position-absolute">
-            <a href="#" class="dropdown-item">Merchandise</a>
-            <a href="#" class="dropdown-item">Extras</a>
-            <a href="#" class="dropdown-item">Media</a>
-          </div>
-        </li>
-        <li class="nav-item">
-          <a href="/frequently-asked-questions" class="nav-link">FAQs</a>
-        </li>
+  </button>
+  <div class="collapse navbar-collapse" id="bamboonav">
+      <ul class="navbar-nav mx-auto">
+          <li class="nav-item">
+              <a class="nav-link" href="/">Home</a>
+          </li>
+          <li class="nav-item">
+              <a class="nav-link" href="/how-it-works">How it works</a>
+          </li>          
+          <li class="nav-item">
+              <a class="nav-link" href="/services">Services</a>
+          </li>
+          <li class="nav-item">
+              <a class="nav-link" href="/why-choose-us">Why choose us</a>
+          </li>
+          <a class="d-none d-lg-block" href="/"><img src="/images/GUI/logo.png"></a>
+          <li class="nav-item">
+              <a class="nav-link" href="/contact">Contact</a>
+          </li>
+          <li class="nav-item">
+              <a class="nav-link" href="/price">Price</a>
+          </li>
+          <li class="nav-item">
+              <a class="nav-link" href="/blog">Blog</a>
+          </li>
+          <li class="nav-item">
+              <a class="nav-link" href="/about">About us</a>
+          </li>
+          
       </ul>
-    </div>
   </div>
 </nav>
-
-<script>
-  $(document).ready(function () {
-    LoadNavbar();
-  });
-
-  function LoadNavbar() {
-    $.ajax({
-      url: "/group",
-      type: "get",
-      success: function (data) {
-        $("#top-menu").empty();
-        let home = ' <li class="nav-item">';
-        home += '<a href="/" class="nav-link active">HOME</a>';
-        home += "</li> ";
-        $("#top-menu").append(home);
-        data.groups.forEach(group=>{
-          let li = ' <li class="position-relative">';
-            li += '<a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">'+group.name+'</a>';
-            li += '<div class="dropdown-menu float-right position-absolute">';
-              group.subs.forEach(sub=>{
-                li += '<a href="/category/'+group.metatitle+'/'+sub.metatitle+'" class="dropdown-item">'+sub.name+'</a>';
-              })
-            li += '</div></li>';
-          $('#top-menu').append(li);
-        })
-        let faq = ' <li class="nav-item"><a href="/frequently-asked-questions" class="nav-link">FAQs</a></li>';
-        $('#top-menu').append(faq);
-      },
-    });
-  }
-</script>
-
-<style>
-  #logo {
-    width: 70px;
-    height: 70px;
-  }
-  #navbar {
-    background-color: var(--base-color);
-  }
-
-  a,
-  a:hover,
-  .nav-item a,
-  .nav-item a:hover {
-    color: #fff;
-  }
-
-  .navbar {
-    padding: 0 2rem 0 3rem;
-    position: fixed !important;
-    top:0;
-    z-index: 100;
-    width: 100vw;
-    /* margin-bottom: 100px;   
-    position:absolute; */
-    opacity: 80%;
-  }
-  nav a {
-    letter-spacing: 0.3rem;
-    font-size: 0.8rem;
-  }
-  nav .dropdown-menu {
-    left: -6rem;
-    top: 2.7rem;
-  }
-  nav .dropdown-menu a:hover {
-    color: #fff;
-    background-color: var(--primary-color);
-  }
-  nav li {
-    margin: 0 0.7rem;
-  }
-  @media (max-width: 767px) {
-    .navbar-nav li:nth-last-of-type(1) {
-      padding-bottom: 1rem;
-    }
-    nav .dropdown-menu {
-      left: 0rem;
-      top: 2.7rem;
-    }
-  }
-</style>
+<link rel="stylesheet" href="/css/navbar.css">

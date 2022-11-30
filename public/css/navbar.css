@@ -1,0 +1,27 @@
+
+.navbar .navbar-nav .nav-link {
+    font-family: "navbar-font";
+    color: #000000;
+    font-size: 1.5em;
+    text-transform: uppercase;
+    background-color: white;
+    margin-top:10px;
+}
+.navbar .navbar-nav .nav-link:hover{   
+    color: #808080;
+}
+ .navbar-nav .nav-link{
+    padding: 1.5em 1em;
+}
+
+
+.navbar img {
+    margin-top:10px;
+    width: 80px;
+    height: auto;
+}
+
+@font-face {
+    font-family: "navbar-font";
+    src: url("/fonts/Franklin Gothic Demi Cond Regular.ttf");
+}
