@@ -43,77 +43,6 @@
 
 <nav class="main-nav">
     <ul>
-        <li><a href="../home/" title="trang chu"><i class="fa fa-home" aria-hidden="true"></i></a></li>
-        <li>
-            <a href="../photo-editing.html">PHOTO EDITING<i class="icon-angle-down"></i></a>
-            <ul>
-                <li>
-                    <a class="smooth" href="http://photohome.com.vn/Photo-editing.htm">Photo Enhancement</a>
-                </li>
-                <li>
-                    <a class="smooth" href="http://photohome.com.vn/Day-dusk.htm">Day To Dusk</a>
-                </li>
-                <li>
-                    <a class="smooth" href="http://photohome.com.vn/Retouching.htm">Item Removal</a>
-                </li>
-                <li>
-                    <a class="smooth" href="http://photohome.com.vn/panorama-stitching.htm">Panorama Stitching</a>
-                </li>
-                <li>
-                    <a class="smooth" href="http://photohome.com.vn/Portrait-Retouching.htm">Portrait Retouching</a>
-                </li>
-                <li>
-                    <a class="smooth" href="http://photohome.com.vn/Clipping-path.htm">Clipping Path</a>
-                </li>
-            </ul>
-        </li>
-        <li>
-
-
-            <a href="http://photohome.com.vn/2dfloorplan.htm">FLOOR PLAN</a>
-
-
-
-
-
-
-
-
-
-            <ul>
-
-                <li>
-
-                    <a class="smooth" href="http://photohome.com.vn/2dfloorplan.htm">2D Black &amp; White</a>
-
-                </li>
-
-                <li>
-
-                    <a class="smooth" href="http://photohome.com.vn/2dfloorplan.htm">2D Full Color</a>
-
-                </li>
-
-                <li>
-
-                    <a class="smooth" href="http://photohome.com.vn/2dfloorplan.htm">2D Texture</a>
-
-                </li>
-
-                <li>
-
-                    <a class="smooth" href="http://photohome.com.vn/2dfloorplan.htm">3D Full Colour</a>
-
-                </li>
-
-                <li>
-
-                    <a class="smooth" href="http://photohome.com.vn/2dfloorplan.htm">Development Site Plan</a>
-
-                </li>
-
-            </ul>
-        </li>
     </ul>
 </nav>
 
@@ -127,21 +56,40 @@
             url: '/group',
             type: 'get',
             success: function (data) {
-                console.log(data)
                 $('.main-nav ul').empty();
                 $('.main-nav ul').append('<li><a href="/" title="trang chu"><i class="fa fa-home" aria-hidden="true"></i></a></li>')
-                data.groups.forEach(g => {
+                data.groups.forEach(async g => {
+                    let li = '';
+
                     if (g.subs.length > 0) {
-                        let li = ' <li><a href="/' + g.metatitle + '">' + g.name + '<i class="icon-angle-down"></i></a>';
-                        li += '<ul>';
-                           
-                        g.subs.forEach(s => {
-                            let link = g.metatitle+'/'+s.metatitle;
-                            li += '<li><a class="smooth" href="/services/' +link + '">' + s.name + '</a></li>';
+                        li = await ' <li><a href="/' + g.metatitle + '">' + g.name + '<i class="icon-angle-down"></i></a>';
+                        
+                            li += await '<ul>';
+                        await g.subs.forEach(async s => {
+                            let link = g.metatitle + '/' + s.metatitle;
+                            li += await '<li><a class="smooth" href="/services/' + link + '">' + s.name + '</a></li>';
                         })
-                        li += '</ul>'
+                        li += await '</ul>'
+
+                        li += await '</li>';
                         $('.main-nav ul').append(li);
                     }
+
+
+                    // if (g.subs.length > 0) {
+                    //     li = ' <li><a href="/' + g.metatitle + '">' + g.name + '<i class="icon-angle-down"></i></a>';
+
+                    //     li += '<ul>';
+                    //     g.subs.forEach(s => {
+                    //         let link = g.metatitle + '/' + s.metatitle;
+                    //         li += '<li><a class="smooth" href="/services/' + link + '">' + s.name + '</a></li>';
+                    //     })
+                    //     li += '</ul>';
+
+                    //     li += '</li>';
+
+                    // } 
+                    // $('.main-nav ul').append(li);
                 })
             }
         })
