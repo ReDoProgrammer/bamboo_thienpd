@@ -119,3 +119,31 @@
 
 
 <link rel="stylesheet" href="/css/navbar.css">
+
+<!-- đổ dữ liệu cho main nav -->
+<script>
+    $(document).ready(function () {
+        $.ajax({
+            url: '/group',
+            type: 'get',
+            success: function (data) {
+                console.log(data)
+                $('.main-nav ul').empty();
+                $('.main-nav ul').append('<li><a href="/" title="trang chu"><i class="fa fa-home" aria-hidden="true"></i></a></li>')
+                data.groups.forEach(g => {
+                    if (g.subs.length > 0) {
+                        let li = ' <li><a href="/' + g.metatitle + '">' + g.name + '<i class="icon-angle-down"></i></a>';
+                        li += '<ul>';
+                           
+                        g.subs.forEach(s => {
+                            let link = g.metatitle+'/'+s.metatitle;
+                            li += '<li><a class="smooth" href="/' +link + '">' + s.name + '</a></li>';
+                        })
+                        li += '</ul>'
+                        $('.main-nav ul').append(li);
+                    }
+                })
+            }
+        })
+    })
+</script>

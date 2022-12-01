@@ -14,7 +14,7 @@ router.get('/', (req, res) => {
     });
 })
 
-router.get('/category/:group/:sub_group', (req, res) => {
+router.get('/:group/:sub_group', (req, res) => {
     let { group, sub_group } = req.params;
     Group.findOne({ metatitle: group })
         .exec()
