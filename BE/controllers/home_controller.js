@@ -21,6 +21,21 @@ router.get('/how-it-works',(req,res)=>{
     });
 })
 
+
+
+router.get('/frequently-asked-questions',(req,res)=>{
+    res.render('home/frequently-asked-questions', {
+        layout: 'layouts/fe_layout'
+    });
+})
+
+
+router.get('/blog',(req,res)=>{
+    res.render('home/blog', {
+        layout: 'layouts/fe_layout'
+    });
+})
+
 router.get('/services/:group/:sub_group', (req, res) => {
     let { group, sub_group } = req.params;
     Group.findOne({ metatitle: group })
@@ -58,28 +73,7 @@ router.get('/services/:group/:sub_group', (req, res) => {
         })
 })
 
-router.get('/contact', (req, res) => {
-    Config.find({active:true})
-        .exec()
-        .then(config => {
-            if (!config) {
-                return res.status(404).json({
-                    msg: `Contact not found!`
-                })
-            }
 
-            return res.status(200).json({
-                msg: `Load contact info successfully`,
-                config: config
-            })
-        })
-        .catch(err => {
-            return res.status(500).json({
-                msg: `Can not get contact info. ${new Error(err.message)}`
-            })
-        })
-
-})
 
 
 router.get('/faq', (req, res) => {
@@ -135,22 +129,7 @@ router.get('/load-subs-by-group',async (req,res)=>{
     })
 })
 
-router.get('/pricing', (req, res) => {
-    Pricing.find()
-        .exec()
-        .then(sps => {
-            return res.status(200).json({
-                msg: `Load service packs list successfully!`,
-                sps: sps
-            })
-        })
-        .catch(err => {
-            return res.status(500).json({
-                msg: `Can not get service pack list. ${new Error(err.message)}`,
-                error: `${new Error(err.message)}`
-            })
-        })
-})
+
 
 router.get('/slider', (req, res) => {
     Slider.find({})
@@ -185,10 +164,6 @@ router.get('/sub-group-with-avatar', (req, res) => {
         })
 })
 
-router.get('/frequently-asked-questions',(req,res)=>{
-    res.render('FAQs/index', {
-        layout: 'layouts/fe_layout'
-    });
-})
+
 
 module.exports = router;

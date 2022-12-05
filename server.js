@@ -40,7 +40,8 @@ const account = require('./BE/controllers/account_controller');
 const homeController = require('./BE/controllers/home_controller');
 const messageController = require('./BE/controllers/message-controller');
 const postController = require('./BE/controllers/post_controller');
-const serviceController = require('./BE/controllers/service_controller');
+const pricingController = require('./BE/controllers/pricing_controller');
+const servicesController = require('./BE/controllers/services_controller');
 const trialOrderController = require('./BE/controllers/trial-order-controller');
 
 /** admin controllers */
@@ -60,7 +61,8 @@ app.use('/',homeController);
 app.use('/',account);
 app.use('/message',messageController);
 app.use('/post',postController);
-app.use('/service',serviceController);
+app.use('/pricing',pricingController);
+app.use('/services',servicesController);
 app.use('/trial-order',trialOrderController);
 
 

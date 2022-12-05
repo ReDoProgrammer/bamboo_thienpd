@@ -1,85 +1,122 @@
-<div class="container">
-  <h1 class="text-center yellow-color">
-    <strong>PRICING</strong>
-  </h1>
-  <div class="horizontal_slider mt-10">
-    <div class="slider_container" id="pricing">
-      <div class="item">
-        <img
-          src="https://i.pinimg.com/originals/83/12/8a/83128aeb3b471540b1d823c637a2541e.jpg"
-        />
-      </div>
-      <div class="item">
-        <img
-          src="https://i.pinimg.com/236x/50/be/74/50be74a2d34a4d12462a43fc7af023b6.jpg"
-        />
-      </div>
-      <div class="item">
-        <img
-          src="https://i.pinimg.com/236x/6a/88/a5/6a88a52040d8bff4e11a60af80c3c243.jpg"
-        />
-      </div>
-      <div class="item">
-        <img
-          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQgppaFDyQC0sD0Q3PEb6_Bw7ZIC63mdR91GBw-uMPERLWce3mjkfqM_8OdbFJndXSJTLxvjXjdeGA&usqp=CAU"
-        />
-      </div>
-      <div class="item">
-        <img
-          src="https://i.pinimg.com/474x/57/64/a7/5764a70152ea26d515a0f3a49422867b.jpg"
-        />
-      </div>
-    </div>
-  </div>
-</div>
+<div class="et_pb_section et_pb_section_7 et_section_regular">
 
-<script>
-  $(document).ready(function () {
-    $.ajax({
-      url: "/pricing",
-      type: "get",
-      success: function (data) {
-        if(data.sps.length > 0){
-          $("#pricing").empty();
-          data.sps.forEach((sp) => {
-            let item =  '<div class="item">'
-            item +=   '<img src="'+sp.thumbnail+'"/>'
-            item += '</div>'
-          $("#pricing").append(item);
-        });
-        }
-       
-       
-      },
-      error: function (err) {
-        console.log(err);
-      },
-    });
-  });
-</script>
 
-<style>
-  .horizontal_slider {
-    display: block;
-    width: 100%;
-    overflow-x: scroll;
-    padding: 20px;
-    box-sizing: border-box;
-    background-color: ;
-  }
-  .slider_container {
-    display: block;
-    white-space: nowrap;
-  }
-  .item {
-    display: inline-block;
-    margin-right: 10px;
-  }
-  .item img {
-    width: 265px !important;
-    height: 300px !important;
-    border-radius: 3%;
-    padding: 3px;
-    border: 1px solid #ddd;
-  }
-</style>
+
+
+    <div class="et_pb_row et_pb_row_9">
+        <div
+            class="et_pb_column et_pb_column_4_4 et_pb_column_19  et_pb_css_mix_blend_mode_passthrough et-last-child">
+
+
+            <div
+                class="et_pb_with_border et_pb_module et_pb_text et_pb_text_19  et_pb_text_align_center et_pb_bg_layout_light">
+
+
+                <div class="et_pb_text_inner">
+                    <h2>PHOTO EDITING PRICING</h2>
+                </div>
+            </div> <!-- .et_pb_text -->
+        </div> <!-- .et_pb_column -->
+
+
+    </div> <!-- .et_pb_row -->
+    <div class="et_pb_row et_pb_row_10 et_pb_equal_columns et_pb_gutters2">
+        <div
+            class="et_pb_with_border et_pb_column_1_3 et_pb_column et_pb_column_20  et_pb_css_mix_blend_mode_passthrough">
+
+
+            <div
+                class="et_pb_with_border et_pb_module et_pb_blurb et_pb_blurb_4  et_pb_text_align_left  et_pb_blurb_position_top et_pb_bg_layout_light">
+
+
+                <div class="et_pb_blurb_content">
+                    <div class="et_pb_main_blurb_image"><span class="et_pb_image_wrap"><span
+                                class="et-waypoint et_pb_animation_top et-pb-icon">j</span></span></div>
+                    <div class="et_pb_blurb_container">
+                        <h2 class="et_pb_module_header"><span>RETOUCHING</span></h2>
+                        <div class="et_pb_blurb_description">
+                            <h2><span style="color: #999999;"><em>FROM 1$</em></span></h2>
+                            <p>We offer photo retouching for real estate agents and homeowners who want
+                                their photos
+                                to look perfect! Our team of professionals will make sure that all the
+                                little details
+                                are taken care of so that customers feel confident in choosing the home.
+                            </p>
+                        </div>
+                    </div>
+                </div> <!-- .et_pb_blurb_content -->
+            </div> <!-- .et_pb_blurb -->
+            <div
+                class="et_pb_button_module_wrapper et_pb_button_3_wrapper et_pb_button_alignment_center et_pb_module ">
+                <a class="et_pb_button et_pb_button_3 et_pb_bg_layout_light"
+                    href="http://photoediting4u.com/price/">DETAIL</a>
+            </div>
+        </div> <!-- .et_pb_column -->
+        <div
+            class="et_pb_with_border et_pb_column_1_3 et_pb_column et_pb_column_21  et_pb_css_mix_blend_mode_passthrough">
+
+
+            <div
+                class="et_pb_with_border et_pb_module et_pb_blurb et_pb_blurb_5  et_pb_text_align_left  et_pb_blurb_position_top et_pb_bg_layout_light">
+
+
+                <div class="et_pb_blurb_content">
+                    <div class="et_pb_main_blurb_image"><span class="et_pb_image_wrap"><span
+                                class="et-waypoint et_pb_animation_top et-pb-icon">j</span></span></div>
+                    <div class="et_pb_blurb_container">
+                        <h2 class="et_pb_module_header"><span>DAY NIGHT CONVERSION</span></h2>
+                        <div class="et_pb_blurb_description">
+                            <h2><span style="color: #999999;"><em>FROM 5$</em></span></h2>
+                            <p>Showcase your real estate in a day-to-night conversion. If you are
+                                interested in
+                                selling your house, show it in both day and night environments.
+                                Potential buyers like
+                                to see how the light plays on home throughout the day.</p>
+                        </div>
+                    </div>
+                </div> <!-- .et_pb_blurb_content -->
+            </div> <!-- .et_pb_blurb -->
+            <div
+                class="et_pb_button_module_wrapper et_pb_button_4_wrapper et_pb_button_alignment_center et_pb_module ">
+                <a class="et_pb_button et_pb_button_4 et_pb_bg_layout_light"
+                    href="http://photoediting4u.com/price/">DETAIL</a>
+            </div>
+        </div> <!-- .et_pb_column -->
+        <div
+            class="et_pb_with_border et_pb_column_1_3 et_pb_column et_pb_column_22  et_pb_css_mix_blend_mode_passthrough et-last-child">
+
+
+            <div
+                class="et_pb_with_border et_pb_module et_pb_blurb et_pb_blurb_6  et_pb_text_align_left  et_pb_blurb_position_top et_pb_bg_layout_light">
+
+
+                <div class="et_pb_blurb_content">
+                    <div class="et_pb_main_blurb_image"><span class="et_pb_image_wrap"><span
+                                class="et-waypoint et_pb_animation_top et-pb-icon">j</span></span></div>
+                    <div class="et_pb_blurb_container">
+                        <h2 class="et_pb_module_header"><span>PHOTO EDITING</span></h2>
+                        <div class="et_pb_blurb_description">
+                            <h2><span style="color: #999999;"><em>FROM 1$</em></span></h2>
+                            <p>We provide real estate photo editing services for all needs, and whether
+                                it’s
+                                enhancing colors or removing unwanted objects in the background, we have
+                                you covered!
+                                That is why we provide a solution that brings professional photo editing
+                                services
+                                affordable to everyone.</p>
+                        </div>
+                    </div>
+                </div> <!-- .et_pb_blurb_content -->
+            </div> <!-- .et_pb_blurb -->
+            <div
+                class="et_pb_button_module_wrapper et_pb_button_5_wrapper et_pb_button_alignment_center et_pb_module ">
+                <a class="et_pb_button et_pb_button_5 et_pb_bg_layout_light"
+                    href="http://photoediting4u.com/price/">DETAIL</a>
+            </div>
+        </div> <!-- .et_pb_column -->
+
+
+    </div> <!-- .et_pb_row -->
+
+
+</div> <!-- .et_pb_section -->
