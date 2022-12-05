@@ -52,6 +52,9 @@
 <!-- đổ dữ liệu cho main nav -->
 <script>
     $(document).ready(function () {
+        $('.main-nav ul').empty();
+        $('.main-nav ul').append('<li><a href="/" title="trang chu"><i class="fa fa-home" aria-hidden="true"></i></a></li>');
+
         $.ajax({
             url: '/group',
             type: 'get',
@@ -64,12 +67,10 @@
                     let li = '';
                     if (g.subs.length > 0) {
                         li = ' <li><a href="/' + g.metatitle + '">' + g.name + '<i class="icon-angle-down"></i></a>';
-
                         li += '<ul>';
-                        g.subs.forEach(async s => {
-                            let link = g.metatitle + '/' + s.metatitle;
-                            li += '<li><a class="smooth" href="/services/' + link + '">' + s.name + '</a></li>';
-                        })
+                            g.subs.forEach(s=>{
+                                li += `<li><a class="smooth" href="/services/${g.metatitle}/${s.metatitle}">${s.name}</a></li>`;
+                            })
                         li += '</ul>'
                         li += '</li>';
                         $('.main-nav ul').append(li);

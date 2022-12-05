@@ -14,6 +14,13 @@ router.get('/', (req, res) => {
     });
 })
 
+
+router.get('/how-it-works',(req,res)=>{
+    res.render('home/how-it-works', {
+        layout: 'layouts/fe_layout'
+    });
+})
+
 router.get('/services/:group/:sub_group', (req, res) => {
     let { group, sub_group } = req.params;
     Group.findOne({ metatitle: group })
@@ -110,6 +117,22 @@ router.get('/group', (req, res) => {
                 msg: `Can not load groups list. Error: ${new Error(err.message)}`
             })
         })
+})
+
+router.get('/load-subs-by-group',async (req,res)=>{
+    let {group} = req.query;
+    await SubGroup.find({group:group})
+    .then(subs=>{
+        return res.status(200).json({
+            msg:`Load subs by group ${group} successfully`,
+            subs
+        })
+    })
+    .catch(err=>{
+        return res.status(500).json({
+            msg:`Can not get subs by group with error: ${err.message}`
+        })
+    })
 })
 
 router.get('/pricing', (req, res) => {
