@@ -43,7 +43,8 @@ router.get("/init", (req, res) => {
 
 router.get("/login", (req, res) => {
   res.render("account/login", {
-    layout: "layouts/fe_layout",
+    layout: "account/login",
+    title:"Administrator login"
   });
 });
 
@@ -92,7 +93,7 @@ router.get('/profile', authenticateToken, async (req, res) => {
     if (!user) {
       return res.status(401).json({
         msg: `Need login to access this module`,
-        url: '/admin/login'
+        url: '/admin/auth/login'
       })
     }
     return res.status(200).json({
