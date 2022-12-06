@@ -57,6 +57,8 @@ const adminSubGroupController = require('./BE/controllers/admin/sub_group_contro
 const adminTrialOrderController = require('./BE/controllers/admin/trial_order_controller');
 
 
+const adminGroupAPI = require('./BE/controllers/admin/group_api');
+
 app.use('/',homeController);
 app.use('/',account);
 app.use('/message',messageController);
@@ -72,7 +74,8 @@ app.use('/admin/category',adminCategoryController);
 app.use('/admin/config',adminConfigController);
 app.use('/admin',adminHomeController);
 app.use('/admin/faq',adminFAQController);
-app.use('/admin/group',adminGroupController);
+app.use('/admin/group',adminGroupAPI);
+app.use('/admin/services',adminGroupController);
 app.use('/admin/home',adminHomeController);
 app.use('/admin/post',adminPostController);
 app.use('/admin/pricing',adminServicePackController);

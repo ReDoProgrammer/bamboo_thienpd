@@ -11,16 +11,31 @@
         <span>Group</span>
     </a>
     <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-        <div class="bg-white py-2 collapse-inner rounded">
-            <h6 class="collapse-header">Custom Components:</h6>
-            <a class="collapse-item" href="buttons.html">Buttons</a>
-            <a class="collapse-item" href="cards.html">Cards</a>
+        <div class="bg-white py-2 collapse-inner rounded" id="sbServices">
+            
+            
         </div>
     </div>
 </li>
 
 <script>
     $(document).ready(function(){
-        
+        $.ajax({
+            url:'/admin/group/list',
+            type:'get',
+            headers: {
+                authorization: "Bearer " + getACCESS_TOKEN(),
+            },
+            success:function(data){
+                $('#sbServices').empty();
+                $('#sbServices').append('<h6 class="collapse-header">Services list</h6>');
+
+                data.groups.forEach(g=>{
+                    $('#sbServices').append(`<a class="collapse-item" href="/admin/services/${g.metatitle}">${g.name}</a>`);
+                })
+
+            
+            }
+        })
     })
 </script>

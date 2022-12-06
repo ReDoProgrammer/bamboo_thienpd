@@ -9,22 +9,6 @@ router.get('/', (req, res) => {
 })
 
 
-router.get('/list', authenticateToken, (req, res) => {
-    Group.find({})
-        .then(groups => {
-            return res.status(200).json({
-                msg: 'Load groups list successfully!',
-                groups: groups
-            })
-        })
-        .catch(err => {
-            return res.status(500).json({
-                msg: 'Can not load groups list',
-                error: new Error(err)
-            })
-        })
-})
-
 router.get('/detail',authenticateToken,(req,res)=>{
 
     Group.findById(req.query.id,(err,group)=>{
