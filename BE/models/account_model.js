@@ -15,7 +15,7 @@ const accountSchema = new Schema({
     },
     fullname:{
         type:String
-    }
+    }   
 });
 
 

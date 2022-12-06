@@ -1,3 +1,29 @@
-<footer>
-   
+<!-- Footer -->
+<footer class="sticky-footer bg-white">
+    <div class="container my-auto">
+        <div class="copyright text-center my-auto">
+            <span>Copyright &copy; Your Website 2020</span>
+        </div>
+    </div>
 </footer>
+<!-- End of Footer -->
+
+<script>
+    $(document).ready(function () {
+        let token = getACCESS_TOKEN();
+        $.ajax({
+            url: '/admin/auth/profile',
+            type: 'get',
+            headers: {
+                authorization: "Bearer " + token,
+            },
+            success: function (data) {
+                console.log(data)
+            },
+            error: function (request, status, error) {
+                console.log(request.responseJSON);
+                window.location.replace(getBaseUrl() +request.responseJSON.url);
+            }
+        })
+    })
+</script>
