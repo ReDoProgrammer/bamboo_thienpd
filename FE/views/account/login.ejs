@@ -44,7 +44,7 @@
                                     <form class="user">
                                         <div class="form-group">
                                             <input type="text" class="form-control form-control-user"
-                                                id="txtUser" aria-describedby="emailHelp"
+                                                id="txtUsername" aria-describedby="Username"
                                                 placeholder="Enter admin account...">
                                         </div>
                                         <div class="form-group">
@@ -86,11 +86,24 @@
 
     <!-- Custom scripts for all pages-->
     <script src="/admin/js/sb-admin-2.min.js"></script>
+    <script src="/js/common.js"></script>
 
     <script>
       $('#btnLogin').click(function(e){
+        console.log($('#txtUsername').val())
         e.preventDefault();
-        console.log(1);
+        $.ajax({
+          url:'/login',
+          type:'post',
+          data:{
+            username: $('#txtUsername').val(),
+            password:$('#txtPassword').val()
+          },
+          success:function(data){
+            localStorage.setItem('ACCESS_TOKEN',data.access_token);
+            window.location.replace(getBaseUrl() +data.url);
+          }
+        })
       })
     </script>
 

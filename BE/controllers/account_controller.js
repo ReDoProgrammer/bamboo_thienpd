@@ -5,6 +5,10 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const { authenticateToken } = require("../middlewares/authenticate");
 
+router.get('/check-token', authenticateToken, (req, res) => {
+ 
+})
+
 router.get("/init", (req, res) => {
   Account.countDocuments(async (err, count) => {
     if (err) {
@@ -43,18 +47,20 @@ router.get("/init", (req, res) => {
 
 router.get("/login", (req, res) => {
   res.render("account/login", {
-    layout: "layouts/fe_layout",
+    layout: "account/login",
   });
 });
 
 router.post("/login", (req, res) => {
-  const username = req.body.username;
+  const {username,password} = req.body;
+
+  console.log({username})
 
   Account.findOne({ username: username })
     .then((user) => {
-      if(user == null){
+      if (user == null) {
         return res.status(401).json({
-          msg:'Username is not exist!'
+          msg: 'Username is not exist!'
         });
       }
 
@@ -72,7 +78,8 @@ router.post("/login", (req, res) => {
           );
           return res.status(200).json({
             msg: "Login successfully!",
-            access_token: access_token,
+            access_token,
+            url:'/admin'
           });
         } else {
           return res.status(401).json({
@@ -87,47 +94,49 @@ router.post("/login", (req, res) => {
     });
 });
 
-router.put('/change-password',authenticateToken,(req,res)=>{
-    Account.findOne({username:'admin'},(err,acc)=>{
-      if(err){
-        console.log(new Error(err.message));
-        return;
-      }
-      let {current_password,new_password} = req.body;
+router.put('/change-password', authenticateToken, (req, res) => {
+  Account.findOne({ username: 'admin' }, (err, acc) => {
+    if (err) {
+      console.log(new Error(err.message));
+      return;
+    }
+    let { current_password, new_password } = req.body;
 
-      bcrypt.compare(current_password, acc.password, async function (err, usr) {
-        if (err) {
-          return res.status(500).json({
-            msg: "Check failed!",
-            error: new Error(err),
+    bcrypt.compare(current_password, acc.password, async function (err, usr) {
+      if (err) {
+        return res.status(500).json({
+          msg: "Check failed!",
+          error: new Error(err),
+        });
+      }
+      if (usr) {
+        const hashedPassword = await bcrypt.hash(new_password, 10);
+        Account.findOneAndUpdate({ username: 'admin' }, {
+          password: hashedPassword
+        }, { new: true }, async (err, acc) => {
+          if (err) {
+            return res.status(500).json({
+              msg: `Can not change password. ${new Error(err.message)}`
+            })
+          }
+          const access_token = await jwt.sign(
+            acc._id.toString(),
+            process.env.ACCESS_TOKEN_SECRET
+          );
+          return res.status(200).json({
+            msg: "Password has changed!",
+            access_token: access_token,
           });
-        }
-        if (usr) {
-          const hashedPassword = await bcrypt.hash(new_password, 10);
-          Account.findOneAndUpdate({username:'admin'},{
-            password: hashedPassword
-          },{new:true},async (err,acc)=>{
-            if(err){
-              return res.status(500).json({
-                msg:`Can not change password. ${new Error(err.message)}`
-              })
-            }
-            const access_token =await jwt.sign(
-              acc._id.toString(),
-              process.env.ACCESS_TOKEN_SECRET
-            );
-            return res.status(200).json({
-              msg: "Password has changed!",
-              access_token: access_token,
-            });
-          })
-        } else{
-          return res.status(403).json({
-            msg:`Current password not correct!`
-          })
-        }
-      });
-    })
+        })
+      } else {
+        return res.status(403).json({
+          msg: `Current password not correct!`
+        })
+      }
+    });
+  })
+
 })
+
 
 module.exports = router;

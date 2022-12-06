@@ -2,20 +2,20 @@
 <footer class="sticky-footer bg-white">
     <div class="container my-auto">
         <div class="copyright text-center my-auto">
-            <span>Copyright &copy; Your Website 2020</span>
+            <span>Copyright &copy; BambooPhoto 2022</span>
         </div>
     </div>
 </footer>
 <!-- End of Footer -->
 
 <script>
-    $(document).ready(function () {
-        let token = getACCESS_TOKEN();
+    $(document).ready(function(){
+        
         $.ajax({
-            url: '/admin/auth/profile',
-            type: 'get',
+            url:'/check-token',
+            type:'get',
             headers: {
-                authorization: "Bearer " + token,
+                authorization: "Bearer " + getACCESS_TOKEN(),
             },
             success: function (data) {
                 console.log(data)
