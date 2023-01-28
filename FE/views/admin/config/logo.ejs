@@ -1,0 +1,101 @@
+<div id="img_container" class="text-center">
+    <img src="/images/GUI/logo.png" id="logo"/>
+    <button class="button btn btn-sm btn-info" id="btnChangeLogo">
+        <i class="fa fa-camera" aria-hidden="true"></i>
+    </button>
+</div>
+
+<%-include('logo_form')-%>
+
+<!-- <script src="../../dist/axios/axios.min.js"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<script>
+    $('#btnChangeLogo').click(function(){
+        $('#modalLogo').modal();
+    })
+    $(document).ready(function () {
+        LoadLogo();
+    })
+
+    function LoadLogo(){
+        $.ajax({
+            url: "/admin/config/load-logo",
+            type: "get",
+            headers: {
+                Authorization: "Bamboo " + getACCESS_TOKEN(),
+            },
+            success: function (data) {
+               $('#logo').attr('src',data.logo.value);         
+
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                $('#logo').attr('src',"/images/GUI/logo.png");      
+                console.log(errorThrown.response.data.msg);        
+            },
+        });
+    }
+    $("#inpBanner").change(function () {
+        readURL(this, 'banner');
+
+        let banner = document.getElementById("inpBanner").files[0];
+        let formData = new FormData();
+        formData.append("banner", banner);
+        var contentType = {
+            headers: {
+                "content-type": "multipart/form-data",
+                authorization: "Bamboo " + getACCESS_TOKEN()
+            }
+        }
+        axios
+            .post("/admin/config/banner", formData, contentType
+            )
+            .then(function (data) {
+                if (data.status == 201) {
+                    alert(data.data.msg);
+
+                }
+            })
+            .catch(function (error) {
+                console.log(error.response);
+                alert(error.response.data.msg);
+            });
+    });
+
+
+
+
+    function readURL(input, preview) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $('#' + preview).attr('src', e.target.result);
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+</script>
+
+<style>
+    #logo {      
+        height: 200px;
+        width: 200px;
+    }
+
+    #img_container {
+        position: relative;
+        display: block;
+        margin: 0 auto;
+    }
+
+    #btnChangeLogo {
+        position: absolute;
+        bottom: 10px;
+        right: 550px;
+        opacity: 60%;
+    }
+    #btnChangeLogo:hover{
+        opacity: 100%;
+    }
+</style>

@@ -5,6 +5,7 @@ const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
 const BANNER_STORAGE = "/images/GUI/banner/";
+const LOGO_STORAGE = "/images/GUI/logo/";
 require("dotenv").config();
 
 var storage = multer.diskStorage({
@@ -18,7 +19,19 @@ var storage = multer.diskStorage({
         );
     },
 });
+var storage_logo = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, "./public/images/GUI/logo");
+    },
+    filename: (req, file, cb) => {
+        cb(
+            null,
+            file.fieldname + "-" + Date.now() + path.extname(file.originalname)
+        );
+    },
+});
 const upload = multer({ storage: storage }).single("banner");
+const uploadlogo = multer({ storage: storage_logo }).single("logo");
 
 
 
@@ -92,6 +105,88 @@ router.put('/', authenticateToken, (req, res) => {
             })
     })
 })
+
+
+router.get('/logo', (req, res) => {
+    res.render('admin/config/logo', {
+        name: 'Setting logo',
+        layout: 'layouts/admin_layout'
+    });
+})
+
+router.get('/load-logo', authenticateToken, (req, res) => {
+    LoadConfig('logo')
+    .then(logo=>{
+        return res.status(200).json({
+            msg:`Load logo successfully!`,
+            logo
+        })        
+    })
+    .catch(err=>{
+        return res.status(500).json({
+            msg:`Can not load logo with error: ${new Error(err.message)}`
+        })
+    })
+
+})
+
+router.post('/logo', authenticateToken, (req, res) => {
+    uploadlogo(req, res, async function (err) {
+        if (err instanceof multer.MulterError) {
+            console.log(`Lỗi upload logo  ${err.message}`);
+            return res.status(500).json({
+                msg: `upload banner failed with error: ${err.message}`,
+                error: err.message,
+            });
+        }
+        if (err) {
+            console.log(`Lỗi upload logo: ${err.message}`);
+            res.status(500).json({
+                msg: `Upload logo failed with error:${err.message}`,
+                error: err.message,
+            });
+        }
+
+        fs.copyFile.value = LOGO_STORAGE + req.file.filename;       
+
+        let cf = await Config.findOne({ key: 'logo' });
+
+        if (cf) {
+           UpdateConfig('logo', LOGO_STORAGE + req.file.filename)
+                .then(_ => {
+                    return res.status(201).json({
+                        msg: `Upload logo successfully!`
+                    })
+                })
+                .catch(err => {
+                    return res.status(500).json({
+                        msg: `Can not upload logo with error: ${err.message}`
+                    })
+                })
+        } else {
+            cf = new Config();
+            cf.key = 'logo';
+            cf.value = LOGO_STORAGE + req.file.filename;
+
+            CreateConfig('logo', LOGO_STORAGE + req.file.filename)
+                .then(_ => {
+                    return res.status(201).json({
+                        msg: `Upload logo successfully!`
+                    })
+                })
+                .catch(err => {
+                    return res.status(500).json({
+                        msg: `Can not upload logo with error: ${err.message}`
+                    })
+                })
+        }
+
+    });
+})
+
+
+
+
 
 router.get('/banner', (req, res) => {
     res.render('admin/config/banner', {
