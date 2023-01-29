@@ -165,12 +165,27 @@ router.get('/sub-group-with-avatar', (req, res) => {
 })
 
 
-router.get('/load-logo',async (req,res)=>{
+router.get('/load-logo',(req,res)=>{
     LoadConfig('logo')
     .then(logo=>{
         return res.status(200).json({
             msg:`Load logo successfully!`,
             logo
+        })        
+    })
+    .catch(err=>{
+        return res.status(err.code).json({
+            msg: err.msg
+        })
+    })
+})
+
+router.get('/load-what-we-do',(req,res)=>{
+    Promise.all([LoadConfig('wwd_thumbnail'),LoadConfig('wwd_content')])   
+    .then(cfs=>{
+        return res.status(200).json({
+            msg:`Load wwd content successfully!`,
+            cfs
         })        
     })
     .catch(err=>{

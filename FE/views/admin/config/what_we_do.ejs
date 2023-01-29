@@ -1,0 +1,46 @@
+<div class="row">
+    <div class="col-sm-6 text-center">
+        <div id="img_container">
+            <img src="/images/GUI/no_image.png" id="wwd-thumbnail" class="img-thumbnail img-fluid" />
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <p id="wwd-content">container</p>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12 text-right">
+        <button class="btn btn-primary ml-2 mt-2" id="btnChangeContent">
+            Change
+        </button>
+    </div>
+</div>
+
+<%-include('what_we_do_form')-%>
+
+    <script>
+        $('#btnChangeContent').click(function () {
+            $('#modalWhatWeDo').modal();
+        })
+        $(document).ready(function () {
+            LoadWhatWeDo();
+        })
+
+        function LoadWhatWeDo() {
+            $.ajax({
+                url: "/admin/config/load-what-we-do",
+                type: "get",
+                headers: {
+                    Authorization: "Bamboo " + getACCESS_TOKEN(),
+                },
+                success: function (data) {                  
+                   $('#wwd-thumbnail').attr('src',data.cfs[0].value)
+                    $('#wwd-content').html(data.cfs[1].value);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    $('#wwd-thumbnail').attr('src',"/images/GUI/no_image.png")
+                    $('#wwd-content').html('empty content');
+                }
+            });
+        }
+    </script>

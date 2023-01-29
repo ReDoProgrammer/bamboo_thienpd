@@ -6,6 +6,7 @@ const path = require("path");
 const fs = require("fs");
 const BANNER_STORAGE = "/images/GUI/banner/";
 const LOGO_STORAGE = "/images/GUI/logo/";
+const WWD_STORAGE = "/images/GUI/wwd/";
 require("dotenv").config();
 
 var storage = multer.diskStorage({
@@ -30,8 +31,20 @@ var storage_logo = multer.diskStorage({
         );
     },
 });
+var storage_wwd = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, "./public/images/GUI/wwd");
+    },
+    filename: (req, file, cb) => {
+        cb(
+            null,
+            file.fieldname + "-" + Date.now() + path.extname(file.originalname)
+        );
+    },
+});
 const upload = multer({ storage: storage }).single("banner");
 const uploadlogo = multer({ storage: storage_logo }).single("logo");
+const uploadwwd = multer({ storage: storage_wwd }).single("thumbnail");
 
 
 
@@ -116,17 +129,17 @@ router.get('/logo', (req, res) => {
 
 router.get('/load-logo', authenticateToken, (req, res) => {
     LoadConfig('logo')
-    .then(logo=>{
-        return res.status(200).json({
-            msg:`Load logo successfully!`,
-            logo
-        })        
-    })
-    .catch(err=>{
-        return res.status(500).json({
-            msg:`Can not load logo with error: ${new Error(err.message)}`
+        .then(logo => {
+            return res.status(200).json({
+                msg: `Load logo successfully!`,
+                logo
+            })
         })
-    })
+        .catch(err => {
+            return res.status(500).json({
+                msg: `Can not load logo with error: ${new Error(err.message)}`
+            })
+        })
 
 })
 
@@ -147,12 +160,12 @@ router.post('/logo', authenticateToken, (req, res) => {
             });
         }
 
-        fs.copyFile.value = LOGO_STORAGE + req.file.filename;       
+        fs.copyFile.value = LOGO_STORAGE + req.file.filename;
 
         let cf = await Config.findOne({ key: 'logo' });
 
         if (cf) {
-           UpdateConfig('logo', LOGO_STORAGE + req.file.filename)
+            UpdateConfig('logo', LOGO_STORAGE + req.file.filename)
                 .then(_ => {
                     return res.status(201).json({
                         msg: `Upload logo successfully!`
@@ -196,18 +209,18 @@ router.get('/banner', (req, res) => {
 })
 
 router.get('/load-banner', authenticateToken, (req, res) => {
-    Promise.all([LoadConfig('banner'),LoadConfig('banner_title'),LoadConfig('banner_description')])
-    .then(cfs=>{
-        return res.status(200).json({
-            msg:`Load banner information successfully!`,
-            cfs
-        })        
-    })
-    .catch(err=>{
-        return res.status(err.code).json({
-            msg:err.msg
+    Promise.all([LoadConfig('banner'), LoadConfig('banner_title'), LoadConfig('banner_description')])
+        .then(cfs => {
+            return res.status(200).json({
+                msg: `Load banner information successfully!`,
+                cfs
+            })
         })
-    })
+        .catch(err => {
+            return res.status(err.code).json({
+                msg: err.msg
+            })
+        })
 
 })
 
@@ -343,6 +356,81 @@ router.get('/detail', authenticateToken, (req, res) => {
 })
 
 
+router.get('/what-we-do', (req, res) => {
+    res.render('admin/config/what_we_do', {
+        name: 'Config what we do content',
+        layout: 'layouts/admin_layout'
+    });
+})
+
+router.post('/what-we-do', authenticateToken, (req, res) => {
+    uploadwwd(req, res, async function (err) {
+        if (err instanceof multer.MulterError) {
+            console.log(`Lỗi upload what-we-do  ${err.message}`);
+            return res.status(500).json({
+                msg: `upload what-we-do failed with error: ${err.message}`,
+                error: err.message,
+            });
+        }
+        if (err) {
+            console.log(`Lỗi upload what-we-do: ${err.message}`);
+            res.status(500).json({
+                msg: `Upload what-we-do failed with error:${err.message}`,
+                error: err.message,
+            });
+        }
+
+        fs.copyFile.value = WWD_STORAGE + req.file.filename;
+
+        let { content } = req.body;
+        let cf = await Config.findOne({ key: 'wwd_thumbnail' });
+
+        if (cf) {
+            Promise.all([UpdateConfig('wwd_thumbnail', WWD_STORAGE + req.file.filename), UpdateConfig('wwd_content', content)])
+
+                .then(_ => {
+                    return res.status(201).json({
+                        msg: `Upload what we do successfully!`
+                    })
+                })
+                .catch(err => {
+                    return res.status(500).json({
+                        msg: `Can not upload what we do with error: ${err.message}`
+                    })
+                })
+        } else {
+            Promise.all([CreateConfig('wwd_thumbnail', WWD_STORAGE + req.file.filename), CreateConfig('wwd_content', content)])
+                .then(_ => {
+                    return res.status(201).json({
+                        msg: `Create what-we-do content successfully!`
+                    })
+                })
+                .catch(err => {
+                    return res.status(500).json({
+                        msg: `Can not create what-we-do content with error: ${err.message}`
+                    })
+                })
+        }
+
+    });
+})
+
+router.get('/load-what-we-do', authenticateToken, (req, res) => {
+    Promise.all([LoadConfig('wwd_thumbnail'), LoadConfig('wwd_content')])
+        .then(cfs => {
+            return res.status(200).json({
+                msg: `Load what we do content successfully!`,
+                cfs
+            })
+        })
+        .catch(err => {
+            return res.status(err.code).json({
+                msg: err.msg
+            })
+        })
+
+})
+
 module.exports = router;
 
 const CreateConfig = (key, value) => {
@@ -384,7 +472,7 @@ const LoadConfig = (key) => {
         let cf = await Config.findOne({ key });
         if (!cf)
             return reject({
-                code:404,
+                code: 404,
                 error: new Error(`Config not found!`)
             })
         return resolve(cf);
