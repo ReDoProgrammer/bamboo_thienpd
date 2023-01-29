@@ -165,5 +165,49 @@ router.get('/sub-group-with-avatar', (req, res) => {
 })
 
 
+router.get('/load-logo',async (req,res)=>{
+    LoadConfig('logo')
+    .then(logo=>{
+        return res.status(200).json({
+            msg:`Load logo successfully!`,
+            logo
+        })        
+    })
+    .catch(err=>{
+        return res.status(err.code).json({
+            msg: err.msg
+        })
+    })
+})
+
+router.get('/load-banner',async (req,res)=>{
+
+    Promise.all([LoadConfig('banner'),LoadConfig('banner_title'),LoadConfig('banner_description')])   
+    .then(cfs=>{
+        return res.status(200).json({
+            msg:`Load banner successfully!`,
+            cfs
+        })        
+    })
+    .catch(err=>{
+        return res.status(err.code).json({
+            msg: err.msg
+        })
+    })
+})
+
 
 module.exports = router;
+
+const LoadConfig = key=>{
+    return new Promise(async (resolve,reject)=>{
+       let cf = await Config.findOne({key:key});
+       if(!cf){
+        return reject({
+            code:404,
+            msg:`Config not found!`
+        })        
+       }
+       return resolve(cf);
+    })
+}
