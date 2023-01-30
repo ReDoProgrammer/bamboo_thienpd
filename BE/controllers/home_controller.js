@@ -212,6 +212,21 @@ router.get('/load-banner',async (req,res)=>{
 })
 
 
+router.get('/load-services-background',(req,res)=>{
+    LoadConfig('services_background')
+    .then(bg=>{
+        return res.status(200).json({
+            msg:`Load services background successfully!`,
+            bg
+        })        
+    })
+    .catch(err=>{
+        return res.status(err.code).json({
+            msg: err.msg
+        })
+    })
+})
+
 module.exports = router;
 
 const LoadConfig = key=>{

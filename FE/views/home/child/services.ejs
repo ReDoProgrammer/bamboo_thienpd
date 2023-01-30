@@ -49,3 +49,23 @@
         </div> <!-- .et_pb_column -->
     </div> <!-- .et_pb_row -->
 </div> <!-- .et_pb_section -->
+
+
+<script>
+    $(document).ready(function () {
+        LoadServicesBackground();
+    })
+
+    function LoadServicesBackground() {
+        $.ajax({
+            url: '/load-services-background',
+            type: 'get',
+            success: function (data) {                                
+                 $('.et_pb_section_2').css('background-image', 'url(' + data.bg.value + ')');
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                $('.et_pb_section_2').css('background-image', 'url(' + "/uploads/2021/07/PhotoeditingDSC01560.jpg" + ')');               
+            }
+        })
+    }
+</script>

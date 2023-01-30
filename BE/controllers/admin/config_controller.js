@@ -7,6 +7,7 @@ const fs = require("fs");
 const BANNER_STORAGE = "/images/GUI/banner/";
 const LOGO_STORAGE = "/images/GUI/logo/";
 const WWD_STORAGE = "/images/GUI/wwd/";
+const SERVICES_BACKGROUND_STORAGE = "/images/GUI/services_background/";
 require("dotenv").config();
 
 var storage = multer.diskStorage({
@@ -42,9 +43,21 @@ var storage_wwd = multer.diskStorage({
         );
     },
 });
+var storage_services_background = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, "./public/images/GUI/services_background");
+    },
+    filename: (req, file, cb) => {
+        cb(
+            null,
+            file.fieldname + "-" + Date.now() + path.extname(file.originalname)
+        );
+    },
+});
 const upload = multer({ storage: storage }).single("banner");
 const uploadlogo = multer({ storage: storage_logo }).single("logo");
 const uploadwwd = multer({ storage: storage_wwd }).single("thumbnail");
+const uploadservicesbackground = multer({ storage: storage_services_background }).single("background");
 
 
 
@@ -430,6 +443,87 @@ router.get('/load-what-we-do', authenticateToken, (req, res) => {
         })
 
 })
+
+
+router.get('/services-background',(req,res)=>{
+    res.render('admin/config/services-background', {
+        name: 'Config Services background',
+        layout: 'layouts/admin_layout'
+    });
+})
+
+
+router.post('/services-background', authenticateToken, (req, res) => {
+    uploadservicesbackground(req, res, async function (err) {
+        if (err instanceof multer.MulterError) {
+            console.log(`Lỗi upload services background  ${err.message}`);
+            return res.status(500).json({
+                msg: `upload services background failed with error: ${err.message}`,
+                error: err.message,
+            });
+        }
+        if (err) {
+            console.log(`Lỗi upload services background: ${err.message}`);
+            res.status(500).json({
+                msg: `Upload services background failed with error:${err.message}`,
+                error: err.message,
+            });
+        }
+
+        fs.copyFile.value = SERVICES_BACKGROUND_STORAGE + req.file.filename;
+
+        let cf = await Config.findOne({ key: 'services_background' });
+
+        if (cf) {
+            UpdateConfig('services_background', SERVICES_BACKGROUND_STORAGE + req.file.filename)
+                .then(_ => {
+                    return res.status(201).json({
+                        msg: `Upload SERVICES_BACKGROUND_STORAGE successfully!`
+                    })
+                })
+                .catch(err => {
+                    return res.status(500).json({
+                        msg: `Can not upload SERVICES_BACKGROUND_STORAGE with error: ${err.message}`
+                    })
+                })
+        } else {
+            cf = new Config();
+            cf.key = 'services_background';
+            cf.value = SERVICES_BACKGROUND_STORAGE + req.file.filename;
+
+            CreateConfig('services_background', SERVICES_BACKGROUND_STORAGE + req.file.filename)
+                .then(_ => {
+                    return res.status(201).json({
+                        msg: `Upload SERVICES_BACKGROUND_STORAGE successfully!`
+                    })
+                })
+                .catch(err => {
+                    return res.status(500).json({
+                        msg: `Can not upload SERVICES_BACKGROUND_STORAGE with error: ${err.message}`
+                    })
+                })
+        }
+
+    });
+})
+router.get('/load-services-background', authenticateToken, (req, res) => {
+   LoadConfig('services_background')
+        .then(bg => {
+            return res.status(200).json({
+                msg: `Load services background successfully!`,
+                bg
+            })
+        })
+        .catch(err => {
+            return res.status(err.code).json({
+                msg: err.msg
+            })
+        })
+
+})
+
+
+
 
 module.exports = router;
 
