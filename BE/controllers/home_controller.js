@@ -227,6 +227,21 @@ router.get('/load-services-background',(req,res)=>{
     })
 })
 
+router.get('/load-how-can-we-help',(req,res)=>{
+    Promise.all([LoadConfig('hcwh_img_1st'),LoadConfig('hcwh_img_2nd'),LoadConfig('hcwh_img_3rd'),LoadConfig('hcwh_description')])
+    .then(content=>{
+        return res.status(200).json({
+            msg:`Load how-can-we-help content successfully!`,
+            content
+        })
+    })
+    .catch(err=>{
+        return res.status(err.code).json({
+            msg:err.msg
+        })
+    })
+})
+
 module.exports = router;
 
 const LoadConfig = key=>{
@@ -235,7 +250,7 @@ const LoadConfig = key=>{
        if(!cf){
         return reject({
             code:404,
-            msg:`Config not found!`
+            msg:`Config ${key} not found!`
         })        
        }
        return resolve(cf);

@@ -1,0 +1,129 @@
+<div class="modal " tabindex="-1" role="dialog" id="modalContent">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Update content</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="formPost" method="post" enctype="multipart/form-data" action="/admin/config/how-can-we-help">
+          <div class="row">
+            <!-- 1st -->
+            <div class="mt-2 col-sm-4">
+              <input type='file' id="inp1st" />
+              <img id="img1st" src="../../images/GUI/no_image.png" class="img-thumbnail mt-2" />
+            </div>
+            <!-- end 1st -->
+
+            <!-- 2nd -->
+            <div class="mt-2 col-sm-4">
+              <input type='file' id="inp2nd" />
+              <img id="img2nd" src="../../images/GUI/no_image.png" class="img-thumbnail mt-2" />
+            </div>
+            <!-- end 2nd -->
+            <!-- 3rd -->
+            <div class="mt-2 col-sm-4">
+              <input type='file' id="inp3rd" />
+              <img id="img3rd" src="../../images/GUI/no_image.png" class="img-thumbnail mt-2" />
+            </div>
+            <!-- end 3rd -->
+
+            <textarea class="form-control mt-2" id="txaDescription" rows="3" placeholder="Description"></textarea>
+          </div>
+      </div>
+      <label id="group_error_msg" class="text-danger font-weight-bold mt-2"></label>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="btnSaveGroup" type="submit">
+          <i class="fa fa-floppy-o pr-2" aria-hidden="true"></i>
+          Save changes
+        </button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          Close
+        </button>
+      </div>
+      </form>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- <script src="../../dist/axios/axios.min.js"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<script>
+  $("#btnSaveGroup").on("click", function (e) {
+
+    let f1st = document.getElementById("inp1st").files[0];
+    let f2nd = document.getElementById("inp2nd").files[0];
+    let f3rd = document.getElementById("inp3rd").files[0];
+
+    let description = $('#txaDescription').val();
+
+    let fData = new FormData();
+    fData.append("img_1st", f1st);
+    fData.append("img_2nd", f2nd);
+    fData.append("img_3rd", f3rd);
+    fData.append("description", description);
+
+    var contentType = {
+      headers: {
+        "content-type": "multipart/form-data",
+        authorization: "BamBoo " + getACCESS_TOKEN()
+      }
+    }
+    axios
+      .post("/admin/config/how-can-we-help", fData, contentType
+      )
+      .then(function (data) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Successfully!',
+          text: data.msg
+        });
+        $('#modalContent').modal('hide');
+      })
+      .catch(function (error) {
+        console.log(error.response);
+        alert(error.response.data.msg);
+      });
+
+  });
+
+
+
+
+
+
+  $("#inp1st").change(function () {
+    readURL(this, 'img1st');
+  });
+  $("#inp2nd").change(function () {
+    readURL(this, 'img2nd');
+  });
+  $("#inp3rd").change(function () {
+    readURL(this, 'img3rd');
+  });
+
+
+  function readURL(input, preview) {
+    if (input.files && input.files[0]) {
+      var reader = new FileReader();
+      reader.onload = function (e) {
+        $('#' + preview).attr('src', e.target.result);
+      }
+      reader.readAsDataURL(input.files[0]);
+    }
+  }
+
+
+</script>
+
+<style>
+  .img-thumbnail {
+    width: 300px !important;
+    height: 188px !important;
+  }
+</style>

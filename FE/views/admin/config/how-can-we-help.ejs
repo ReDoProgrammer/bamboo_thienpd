@@ -1,0 +1,67 @@
+<div class="row">
+    <div class="col-sm-4">
+        <label class="text-info font-weight-bold">Image 1</label>
+        <div>
+            <img src="/images/GUI/no_image.png" alt="" class="img-thumbnail img-fluid" id="img_1st">
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <label class="text-info font-weight-bold">Image 2</label>
+        <div>
+            <img src="/images/GUI/no_image.png" alt="" class="img-thumbnail img-fluid" id="img_2nd">
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <label class="text-info font-weight-bold">Image 3</label>
+        <div>
+            <img src="/images/GUI/no_image.png" alt="" class="img-thumbnail img-fluid" id="img_3rd">
+        </div>
+    </div>
+</div>
+<hr>
+<div class="row mt-2">
+    <div class="col-sm-12">
+        <p id="pContent">empty content description</p>
+    </div>
+</div>
+<hr>
+<div class="row mt-2">
+    <div class="col-sm-12 text-right">
+        <button class="btn btn-primary" id="btnChangeContent">
+            Change content
+        </button>
+    </div>
+</div>
+
+<%-include('hcwh_form')-%>
+
+    <script>
+        $(document).ready(function () {
+            LoadContent();
+        })
+        $('#btnChangeContent').click(function () {
+            $('#modalContent').modal();
+        })
+
+        function LoadContent() {
+            $.ajax({
+                url: '/admin/config/load-how-can-we-help',
+                type: 'get',
+                headers: {
+                    Authorization: "Bamboo " + getACCESS_TOKEN()
+                },
+                success: function (data) {
+                    $('#pContent').html(data.content[0].value);
+                    $('#img_1st').attr('src',data.content[1].value);
+                    $('#img_2nd').attr('src',data.content[2].value);
+                    $('#img_3rd').attr('src',data.content[3].value);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    $('#pContent').html('Empty content');
+                    $('#img_1st').attr('src',"/images/GUI/no_image.png");
+                    $('#img_2nd').attr('src',"/images/GUI/no_image.png");
+                    $('#img_3rd').attr('src',"/images/GUI/no_image.png");
+                }
+            })
+        }
+    </script>

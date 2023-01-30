@@ -4,11 +4,16 @@ const Config = require('../../models/config_model');
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
+const sharp = require('sharp');
 const BANNER_STORAGE = "/images/GUI/banner/";
 const LOGO_STORAGE = "/images/GUI/logo/";
 const WWD_STORAGE = "/images/GUI/wwd/";
 const SERVICES_BACKGROUND_STORAGE = "/images/GUI/services_background/";
+const HCWH_STORAGE = "/images/GUI/how_can_we_help/";
 require("dotenv").config();
+
+
+
 
 var storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -54,10 +59,24 @@ var storage_services_background = multer.diskStorage({
         );
     },
 });
+
+const storage_hcwh = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, './public/images/GUI/how_can_we_help')
+    },
+    filename: function (req, file, cb) {
+        cb(null, new Date().getTime() + `_${file.originalname}`)
+    }
+})
+
+
 const upload = multer({ storage: storage }).single("banner");
 const uploadlogo = multer({ storage: storage_logo }).single("logo");
 const uploadwwd = multer({ storage: storage_wwd }).single("thumbnail");
 const uploadservicesbackground = multer({ storage: storage_services_background }).single("background");
+
+const uploadhcwh = multer({ storage: storage_hcwh })
+const uploadMultiple = uploadhcwh.fields([{ name: 'img_1st', maxCount: 1 }, { name: 'img_2nd', maxCount: 1 }, { name: 'img_3rd', maxCount: 1 }]);
 
 
 
@@ -445,7 +464,7 @@ router.get('/load-what-we-do', authenticateToken, (req, res) => {
 })
 
 
-router.get('/services-background',(req,res)=>{
+router.get('/services-background', (req, res) => {
     res.render('admin/config/services-background', {
         name: 'Config Services background',
         layout: 'layouts/admin_layout'
@@ -507,7 +526,7 @@ router.post('/services-background', authenticateToken, (req, res) => {
     });
 })
 router.get('/load-services-background', authenticateToken, (req, res) => {
-   LoadConfig('services_background')
+    LoadConfig('services_background')
         .then(bg => {
             return res.status(200).json({
                 msg: `Load services background successfully!`,
@@ -523,6 +542,83 @@ router.get('/load-services-background', authenticateToken, (req, res) => {
 })
 
 
+router.get('/how-can-we-help', (req, res) => {
+    res.render('admin/config/how-can-we-help', {
+        name: 'Config how can we help',
+        layout: 'layouts/admin_layout'
+    });
+})
+
+router.post('/how-can-we-help', authenticateToken, (req, res) => {
+
+    uploadMultiple(req, res, async (err) => {
+        if (err) {
+            return res.status(500).json({
+                msg: `${new Error(err.message)}`
+            });
+        }
+
+        //reduce image before & image after to thumbnail
+        Promise.all([
+            ReduceImageSize(req.files.img_1st[0]),
+            ReduceImageSize(req.files.img_2nd[0]),
+            ReduceImageSize(req.files.img_3rd[0])
+        ])
+            .then(async fileNames => {
+                let { description } = req.body;
+                let chk = await Config.findOne({key:'hcwh_description'});
+                console.log({fileNames,chk});
+                if(chk !==null){
+                    Promise.all([UpdateConfig("hcwh_description",description),UpdateConfig("hcwh_img_1st",HCWH_STORAGE+fileNames[0]),UpdateConfig("hcwh_img_2nd",HCWH_STORAGE+fileNames[1]),UpdateConfig("hcwh_img_3rd",HCWH_STORAGE+fileNames[2])])
+                    .then(_=>{
+                        return res.status(201).json({
+                            msg:`Change how-can-we-help content successfully!`
+                        })
+                    })
+                    .catch(err=>{
+                        return res.status(500).json({
+                            msg:`Can not change how-can-we-help content with error: ${new Error(err.message)}`
+                        })
+                    })
+                }else{
+                    console.log(0);
+                    Promise.all([CreateConfig("hcwh_description",description),CreateConfig("hcwh_img_1st",HCWH_STORAGE+fileNames[0]),CreateConfig("hcwh_img_2nd",HCWH_STORAGE+fileNames[1]),CreateConfig("hcwh_img_3rd",HCWH_STORAGE+fileNames[2])])
+                    .then(_=>{
+                        return res.status(201).json({
+                            msg:`Change how-can-we-help content successfully!`
+                        })
+                    })
+                    .catch(err=>{
+                        return res.status(500).json({
+                            msg:`Can not change how-can-we-help content with error: ${err}`
+                        })
+                    })
+                }
+               
+            })
+            .catch(err => {
+                return res.status(500).json({
+                    msg:`Can not change how-can-we-help content with error: ${new Error(err)}`
+                })
+            })
+    });
+})
+
+
+router.get('/load-how-can-we-help',authenticateToken,(req,res)=>{
+    Promise.all([LoadConfig('hcwh_description'),LoadConfig('hcwh_img_1st'),LoadConfig('hcwh_img_2nd'),LoadConfig('hcwh_img_3rd')])
+    .then(content=>{
+        return res.status(200).json({
+            msg:`Load how-can-we-help content successfully!`,
+            content
+        })
+    })
+    .catch(err=>{
+        return res.status(err.code).json({
+            msg:err.msg
+        })
+    })
+})
 
 
 module.exports = router;
@@ -570,5 +666,29 @@ const LoadConfig = (key) => {
                 error: new Error(`Config not found!`)
             })
         return resolve(cf);
+    })
+}
+
+const ReduceImageSize = (file) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let fileName = "thumbnail_" + new Date().getTime() + file.originalname;
+            fs.access("./public/images/GUI/how_can_we_help", (err) => {
+                if (err) {
+                    fs.mkdirSync("./public/images/GUI/how_can_we_help");
+                }
+            });
+            await sharp(file.path)
+                .resize({
+                    width: 200,
+                    height: 135,
+                })
+                .toFile(
+                    "./public/images/GUI/how_can_we_help/" + fileName
+                );
+            return resolve(fileName);
+        } catch (err) {
+            return reject(new Error(err.message));
+        }
     })
 }
