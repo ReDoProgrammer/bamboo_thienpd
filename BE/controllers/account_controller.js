@@ -5,8 +5,15 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const { authenticateToken } = require("../middlewares/authenticate");
 
-router.get('/check-token', authenticateToken, (req, res) => {
- 
+router.get('/check-token', authenticateToken, async (req, res) => {
+  
+    var account = await Account.findById(req.user);
+    if(account){
+      return res.status(200).json({
+        msg:`Get account info successfully!`,
+        account
+      })
+    }
 })
 
 router.get("/init", (req, res) => {
@@ -23,7 +30,7 @@ router.get("/init", (req, res) => {
       });
     }
     const hashedPassword = await bcrypt.hash("admin", 10);
-    var root = await new Account({
+    var root = new Account({
       username: "admin",
       password: hashedPassword,
       fullname: "Administrator",

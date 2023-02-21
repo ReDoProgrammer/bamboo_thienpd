@@ -8,5 +8,16 @@ router.get('/',(req,res)=>{
     });
 })
 
+router.get('/login',(req,res)=>{
+    res.render('admin/home/login',{
+        name:'Login',
+        layout:'admin/home/login'
+    });
+})
+
+router.get('/check-token',authenticateToken,async (req,res)=>{
+    console.log(req)
+})
+
 
 module.exports = router;

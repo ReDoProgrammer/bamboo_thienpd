@@ -10,7 +10,10 @@
 
 <script>
     $(document).ready(function(){
-        
+        GetProfile();
+    })
+
+    function GetProfile(){
         $.ajax({
             url:'/check-token',
             type:'get',
@@ -19,11 +22,13 @@
             },
             success: function (data) {
                 console.log(data)
+                $('#profileName').text(data.account.fullname);
             },
             error: function (request, status, error) {
-                console.log(request.responseJSON);
+                // console.log(request.responseJSON);
+                console.log(0);
                 window.location.replace(getBaseUrl() +request.responseJSON.url);
             }
         })
-    })
+    }
 </script>
