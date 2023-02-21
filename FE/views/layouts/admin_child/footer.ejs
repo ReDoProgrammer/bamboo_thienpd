@@ -20,8 +20,7 @@
             headers: {
                 authorization: "Bearer " + getACCESS_TOKEN(),
             },
-            success: function (data) {
-                console.log(data)
+            success: function (data) {              
                 $('#profileName').text(data.account.fullname);
             },
             error: function (request, status, error) {

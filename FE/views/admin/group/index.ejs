@@ -26,38 +26,18 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">Add or update a group</h5>
-        <button
-          type="button"
-          class="close"
-          data-dismiss="modal"
-          aria-label="Close"
-        >
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-        <input
-          type="text"
-          name="name"
-          id="name"
-          class="form-control"
-          placeholder="Group name"
-          required
-        />
-        <input
-          type="text"
-          name="metatitle"
-          id="metatitle"
-          class="form-control mt-2"
-          placeholder="Meta title"
-        />
-        <div>                       
-          <input type="number" id="order" min="1" placeholder="order" data-bind="value:replyNumber" class="form-control mt-2"/>
-      </div>
-        <label
-          id="group_error_msg"
-          class="text-danger font-weight-bold mt-2"
-        ></label>
+        <input type="text" name="name" id="name" class="form-control" placeholder="Group name" required />
+        <input type="text" name="metatitle" id="metatitle" class="form-control mt-2" placeholder="Meta title" />
+        <div>
+          <input type="number" id="order" min="1" placeholder="order" data-bind="value:replyNumber"
+            class="form-control mt-2" />
+        </div>
+        <label id="group_error_msg" class="text-danger font-weight-bold mt-2"></label>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" id="btnSaveGroup">
@@ -109,7 +89,11 @@
           order
         },
         success: function (data) {
-          alert(data.msg);
+          Swal.fire({
+            icon: 'success',
+            title: 'Successfully!',
+            text: data.msg
+          });
           $("#modalGroup").modal("hide");
           LoadGroups();
         },
@@ -120,19 +104,23 @@
       });
     } else {
       $.ajax({
-        url:'/admin/group/',
-        type:'put',
+        url: '/admin/group/',
+        type: 'put',
         headers: {
           Authorization: "Bamboo " + ACCESS_TOKEN,
         },
         data: {
-          id:groupId,
+          id: groupId,
           name,
           metatitle,
           order
         },
         success: function (data) {
-          alert(data.msg);
+          Swal.fire({
+            icon: 'success',
+            title: 'Successfully!',
+            text: data.msg
+          });
           $("#modalGroup").modal("hide");
           LoadGroups();
         },
@@ -171,7 +159,7 @@
           tr += "</td>";
           tr += "<td>";
           tr +=
-            '<td class="text-right"><button class="btn btn-sm btn-warning" name="update"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>';
+            '<td class="text-right"><button class="btn btn-sm btn-warning" name="update"><i class="fa fa-edit"></i></button>';
           tr +=
             '<button class="btn btn-sm btn-danger ml-2" name="delete"><i class="fa fa-trash" aria-hidden="true"></i></button></td>';
           tr += "</td>";
@@ -186,28 +174,43 @@
   }
 
   $(document).on("click", "button[name='delete']", function () {
-    var r = confirm(
-      "Are you sure to delete " + $(this).closest("tr").data("name") + "?"
-    );
-    if (r == true) {
-      $.ajax({
-        url: "/admin/group",
-        type: "delete",
-        headers: {
-          authorization: "Bamboo " + getACCESS_TOKEN(),
-        },
-        data: {
-          id: $(this).closest("tr").attr("id"),
-        },
-        success: function (data, textStatus, xhr) {
-          alert(data.msg);
-          LoadGroups();
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-          alert(jqXHR.responseJSON.msg);
-        },
-      });
-    }
+    Swal.fire({
+      title: 'Bạn có chắc muốn xóa group này?',
+      showDenyButton: true,
+      showCancelButton: true,
+      confirmButtonText: 'Yes',
+      denyButtonText: 'No',
+      customClass: {
+        actions: 'my-actions',
+        cancelButton: 'order-1 right-gap',
+        confirmButton: 'order-2',
+        denyButton: 'order-3',
+      }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        $.ajax({
+          url: "/admin/group",
+          type: "delete",
+          headers: {
+            authorization: "Bamboo " + getACCESS_TOKEN(),
+          },
+          data: {
+            id: $(this).closest("tr").attr("id"),
+          },
+          success: function (data, textStatus, xhr) {
+            Swal.fire({
+              icon: 'success',
+              title: 'Successfully!',
+              text: data.msg
+            });
+            LoadGroups();
+          },
+          error: function (jqXHR, textStatus, errorThrown) {
+            alert(jqXHR.responseJSON.msg);
+          },
+        });
+      }
+    })
   });
 
   $(document).on("click", "button[name='update']", function () {
@@ -234,7 +237,7 @@
     });
   });
 
-  $('#name').keyup(function(){
+  $('#name').keyup(function () {
     $('#metatitle').val(getMeta($('#name').val()));
   })
 </script>
