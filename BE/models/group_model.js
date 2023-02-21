@@ -29,8 +29,8 @@ const groupSchema = new Schema({
 
 });
 
-groupSchema.pre('remove', function(next) {
-    SubGroup.remove({group: this._id}).exec();   
+groupSchema.pre('remove', async function(next) {
+    await SubGroup.deleteMany({group: this._id}).exec();   
     next();
 });
 

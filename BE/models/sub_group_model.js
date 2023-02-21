@@ -3,7 +3,7 @@ require('dotenv').config();
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const Post = require('./post_model');
-
+const Group = require('./group_model');
 const subGroupSchema = new Schema({
     name:{
         type:String,
@@ -39,8 +39,13 @@ const subGroupSchema = new Schema({
     ]    
 });
 
-subGroupSchema.pre('remove', function(next) {
-    SubGroup.remove({sub_group: this._id}).exec();   
+subGroupSchema.pre('remove', async function(next) {
+    await Group.findOneAndUpdate(
+        { _id : this.group}, 
+        { $pull: { subs: this._id } },
+        { multi: true })  //if reference exists in multiple documents 
+    .exec();
+   await Post.deleteMany({sub_group: this._id}).exec();   
     next();
 });
 
