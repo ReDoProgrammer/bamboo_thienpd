@@ -9,75 +9,95 @@
         <div class="sidebar-brand-text mx-3">BambooPhoto <sup>.com</sup></div>
     </a>
 
+
     <!-- Divider -->
-    <hr class="sidebar-divider my-0">
-
-
+    <hr class="sidebar-divider">
+    <!-- Nav Item - Utilities Collapse Menu -->
+    <!-- Heading -->
+    <div class="sidebar-heading">
+        Config
+    </div>
+    
+    <!-- Nav Item - Tables -->
+    <li class="nav-item">
+        <a class="nav-link" href="/admin/services">
+            <i class="fas fa-fw fa-table"></i>
+            <span>Services</span></a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#custome_homepage"
+            aria-expanded="true" aria-controls="collapseUtilities">
+            <i class="fas fa-fw fa-wrench"></i>
+            <span>Home page</span>
+        </a>
+        <div id="custome_homepage" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <h6 class="collapse-header">Custom home page:</h6>
+                <a class="collapse-item" href="/admin/config/logo">Logo</a>
+                <a class="collapse-item" href="/admin/config/banner">Banner</a>
+                <a class="collapse-item" href="/admin/config/what-we-do">What we do</a>
+                <a class="collapse-item" href="/admin/config/services-background">Services background</a>
+                <a class="collapse-item" href="/admin/config/how-can-we-help">How can we help</a>
+                <a class="collapse-item" href="/admin/config/our-portfolio">Our portfolio</a>
+                <a class="collapse-item" href="/admin/config/about-us">About us</a>
+                <a class="collapse-item" href="/admin/config/photo-editing-pricing">Photo editing pricing</a>
+                <a class="collapse-item" href="/admin/config/how-it-works">How it works</a>
+                <a class="collapse-item" href="/admin/config/follow-us">Follow us</a>
+                <a class="collapse-item" href="/admin/config/contact-us">Contact us</a>
+            </div>
+        </div>
+    </li>
 
     <!-- Divider -->
     <hr class="sidebar-divider">
 
-        <!-- Divider -->
-        <hr class="sidebar-divider">
-        
+    <!-- Heading -->
+    <div class="sidebar-heading">
+        Addons
+    </div>
 
-        <li class="nav-item">
-            <a class="nav-link" href="/admin/services">
-                <i class="fas fa-fw fa-table"></i>
-                <span>Services</span></a>
-        </li>
-
-        <!-- Divider -->
-        <hr class="sidebar-divider">
-
-        <!-- Heading -->
-        <div class="sidebar-heading">
-            Addons
-        </div>
-
-        <!-- Nav Item - Pages Collapse Menu -->
-        <li class="nav-item active">
-            <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true"
-                aria-controls="collapsePages">
-                <i class="fas fa-fw fa-folder"></i>
-                <span>Pages</span>
-            </a>
-            <div id="collapsePages" class="collapse show" aria-labelledby="headingPages"
-                data-parent="#accordionSidebar">
-                <div class="bg-white py-2 collapse-inner rounded">
-                    <h6 class="collapse-header">Login Screens:</h6>
-                    <a class="collapse-item" href="login.html">Login</a>
-                    <a class="collapse-item" href="register.html">Register</a>
-                    <a class="collapse-item" href="forgot-password.html">Forgot Password</a>
-                    <div class="collapse-divider"></div>
-                    <h6 class="collapse-header">Other Pages:</h6>
-                    <a class="collapse-item" href="404.html">404 Page</a>
-                    <a class="collapse-item active" href="blank.html">Blank Page</a>
-                </div>
+    <!-- Nav Item - Pages Collapse Menu -->
+    <li class="nav-item active">
+        <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true"
+            aria-controls="collapsePages">
+            <i class="fas fa-fw fa-folder"></i>
+            <span>Pages</span>
+        </a>
+        <div id="collapsePages" class="collapse show" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <h6 class="collapse-header">Login Screens:</h6>
+                <a class="collapse-item" href="login.html">Login</a>
+                <a class="collapse-item" href="register.html">Register</a>
+                <a class="collapse-item" href="forgot-password.html">Forgot Password</a>
+                <div class="collapse-divider"></div>
+                <h6 class="collapse-header">Other Pages:</h6>
+                <a class="collapse-item" href="404.html">404 Page</a>
+                <a class="collapse-item active" href="blank.html">Blank Page</a>
             </div>
-        </li>
-
-        <!-- Nav Item - Charts -->
-        <li class="nav-item">
-            <a class="nav-link" href="charts.html">
-                <i class="fas fa-fw fa-chart-area"></i>
-                <span>Charts</span></a>
-        </li>
-
-        <!-- Nav Item - Tables -->
-        <li class="nav-item">
-            <a class="nav-link" href="tables.html">
-                <i class="fas fa-fw fa-table"></i>
-                <span>Tables</span></a>
-        </li>
-
-        <!-- Divider -->
-        <hr class="sidebar-divider d-none d-md-block">
-
-        <!-- Sidebar Toggler (Sidebar) -->
-        <div class="text-center d-none d-md-inline">
-            <button class="rounded-circle border-0" id="sidebarToggle"></button>
         </div>
+    </li>
+
+    <!-- Nav Item - Charts -->
+    <li class="nav-item">
+        <a class="nav-link" href="charts.html">
+            <i class="fas fa-fw fa-chart-area"></i>
+            <span>Charts</span></a>
+    </li>
+
+    <!-- Nav Item - Tables -->
+    <li class="nav-item">
+        <a class="nav-link" href="tables.html">
+            <i class="fas fa-fw fa-table"></i>
+            <span>Tables</span></a>
+    </li>
+
+    <!-- Divider -->
+    <hr class="sidebar-divider d-none d-md-block">
+
+    <!-- Sidebar Toggler (Sidebar) -->
+    <div class="text-center d-none d-md-inline">
+        <button class="rounded-circle border-0" id="sidebarToggle"></button>
+    </div>
 
 </ul>
 <!-- End of Sidebar -->
