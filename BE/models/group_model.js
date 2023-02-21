@@ -2,7 +2,7 @@ require('dotenv').config();
 
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-
+const SubGroup = require('./sub_group_model');
 
 const groupSchema = new Schema({
     name: {
@@ -27,6 +27,11 @@ const groupSchema = new Schema({
             }
         ]
 
+});
+
+groupSchema.pre('remove', function(next) {
+    SubGroup.remove({group: this._id}).exec();   
+    next();
 });
 
 module.exports = mongoose.model('group',groupSchema);
