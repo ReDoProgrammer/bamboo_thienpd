@@ -14,10 +14,9 @@
       <th scope="col">#</th>
       <th scope="col">Group</th>
       <th scope="col">Name</th>
-      <th scope="col">Metatitle</th>
-      <th scope="col" class="text-center">Avatar</th>
+      <th scope="col" class="text-center">Banner</th>
       <th scope="col" class="text-center">Is shown</th>
-      <th scope="col" class="text-right">Handle</th>
+      <th scope="col" class="text-right"></th>
     </tr>
   </thead>
   <tbody id="subgroups_list"></tbody>
@@ -25,185 +24,203 @@
 
 <%-include('modal')%>
 
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-<script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script>
 
-  var subGroupId= '';
-
-
-  $("#btnCreateSubGroup").click(function () {
-    $("#modalSubGroup").modal();
-  });
-
-  $(document).ready(function () {
-    LoadGroups();
-    LoadSubGroups();
-  });
-
-  $(window).on("shown.bs.modal", function () {
-    $('#name').val('');
-    $('#metatitle').val('');
-    $('#description').val('');
-    $('#fBanner').val('');
-    $('#fThumbnail').val('');
-    $('#thumbnail').hide();
-    $('#banner').hide();
-  });
-
-  $("#modalSubGroup").on("hidden.bs.modal", function () {
-    LoadSubGroups();
-  });
+    var subGroupId = '';
 
 
-  $(document).on("change", "input[name='is_shown']", function () {
-    $.ajax({
-      url:'/admin/sub-group/change-shown-state',
-      type:'put',
-      headers: {
-          authorization: "Bamboo " + getACCESS_TOKEN(),
-        },
-      data:{
-        id:$(this).closest("tr").attr("id")
-      },
-      success: function (data, textStatus, xhr) {
-        LoadSubGroups();       
-      },
-      error: function (jqXHR, textStatus, errorThrown) {
-        alert(jqXHR.responseJSON.msg);
-        LoadSubGroups(); 
-      },
-    })
-  })
-
-
-
-  $(document).on("click", "button[name='update']", function () {
-    subGroupId = $(this).closest("tr").attr("id");
-    $.ajax({
-      url: "/admin/sub-group/detail",
-      type: "get",
-      headers: {
-        authorization: "Bamboo " + getACCESS_TOKEN(),
-      },
-      data: {
-        id: subGroupId,
-      },
-      success: function (data, textStatus, xhr) {
-        $("#modalSubGroup").modal();
-        $("#name").val(data.sg.name);
-        $("#metatitle").val(data.sg.metatitle);
-        $("#description").val(data.sg.description);
-        $("#group").val(data.sg.group.trim());        
-      },
-      error: function (jqXHR, textStatus, errorThrown) {
-        alert(jqXHR.responseJSON.msg);
-      },
+    $("#btnCreateSubGroup").click(function () {
+      $("#modalSubGroup").modal();
     });
-  });
+
+    $(document).ready(function () {
+      LoadGroups();
+      LoadSubGroups();
+    });
+
+    $(window).on("shown.bs.modal", function () {
+      $('#name').val('');
+      $('#metatitle').val('');
+      $('#description').val('');
+      $('#fBanner').val('');
+      $('#fThumbnail').val('');
+      $('#thumbnail').hide();
+      $('#banner').hide();
+    });
+
+    $("#modalSubGroup").on("hidden.bs.modal", function () {
+      LoadSubGroups();
+    });
 
 
-  $(document).on("click", "button[name='delete']", function () {
-    var r = confirm(
-      "Are you sure to delete " + $(this).closest("tr").data("name") + "?"
-    );
-    if (r == true) {
+    $(document).on("change", "input[name='is_shown']", function () {
       $.ajax({
-        url: "/admin/sub-group",
-        type: "delete",
+        url: '/admin/sub-group/change-shown-state',
+        type: 'put',
         headers: {
           authorization: "Bamboo " + getACCESS_TOKEN(),
         },
         data: {
-          id: $(this).closest("tr").attr("id"),
+          id: $(this).closest("tr").attr("id")
         },
         success: function (data, textStatus, xhr) {
-          alert(data.msg);
           LoadSubGroups();
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+          alert(jqXHR.responseJSON.msg);
+          LoadSubGroups();
+        },
+      })
+    })
+
+
+
+    $(document).on("click", "button[name='update']", function () {
+      subGroupId = $(this).closest("tr").attr("id");
+      $.ajax({
+        url: "/admin/sub-group/detail",
+        type: "get",
+        headers: {
+          authorization: "Bamboo " + getACCESS_TOKEN(),
+        },
+        data: {
+          id: subGroupId,
+        },
+        success: function (data, textStatus, xhr) {
+          $("#modalSubGroup").modal();
+          $("#name").val(data.sg.name);
+          $("#metatitle").val(data.sg.metatitle);
+          $("#description").val(data.sg.description);
+          $("#group").val(data.sg.group.trim());
         },
         error: function (jqXHR, textStatus, errorThrown) {
           alert(jqXHR.responseJSON.msg);
         },
       });
+    });
+
+
+    $(document).on("click", "button[name='delete']", function () {
+      Swal.fire({
+        title: 'Bạn có chắc muốn xóa sub group này?',
+        showDenyButton: true,
+        showCancelButton: true,
+        confirmButtonText: 'Yes',
+        denyButtonText: 'No',
+        customClass: {
+          actions: 'my-actions',
+          cancelButton: 'order-1 right-gap',
+          confirmButton: 'order-2',
+          denyButton: 'order-3',
+        }
+      }).then((result) => {
+        if (result.isConfirmed) {
+          $.ajax({
+            url: "/admin/sub-group",
+            type: "delete",
+            headers: {
+              authorization: "Bamboo " + getACCESS_TOKEN(),
+            },
+            data: {
+              id: $(this).closest("tr").attr("id"),
+            },
+            success: function (data, textStatus, xhr) {
+              Swal.fire({
+                icon: 'success',
+                title: 'Successfully!',
+                text: data.msg
+              });
+              LoadSubGroups();
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+              alert(jqXHR.responseJSON.msg);
+            },
+          });
+        }
+      })
+    });
+
+
+
+
+    function LoadGroups() {
+      $.ajax({
+        url: "/group",
+        type: "get",
+        success: function (data) {
+          $("#group").empty();
+          data.groups.forEach((gr) => {
+            let opt = '<option value="' + gr._id + '">' + gr.name + "</option>";
+            $("#group").append(opt);
+          });
+        },
+      });
     }
-  });
 
-
-
-
-  function LoadGroups() {
-    $.ajax({
-      url: "/group",
-      type: "get",
-      success: function (data) {
-        $("#group").empty();
-        data.groups.forEach((gr) => {
-          let opt = '<option value="' + gr._id + '">' + gr.name + "</option>";
-          $("#group").append(opt);
-        });
-      },
-    });
-  }
-
-  function LoadSubGroups() {
-    $.ajax({
-      url: "/admin/sub-group/list",
-      type: "get",
-      headers: {
-        authorization: "BamBoo " + getACCESS_TOKEN(),
-      },
-      success: function (data) {
-        $("#subgroups_list").empty();
-        let idx = 1;
-        data.sgs.forEach((sg) => {
-          let tr = '<tr id="' + sg._id + '" data-name="'+sg.name+'">';
-          tr += '<td class="align-middle">' + idx++ + "</td>";
-          tr +=
-            '<td class="align-middle font-weight-bold">' +
-            sg.group.name +
-            "</td>";
-          tr += '<td class="align-middle">' + sg.name + "</td>";
-          tr += '<td class="align-middle">' + sg.metatitle + "</td>";
-          tr +=
-            '<td class="text-center"><img src="' +
-            sg.thumbnail +
-            '" class="img-thumbnail line-thumbnail"></td>';
-          if (sg.is_shown) {
+    function LoadSubGroups() {
+      $.ajax({
+        url: "/admin/sub-group/list",
+        type: "get",
+        headers: {
+          authorization: "BamBoo " + getACCESS_TOKEN(),
+        },
+        success: function (data) {
+          $("#subgroups_list").empty();
+          let idx = 1;
+          data.sgs.forEach((sg) => {
+            let tr = '<tr id="' + sg._id + '" data-name="' + sg.name + '">';
+            tr += '<td class="align-middle">' + idx++ + "</td>";
             tr +=
-              '<td class="text-center align-middle"><input type="checkbox" name="is_shown" name="is_shown" checked></td>';
-          } else {
+              '<td class="align-middle font-weight-bold">' +
+              sg.group.name +
+              "</td>";
+            tr += '<td class="align-middle">' + sg.name + "</td>";
+            tr += '<td class="align-middle">' + sg.metatitle + "</td>";
             tr +=
-              '<td class="text-center align-middle"><input type="checkbox" name="is_shown" name="is_shown"></td>';
-          }
-          tr +=
-            '<td class="text-right align-middle"><button class="btn btn-sm btn-warning" name="update"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>';
-          tr +=
-            '<button class="btn btn-sm btn-danger ml-2" name="delete"><i class="fa fa-trash" aria-hidden="true"></i></button></td>';
-          tr += "</td>";
+              '<td class="text-center"><img src="' +
+              sg.thumbnail +
+              '" class="img-thumbnail line-thumbnail"></td>';
+            if (sg.is_shown) {
+              tr +=
+                '<td class="text-center align-middle"><input type="checkbox" name="is_shown" name="is_shown" checked></td>';
+            } else {
+              tr +=
+                '<td class="text-center align-middle"><input type="checkbox" name="is_shown" name="is_shown"></td>';
+            }
+            tr +=
+              '<td class="text-right align-middle"><button class="btn btn-sm btn-warning" name="update"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>';
+            tr +=
+              '<button class="btn btn-sm btn-danger ml-2" name="delete"><i class="fa fa-trash" aria-hidden="true"></i></button></td>';
+            tr += "</td>";
 
-          tr += "</tr>";
-          $("#subgroups_list").append(tr);
-        });
-      },
-    });
-  }
-</script>
+            tr += "</tr>";
+            $("#subgroups_list").append(tr);
+          });
+        },
+      });
+    }
+  </script>
 
-<style>
-  .file {
-    visibility: hidden;
-    position: absolute;
-  }
-  .preview {
-    width: 100% !important;
-    height: auto;
-  }
-  .line-thumbnail {
-    width: 160px !important;
-    height: 100px !important;
-  }
-  #banner_preview {
-    width: 475px !important;
-    height: 260px !important;
-    object-fit: contain !important;
-  }
-</style>
+  <style>
+    .file {
+      visibility: hidden;
+      position: absolute;
+    }
+
+    .preview {
+      width: 100% !important;
+      height: auto;
+    }
+
+    .line-thumbnail {
+      width: 160px !important;
+      height: 100px !important;
+    }
+
+    #banner_preview {
+      width: 475px !important;
+      height: 260px !important;
+      object-fit: contain !important;
+    }
+  </style>
