@@ -14,6 +14,7 @@
       <th scope="col">#</th>
       <th scope="col">Group</th>
       <th scope="col">Name</th>
+      <th scope="col" class="text-center">Thumbnail</th>
       <th scope="col" class="text-center">Banner</th>
       <th scope="col" class="text-center">Is shown</th>
       <th scope="col" class="text-right"></th>
@@ -175,11 +176,14 @@
               '<td class="align-middle font-weight-bold">' +
               sg.group.name +
               "</td>";
-            tr += '<td class="align-middle">' + sg.name + "</td>";
-            tr += '<td class="align-middle">' + sg.metatitle + "</td>";
+            tr += '<td class="align-middle text-warning font-weight-bold">' + sg.name + "</td>";
             tr +=
               '<td class="text-center"><img src="' +
               sg.thumbnail +
+              '" class="img-thumbnail line-thumbnail"></td>';
+              tr +=
+              '<td class="text-center"><img src="' +
+              sg.banner +
               '" class="img-thumbnail line-thumbnail"></td>';
             if (sg.is_shown) {
               tr +=
@@ -189,7 +193,7 @@
                 '<td class="text-center align-middle"><input type="checkbox" name="is_shown" name="is_shown"></td>';
             }
             tr +=
-              '<td class="text-right align-middle"><button class="btn btn-sm btn-warning" name="update"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>';
+              '<td class="text-right align-middle"><button class="btn btn-sm btn-warning" name="update"><i class="fa fa-edit"></i></button>';
             tr +=
               '<button class="btn btn-sm btn-danger ml-2" name="delete"><i class="fa fa-trash" aria-hidden="true"></i></button></td>';
             tr += "</td>";
