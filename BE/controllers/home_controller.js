@@ -10,14 +10,16 @@ const Pricing = require('../models/pricing');
 
 router.get('/', (req, res) => {
     res.render('home/index', {
-        layout: 'layouts/fe_layout'
+        layout: 'layouts/fe_layout',
+        name: 'Homepage'
     });
 })
 
 
 router.get('/how-it-works',(req,res)=>{
     res.render('home/how-it-works', {
-        layout: 'layouts/fe_layout'
+        layout: 'layouts/fe_layout',
+        name:'How it works'
     });
 })
 
@@ -25,14 +27,16 @@ router.get('/how-it-works',(req,res)=>{
 
 router.get('/frequently-asked-questions',(req,res)=>{
     res.render('home/frequently-asked-questions', {
-        layout: 'layouts/fe_layout'
+        layout: 'layouts/fe_layout',
+        name:'FAQs'
     });
 })
 
 
 router.get('/blog',(req,res)=>{
     res.render('home/blog', {
-        layout: 'layouts/fe_layout'
+        layout: 'layouts/fe_layout',
+        name:'Blogs'
     });
 })
 
