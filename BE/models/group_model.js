@@ -29,9 +29,6 @@ const groupSchema = new Schema({
 
 });
 
-groupSchema.pre('remove', async function(next) {
-    await SubGroup.deleteMany({group: this._id}).exec();   
-    next();
-});
+
 
 module.exports = mongoose.model('group',groupSchema);

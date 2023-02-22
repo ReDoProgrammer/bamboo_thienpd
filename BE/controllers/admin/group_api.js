@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const { authenticateToken } = require('../../middlewares/authenticate');
 const Group = require('../../models/group_model');
-
+const SubGroup = require('../../models/sub_group_model');
 
 
 router.get('/detail',authenticateToken,(req,res)=>{
@@ -70,7 +70,7 @@ router.put('/',authenticateToken,(req,res)=>{
 
 router.delete('/',authenticateToken,(req,res)=>{
     let id = req.body.id;
-    Group.findOneAndDelete({_id:id},(err,group)=>{
+    Group.findOneAndDelete({_id:id},async (err,group)=>{
         if(err){
             return res.status(500).json({
                 msg:'Can not delete this group!',
@@ -82,7 +82,7 @@ router.delete('/',authenticateToken,(req,res)=>{
                 return res.status(404).json({
                     msg:'Group not found'
                 });
-            }else{
+            }else{              
                 return res.status(200).json({
                     msg:'Delete group successfully!'
                 })
@@ -113,3 +113,5 @@ router.post('/',authenticateToken, async (req,res)=>{
 })
 
 module.exports = router;
+
+
