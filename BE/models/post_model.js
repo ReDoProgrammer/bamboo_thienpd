@@ -16,14 +16,7 @@ const postSchema = new Schema({
     link: {
         type: String //if video
     },
-    type: {
-        /*
-            -1 if video
-            0 if single image
-            1 if compared images with before and after
-        */
-        type: Number
-    },
+   
     sub_group: {
         type: Schema.Types.ObjectId,
         ref: 'sub_group'
