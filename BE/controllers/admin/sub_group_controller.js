@@ -52,7 +52,7 @@ router.get("/list", authenticateToken, (req, res) => {
 
 router.get("/listById", authenticateToken, async (req, res) => {
   let { groupId } = req.query;
-  let sgs = await SubGroup.find({ group: groupId }).select("name type");
+  let sgs = await SubGroup.find({ group: groupId }).select("name");
   return res.status(200).json({
     msg: `Load subgroups by groupid successfully!`,
     sgs
@@ -60,7 +60,7 @@ router.get("/listById", authenticateToken, async (req, res) => {
 });
 
 router.post("/", authenticateToken, async (req, res) => {
-  await uploadMultiple(req, res, async (err) => {
+   uploadMultiple(req, res, async (err) => {
     if (err) {
       return res.status(500).json({
         msg: `${new Error(err.message)}`,
@@ -69,13 +69,12 @@ router.post("/", authenticateToken, async (req, res) => {
 
     ReduceImageSize(req.files.thumbnail[0])
       .then((fileName) => {
-        let { group, type, name, metatitle, description } = req.body;
+        let { group, name, metatitle, description } = req.body;
         let thumbnail = THUMBNAIL_LOCATION + fileName;
         let banner = BANNER_LOCATION + req.files.banner[0].filename;
 
         let sg = new SubGroup({
           name,
-          type,
           metatitle,
           description,
           banner,

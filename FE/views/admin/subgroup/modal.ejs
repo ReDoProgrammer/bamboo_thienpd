@@ -26,7 +26,7 @@
 
           <div class="form-group col-md-6">
             <label for="">Metatitle</label>
-            <input type="text" name="metatitle" id="metatitle" class="form-control mt-2"
+            <input type="text" name="metatitle" id="metatitle" class="form-control"
               placeholder="Subgroup metatitle" />
           </div>
         </div>
@@ -92,7 +92,6 @@
     let fData = new FormData();
     fData.append("group", group);
     fData.append("name", name);
-    fData.append("type", type);
     fData.append("metatitle", metatitle);
     fData.append("description", description);
     fData.append("thumbnail", thumbnail);

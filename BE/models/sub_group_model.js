@@ -27,7 +27,7 @@ const subGroupSchema = new Schema({
     },
     is_shown:{
         type:Boolean,
-        default:false
+        default:true
     }, 
     posts:[
         {
