@@ -33,21 +33,12 @@ router.get("/", (req, res) => {
   });
 });
 
-router.get("/list", authenticateToken, (req, res) => {
-  SubGroup.find({})
-    .populate("group", "name")
-    .then((sgs) => {
-      return res.status(200).json({
-        msg: "Load sub groups list successfully!",
-        sgs: sgs,
-      });
-    })
-    .catch((err) => {
-      return res.status(500).json({
-        msg: "Can not load sub groups list",
-        error: new Error(err),
-      });
-    });
+router.get("/list", authenticateToken, async (req, res) => {
+  let sgs = await SubGroup.find({});
+  return res.status(200).json({
+    msg: `Load sub groups list successfully!`,
+    sgs
+  })
 });
 
 router.get("/listById", authenticateToken, async (req, res) => {
@@ -60,7 +51,7 @@ router.get("/listById", authenticateToken, async (req, res) => {
 });
 
 router.post("/", authenticateToken, async (req, res) => {
-   uploadMultiple(req, res, async (err) => {
+  uploadMultiple(req, res, async (err) => {
     if (err) {
       return res.status(500).json({
         msg: `${new Error(err.message)}`,
@@ -68,7 +59,7 @@ router.post("/", authenticateToken, async (req, res) => {
     }
 
     ReduceImageSize(req.files.thumbnail[0])
-      .then((fileName) => {
+      .then(async (fileName) => {
         let { group, name, metatitle, description } = req.body;
         let thumbnail = THUMBNAIL_LOCATION + fileName;
         let banner = BANNER_LOCATION + req.files.banner[0].filename;
@@ -79,36 +70,13 @@ router.post("/", authenticateToken, async (req, res) => {
           description,
           banner,
           thumbnail,
-          group,
+          group
         });
-        sg.save()
+        await sg.save()
           .then((s) => {
-            Group.findByIdAndUpdate(
-              group,
-              { $push: { subs: s._id } },
-              {
-                new: true,
-              },
-              (err, g) => {
-                if (err) {
-                  return res.status(500).json({
-                    msg: `Can not update subgroups list of group ${new Error(
-                      err.message
-                    )}`,
-                  });
-                }
-                if (!g) {
-                  return res.status(404).json({
-                    msg: `Can not found group need to update subgroups list`,
-                  });
-                }
-
-                return res.status(200).json({
-                  msg: `Create subgroup successfully`,
-                  sg: s,
-                });
-              }
-            );
+            return res.status(201).json({
+              msg: `Sub group has been created!`
+            })
           })
           .catch((err) => {
             return res.status(500).json({
@@ -204,71 +172,54 @@ router.put("/change-shown-state", authenticateToken, (req, res) => {
     });
 });
 
-router.delete("/", authenticateToken, (req, res) => {
-  let id = req.body.id;
-  SubGroup.findOneAndDelete({ _id: id }, (err, sg) => {
-    if (err) {
-      return res.status(500).json({
-        msg: "Can not delete this sub group!",
-        error: new Error(err),
-      });
-    } else {
-      if (!sg) {
-        return res.status(404).json({
-          msg: "Sub group not found",
-        });
-      } else {
-        Group
-          .findByIdAndUpdate(
-            sg.group,
-            { $pull: { subs: sg._id } },
-            { new: true },
-            (err, sg) => {
-              console.log(sg);
-            }
-          );
-
-        return res.status(200).json({
-          msg: "Delete sub group successfully!",
-        });
-      }
-    }
-  });
-});
-
-router.get("/detail", authenticateToken, (req, res) => {
-  let { id } = req.query;
-  SubGroup.findById(id, (err, subGroup) => {
-    if (err) {
-      return res.status(500).json({
-        msg: "Can not get sub group detail",
-        error: new Error(err),
-      });
-    }
-    if (!subGroup) {
-      return res.status(404).json({
-        msg: "Sub group not found",
-      });
-    }
-    return res.status(200).json({
-      msg: "Get sub group detail successfully",
-      sg: subGroup,
-    });
-  });
-});
-
-router.post("/drop-collection", authenticateToken, (req, res) => {
-  try {
-    SubGroup.collection.drop();
-    return res.status(200).json({
-      msg: `Drop subgroup collection successfully!`,
-    });
-  } catch (error) {
-    return res.status(500).json({
-      msg: `Can not drop SubGroup collection ${new Error(err.message)}`,
-    });
+router.delete("/", authenticateToken, async (req, res) => {
+  let { id } = req.body.id;
+  let s = await SubGroup.findById(id);
+  if (!s) {
+    return res.status(404).json({
+      msg: `Can not delete this sub group cause it not found!`
+    })
   }
+  await s.delete()
+    .then(_ => {
+      return res.status(200).json({
+        msg: `The sub group has been deleted!`
+      })
+    })
+    .catch(err => {
+      return res.status(500).json({
+        msg: `Can not delete this sub group with error: ${err.message}`
+      })
+    })
 });
+
+router.get("/detail", authenticateToken, async (req, res) => {
+  let { id } = req.query;
+  let s = await SubGroup.findById(id);
+  if (!s) {
+    return res.status(404).json({
+      msg: `Sub group not found!`
+    })
+  }
+
+  return res.status(200).json({
+    msg: `Get sub group detail successfully!`,
+    s
+  })
+});
+
+// router.post("/drop-collection", authenticateToken, (req, res) => {
+//   try {
+//     SubGroup.collection.drop();
+//     return res.status(200).json({
+//       msg: `Drop subgroup collection successfully!`,
+//     });
+//   } catch (error) {
+//     return res.status(500).json({
+//       msg: `Can not drop SubGroup collection ${new Error(err.message)}`,
+//     });
+//   }
+// });
 
 const ReduceImageSize = (file) => {
   return new Promise(async (resolve, reject) => {
