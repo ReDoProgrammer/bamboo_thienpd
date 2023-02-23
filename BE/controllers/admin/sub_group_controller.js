@@ -79,12 +79,13 @@ router.post("/", authenticateToken, async (req, res) => {
 
     ReduceImageSize(req.files.thumbnail[0])
       .then((fileName) => {
-        let { group, name, metatitle, description } = req.body;
+        let { group,type, name, metatitle, description } = req.body;
         let thumbnail = THUMBNAIL_LOCATION + fileName;
         let banner = BANNER_LOCATION + req.files.banner[0].filename;
 
         let sg = new SubGroup({
           name,
+          type,
           metatitle,
           description,
           banner,

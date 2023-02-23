@@ -11,17 +11,36 @@
         </button>
       </div>
       <div class="modal-body">
-        <div class="form-group">
-          <label for="">Group</label>
-          <select name="group" id="group" class="form-control"></select>
+        <div class="row">
+          <div class="form-group  col-md-6">
+            <label for="">Group</label>
+            <select name="group" id="group" class="form-control"></select>
+          </div>
+  
+          <div class="form-group col-md-6">
+            <label for="">Type</label>
+            <select name="" id="sType" class="form-control">
+              <option value="-1">Single</option>
+              <option value="0">Compare</option>
+              <option value="1">Video</option>
+            </select>
+          </div>
         </div>
-        <div class="form-group">
-          <label for="">Sub group name:</label>
 
-          <input type="text" name="name" id="name" class="form-control" placeholder="Subgroup name" />
-          <input type="text" name="metatitle" id="metatitle" class="form-control mt-2"
+
+        <div class="row">
+          <div class="form-group col-md-6">
+            <label for="">Sub group name:</label>  
+            <input type="text" name="name" id="name" class="form-control" placeholder="Subgroup name" />           
+          </div>
+
+          <div class="form-group col-md-6">
+            <label for="">Metatitle</label>
+            <input type="text" name="metatitle" id="metatitle" class="form-control mt-2"
             placeholder="Subgroup metatitle" />
+          </div>
         </div>
+       
 
 
         <div class="form-group">
@@ -32,7 +51,7 @@
 
         <hr class="sidebar-divider">
         <div class="form-group">
-          <label for="">Thumbnail:</label><br/>
+          <label for="">Thumbnail:</label><br />
           <input type="file" onchange="readURL(this,'thumbnail');" id="fThumbnail" />
           <div class="text-center">
             <img id="thumbnail" src="/images/GUI/no_image.png" class="img-thumbnail" />
@@ -40,7 +59,7 @@
         </div>
 
         <div class="form-group">
-          <label for="">Banner:</label><br/>
+          <label for="">Banner:</label><br />
           <input type="file" onchange="readURL(this,'banner');" id="fBanner" />
           <div class="text-center">
             <img id="banner" src="/images/GUI/no_image.png" class="img-thumbnail" />
@@ -70,6 +89,7 @@
 
   $("#btnSaveSubGroup").on("click", async function (e) {
     let group = $('#group option:selected').val();
+    let type = $('#sType option:selected').val();
     let name = $('#name').val();
     let metatitle = $('#metatitle').val();
     let description = $('#description').val();
@@ -82,6 +102,7 @@
     let fData = new FormData();
     fData.append("group", group);
     fData.append("name", name);
+    fData.append("type", type);
     fData.append("metatitle", metatitle);
     fData.append("description", description);
     fData.append("thumbnail", thumbnail);

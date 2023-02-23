@@ -37,9 +37,9 @@ const subGroupSchema = new Schema({
     ],
     type: {
         /*
-            -1 if video
-            0 if single image
-            1 if compared images with before and after
+            -1 if single
+            0 if compare
+            1 video
         */
         type: Number
     },    
