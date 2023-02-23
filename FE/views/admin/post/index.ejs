@@ -29,9 +29,8 @@
     <tr>
       <th scope="col">#</th>
       <th scope="col">Caption</th>
-      <th scope="col">Before</th>
-      <th scope="col">After</th>
-      <th scope="col">Handle</th>
+      <th scope="col">Description</th>
+      <th scope="col"></th>
     </tr>
   </thead>
   <tbody id="posts_list"></tbody>
@@ -42,12 +41,33 @@
     <script>
       var page = 1;
       var search = "";
+      var type = -1;
       $(document).ready(function () {
         loadGroups();
       });
 
       $("#btnAddPost").click(function () {
+        type = $('#slGroups option:selected').data('type');
         $("#modalPost").modal();
+      });
+
+      $(document).on('show.bs.modal', '#modalPost', function () {
+        if (type == -1) {
+          $('#single').show(100);
+          $('#comparison').hide();
+          $('#video').hide();
+        } else {
+          if (type == 0) {
+            $('#single').hide();
+            $('#comparison').show(100);
+            $('#video').hide();
+          } else {
+            $('#single').hide();
+            $('#comparison').hide();
+            $('#video').show(100);
+          }
+        }
+
       });
 
       $(document).on("click", "button[name='btnView']", function () {
@@ -99,20 +119,13 @@
               let tr = '<tr id="' + p._id + '">';
               tr += "<td>" + idx++ + "</td>";
               tr += '<td class="font-weight-bold">' + p.caption + "</td>";
+              tr += '<td>' + p.description + '</td>';
               tr +=
-                '<td> <img src="' +
-                p.img_before_thumbnail +
-                '" class="img-thumbnail img-fluid"></td>';
+                '<td class="text-right"><button class="btn btn-sm btn-info" name="btnView"><i class="fa fa-eye" aria-hidden="true"></i></button>';
               tr +=
-                '<td> <img src="' +
-                p.img_after_thumbnail +
-                '" class="img-thumbnail img-fluid"></td>';
+                '<button class="btn btn-sm btn-warning ml-2" name="btnUpdate"><i class="fa fa-edit"></i></button>';
               tr +=
-                '<td class="align-middle"><button class="btn btn-sm btn-info" name="btnView"><i class="fa fa-eye" aria-hidden="true"></i></button><br>';
-              tr +=
-                '<button class="btn btn-sm btn-warning mt-2" name="btnUpdate"><i class="fa fa-refresh" aria-hidden="true"></i></button><br>';
-              tr +=
-                '<button class="btn btn-sm btn-danger mt-2" name="btnDelete"><i class="fa fa-trash" aria-hidden="true"></i></button></td>';
+                '<button class="btn btn-sm btn-danger ml-2" name="btnDelete"><i class="fa fa-trash" aria-hidden="true"></i></button></td>';
               tr += "</tr>";
               $("#posts_list").append(tr);
             });
@@ -134,7 +147,7 @@
             $("#slGroups").empty();
             data.groups.forEach((group) => {
               let opt =
-                '<option value = "' + group._id + '">' + group.name + "</option>";
+                '<option value = "' + group._id + '" data-type="' + group.type + '">' + group.name + "</option>";
               $("#slGroups").append(opt);
             });
             loadSubGroupsByGroupId($("#slGroups").val());
@@ -165,7 +178,7 @@
             $("#slSubGroups").empty();
             if (data.sgs.length > 0) {
               data.sgs.forEach((sg) => {
-                let opt = '<option value = "' + sg._id + '" data-type="'+sg.type+'">' + sg.name + "</option>";
+                let opt = '<option value = "' + sg._id + '">' + sg.name + "</option>";
                 $("#slSubGroups").append(opt);
               });
               loadPosts($("#slSubGroups").val(), page, search);

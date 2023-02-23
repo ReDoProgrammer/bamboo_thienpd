@@ -1,51 +1,45 @@
 <div class="modal" tabindex="-1" role="dialog" id="modalPost">
-  <div class="modal-dialog" role="document">
+  <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">Add or update a group</h5>
-        <button
-          type="button"
-          class="close"
-          data-dismiss="modal"
-          aria-label="Close"
-        >
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-          <form id="formPost"  method="post" enctype="multipart/form-data" action="/admin/post">
-       
-        <input
-          type="text"
-          name="caption"
-          id="caption"
-          class="form-control mt-2"
-          placeholder="Caption"
-          required
-        />
-        <textarea class="form-control mt-2" id="description" rows="3" placeholder="Description"></textarea>
-       
+        <form id="formPost" method="post" enctype="multipart/form-data" action="/admin/post">
 
-        <div class="row">
-          <!-- before -->
-          <div class="mt-2 col-sm-6">
-            <input type='file' id="inpBefore" />
-            <img id="imgBefore" src="../../images/GUI/no_image.png" class="img-thumbnail mt-2" />
+          <input type="text" name="caption" id="caption" class="form-control mt-2" placeholder="Caption" required />
+          <textarea class="form-control mt-2" id="description" rows="3" placeholder="Description"></textarea>
+          <hr />
+          <div class="form-group" id="single">
+            <label for="">Image path</label>
+            <input type='file' id="inpSingle" />
+            <img id="imgSingle" src="../../images/GUI/no_image.png" class="img-thumbnail mt-2" />
           </div>
-          <!-- end before -->
+          <div class="form-group" id="video">
+            <label for="">Video URL:</label>
+            <input type="text" placeholder="Video URL" id="txtVideoURL" class="form-control">
+          </div>
 
-          <!-- after -->
-          <div class="mt-2 col-sm-6">
-            <input type='file' id="inpAfter" />
-            <img id="imgAfter" src="../../images/GUI/no_image.png" class="img-thumbnail mt-2" />
+          <div class="row" id="comparison">
+            <!-- before -->
+            <div class="mt-2 col-sm-6">
+              <input type='file' id="inpBefore" />
+              <img id="imgBefore" src="../../images/GUI/no_image.png" class="img-thumbnail mt-2" />
+            </div>
+            <!-- end before -->
+
+            <!-- after -->
+            <div class="mt-2 col-sm-6">
+              <input type='file' id="inpAfter" />
+              <img id="imgAfter" src="../../images/GUI/no_image.png" class="img-thumbnail mt-2" />
+            </div>
+            <!-- end before -->
           </div>
-          <!-- end before -->
-        </div>
       </div>
-      <label
-      id="group_error_msg"
-      class="text-danger font-weight-bold mt-2"
-    ></label>
+      <label id="group_error_msg" class="text-danger font-weight-bold mt-2"></label>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" id="btnSaveGroup" type="submit">
           <i class="fa fa-floppy-o pr-2" aria-hidden="true"></i>
@@ -55,8 +49,8 @@
           Close
         </button>
       </div>
-    </form>
-      
+      </form>
+
     </div>
   </div>
 </div>
@@ -66,70 +60,104 @@
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
 <script>
-    $("#btnSaveGroup").on("click", function(e) {
-      let sub_group = $('#slSubGroups option:selected').val();
-      let caption = $('#caption').val();
-      let description = $('#description').val();
+  $("#btnSaveGroup").on("click", function (e) {
+    let sub_group = $('#slSubGroups option:selected').val();
+    let caption = $('#caption').val();
+    let description = $('#description').val();
+    let videoURL = $('#txtVideoURL').val();
+
+    let fBefore = document.getElementById("inpBefore").files[0];
+    let fAfter = document.getElementById("inpAfter").files[0];
+    let fSingle = document.getElementById('inpSingle').files[0];
 
 
-      let fBefore = document.getElementById("inpBefore").files[0];
-      let fAfter = document.getElementById("inpAfter").files[0];
+    if (type == 1 && videoURL.trim().length == 0) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Warning!',
+        text: `Please input video url`
+      });
+      return;
+    }
 
-
-      let fData = new FormData();
-      fData.append("sub_group",sub_group);
-      fData.append("caption", caption);
-      fData.append("description", description);
+    let fData = new FormData();
+    fData.append("sub_group", sub_group);
+    fData.append("caption", caption);
+    fData.append("description", description);
+    fData.append("type", type);
+    if (type == -1) {
+      fData.append('img_Single', fSingle);
+    } else if (type == 0) {
       fData.append("img_before", fBefore);
       fData.append("img_after", fAfter);
-      var contentType = {
-          headers:{
-            "content-type":"multipart/form-data",
-            authorization: "BamBoo " + getACCESS_TOKEN()
-          }
-        }
+    } else {
+      fData.append("video_url", videoURL);
+    }
+
+    var contentType = {
+      headers: {
+        "content-type": "multipart/form-data",
+        authorization: "BamBoo " + getACCESS_TOKEN()
+      }
+    }
+    if (type == -1) {
+
+    } else if (type == 0) {
       axios
-        .post("/admin/post",fData,contentType     
+        .post("/admin/post/comparison", fData, contentType
         )
         .then(function (data) {
-          alert(data.data.msg);
-          $('#modalPost').modal('hide');               
+          Swal.fire({
+            icon: 'success',
+            title: 'Successfully!',
+            text: data.msg
+          });
+          $('#modalPost').modal('hide');
         })
         .catch(function (error) {
-          console.log(error.response);
-          alert(error.response.data.msg);
+          Swal.fire({
+            icon: 'error',
+            title: 'Failed!',
+            text: error.response.data.msg
+          });
         });
-        
-    });
+    } else {
 
-
-
-
-    
-   
-    $("#inpBefore").change(function () {
-        readURL(this,'imgBefore');
-    });
-    $("#inpAfter").change(function () {
-        readURL(this,'imgAfter');
-    });
-
-
-    function readURL(input,preview) {
-        if (input.files && input.files[0]) {
-            var reader = new FileReader();
-            reader.onload = function (e) {
-                $('#'+preview).attr('src', e.target.result);
-            }
-            reader.readAsDataURL(input.files[0]);
-        }
     }
+
+  });
+
+
+
+
+
+
+  $("#inpBefore").change(function () {
+    readURL(this, 'imgBefore');
+  });
+  $("#inpAfter").change(function () {
+    readURL(this, 'imgAfter');
+  });
+  $("#inpSingle").change(function () {
+    readURL(this, 'imgSingle');
+  });
+
+
+
+  function readURL(input, preview) {
+    if (input.files && input.files[0]) {
+      var reader = new FileReader();
+      reader.onload = function (e) {
+        $('#' + preview).attr('src', e.target.result);
+      }
+      reader.readAsDataURL(input.files[0]);
+    }
+  }
 </script>
 
 <style>
-  .img-thumbnail{
+  .img-thumbnail {
     width: 300px !important;
     height: 188px !important;
   }
 </style>
-

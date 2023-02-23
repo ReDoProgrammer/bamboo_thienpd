@@ -6,20 +6,34 @@ const sharp = require('sharp');
 const fs = require('fs');
 require("dotenv").config();
 
+
+const SINGLE_STORAGE = "/images/upload/posts/";
 //config upload from two input files
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, './public/images/upload/posts')
   },
   filename: function (req, file, cb) {
-    cb(null, new Date().getTime()+`_${file.originalname}`)
+    cb(null, new Date().getTime() + `_${file.originalname}`)
   }
 })
 
+var storage_single = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "./public/images/upload/posts");
+  },
+  filename: (req, file, cb) => {
+    cb(
+      null,
+      file.fieldname + "-" + Date.now() + path.extname(file.originalname)
+    );
+  },
+});
+
 const upload = multer({ storage: storage })
 const uploadMultiple = upload.fields([{ name: 'img_before', maxCount: 1 }, { name: 'img_after', maxCount: 1 }]);
+const upload_single = multer({ storage: storage_single }).single("single");
 
-//end config upload from two inputfiles
 
 
 const { authenticateToken } = require("../../middlewares/authenticate");
@@ -41,7 +55,7 @@ router.get("/list", authenticateToken, (req, res) => {
       { caption: { $regex: search, $options: "i" } },
       { description: { $regex: search, $options: "i" } }
     ],
-    sub_group:subGroupId
+    sub_group: subGroupId
   })
     .skip((page - 1) * parseInt(limit))
     .limit(parseInt(limit))
@@ -84,7 +98,31 @@ router.get("/detail", authenticateToken, (req, res) => {
     });
 });
 
-router.post("/", authenticateToken, (req, res) => {
+router.post('/single', authenticateToken, async (req, res) => {
+  upload_single(req, res, async function (err) {
+    if (err instanceof multer.MulterError) {
+      console.log(`Lỗi upload logo  ${err.message}`);
+      return res.status(500).json({
+        msg: `upload banner failed with error: ${err.message}`,
+        error: err.message,
+      });
+    }
+    if (err) {
+      console.log(`Lỗi upload logo: ${err.message}`);
+      res.status(500).json({
+        msg: `Upload logo failed with error:${err.message}`,
+        error: err.message,
+      });
+    }
+
+    fs.copyFile.value = SINGLE_STORAGE + req.file.filename;
+
+
+
+  });
+})
+
+router.post("/comparison", authenticateToken, (req, res) => {
   uploadMultiple(req, res, async (err) => {
     if (err) {
       console.log(`upload post from two input files failed with error ${new Error(err.message)}`);
@@ -92,7 +130,7 @@ router.post("/", authenticateToken, (req, res) => {
         msg: `${new Error(err.message)}`
       });
     }
-    
+
     //reduce image before & image after to thumbnail
     Promise.all([
       ReduceImageSize(req.files.img_before[0]),
@@ -208,7 +246,7 @@ router.post('/drop-collection', authenticateToken, (req, res) => {
 const ReduceImageSize = (file) => {
   return new Promise(async (resolve, reject) => {
     try {
-      let fileName = "thumbnail_"+new Date().getTime()+file.originalname;
+      let fileName = "thumbnail_" + new Date().getTime() + file.originalname;
       fs.access("./public/images/upload/posts/thumbnail", (err) => {
         if (err) {
           fs.mkdirSync("./public/images/upload/posts/thumbnail");
