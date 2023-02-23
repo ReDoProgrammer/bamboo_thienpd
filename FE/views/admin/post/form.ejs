@@ -84,7 +84,7 @@
     fData.append("sub_group", sub_group);
     fData.append("caption", caption);
     fData.append("description", description);
-    fData.append("type", type);
+
     if (type == -1) {
       fData.append('img_Single', fSingle);
     } else if (type == 0) {
@@ -100,9 +100,36 @@
         authorization: "BamBoo " + getACCESS_TOKEN()
       }
     }
-    if (type == -1) {
+    if (type == -1) {//single
+      var contentType = {
+        headers: {
+          "content-type": "multipart/form-data",
+          authorization: "Bamboo " + getACCESS_TOKEN()
+        }
+      }
+      axios
+        .post("/admin/post/single", fData, contentType
+        )
+        .then(function (data) {
+          if (data.status == 201) {
+            Swal.fire({
+              icon: 'success',
+              title: 'Successfully!',
+              text: data.msg
+            });
+            $('#modalPost').modal('hide');
+            loadPosts($('#slGroups option:selected').val(), page, search)
+          }
+        })
+        .catch(function (error) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Lỗi rồi!',
+            text: error.response.data.msg
+          });
 
-    } else if (type == 0) {
+        });
+    } else if (type == 0) {//comparison
       axios
         .post("/admin/post/comparison", fData, contentType
         )
@@ -121,8 +148,32 @@
             text: error.response.data.msg
           });
         });
-    } else {
-
+    } else {//video
+      $.ajax({
+        url: '/admin/post/video',
+        type: 'post',
+        headers: {
+          authorization: "Bamboo " + getACCESS_TOKEN(),
+        },
+        data: {
+          sub_group,
+          caption,
+          description,
+          video_url: videoURL
+        },
+        success: function (data, textStatus, xhr) {
+          Swal.fire({
+            icon: 'success',
+            title: 'Successfully!',
+            text: data.msg
+          });
+          $('#modalPost').modal('hide');
+            loadPosts($('#slGroups option:selected').val(), page, search)
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+          alert(jqXHR.responseJSON.msg);
+        },
+      })
     }
 
   });

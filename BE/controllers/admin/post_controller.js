@@ -32,7 +32,7 @@ var storage_single = multer.diskStorage({
 
 const upload = multer({ storage: storage })
 const uploadMultiple = upload.fields([{ name: 'img_before', maxCount: 1 }, { name: 'img_after', maxCount: 1 }]);
-const upload_single = multer({ storage: storage_single }).single("single");
+const upload_single = multer({ storage: storage_single }).single("img_Single");
 
 
 
@@ -98,25 +98,58 @@ router.get("/detail", authenticateToken, (req, res) => {
     });
 });
 
+router.post('/video',authenticateToken, async (req,res)=>{
+  let {sub_group,caption,description,video_url} = req.body;
+  let p = new Post({caption,description,sub_group,video_url});
+  await p.save()
+  .then(_=>{
+    return res.status(201).json({
+      msg:`The post has been created!`
+    })
+  })
+  .catch(err=>{
+    return res.status(500).json({
+      msg:`Can not create new post with error: ${new Error(err.message)}`
+    })
+  })
+})
+
 router.post('/single', authenticateToken, async (req, res) => {
   upload_single(req, res, async function (err) {
     if (err instanceof multer.MulterError) {
-      console.log(`Lỗi upload logo  ${err.message}`);
       return res.status(500).json({
-        msg: `upload banner failed with error: ${err.message}`,
+        msg: `Upload post image failed with error: ${err.message}`,
         error: err.message,
       });
     }
     if (err) {
-      console.log(`Lỗi upload logo: ${err.message}`);
       res.status(500).json({
-        msg: `Upload logo failed with error:${err.message}`,
-        error: err.message,
+        msg: `Can not upload post image with error:${err.message}`,
+        error: err.message
       });
     }
 
-    fs.copyFile.value = SINGLE_STORAGE + req.file.filename;
+    let imgURL = SINGLE_STORAGE + req.file.filename;
+    fs.copyFile.value = imgURL;
+    let { sub_group, caption, description } = req.body;
+    console.log(sub_group, caption, description, req.file.filename);
+    let p = new Post();
+    p.img_url = imgURL;
+    p.caption = caption;
+    p.description = description;
+    p.sub_group = sub_group;
 
+    await p.save()
+    .then(_=>{
+      return res.status(201).json({
+        msg:`The post has been created!`
+      })
+    })
+    .catch(err=>{
+      return res.status(500).json({
+        msg:`Can not create new post with error: ${new Error(err.message)}`
+      })
+    })
 
 
   });
@@ -206,26 +239,25 @@ router.put("/", authenticateToken, (req, res) => {
   );
 });
 
-router.delete("/", authenticateToken, (req, res) => {
+router.delete("/", authenticateToken, async(req, res) => {
   let id = req.body.id;
-  Group.findOneAndDelete({ _id: id }, (err, group) => {
-    if (err) {
-      return res.status(500).json({
-        msg: "Can not delete this group!",
-        error: new Error(err),
-      });
-    } else {
-      if (!group) {
-        return res.status(404).json({
-          msg: "Group not found",
-        });
-      } else {
-        return res.status(200).json({
-          msg: "Delete group successfully!",
-        });
-      }
-    }
-  });
+  let p = await Post.findById(id);
+  if(!p){
+    return res.status(404).json({
+      msg:`Post not found!`
+    })
+  }
+  await p.delete()
+  .then(_=>{
+    return res.status(200).json({
+      msg:`The post has been deleted!`
+    })
+  })
+  .catch(err=>{
+    return res.status(500).json({
+      msg:`Can not delete this post with error: ${new Error(err.message)}`
+    })
+  })
 });
 
 
