@@ -13,10 +13,12 @@ const postSchema = new Schema({
         type: String,
         default: ''
     },
-    link: {
+    video_url: {
         type: String //if video
     },
-   
+    img_url: {
+        type: String //if single image
+    },
     sub_group: {
         type: Schema.Types.ObjectId,
         ref: 'sub_group'

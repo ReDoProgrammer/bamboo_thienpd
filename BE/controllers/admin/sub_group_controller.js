@@ -37,14 +37,12 @@ router.get("/list", authenticateToken, (req, res) => {
   SubGroup.find({})
     .populate("group", "name")
     .then((sgs) => {
-      console.log(sgs);
       return res.status(200).json({
         msg: "Load sub groups list successfully!",
         sgs: sgs,
       });
     })
     .catch((err) => {
-      console.log(err);
       return res.status(500).json({
         msg: "Can not load sub groups list",
         error: new Error(err),
@@ -52,21 +50,13 @@ router.get("/list", authenticateToken, (req, res) => {
     });
 });
 
-router.get("/listById", authenticateToken, (req, res) => {
+router.get("/listById", authenticateToken, async (req, res) => {
   let { groupId } = req.query;
-  SubGroup.find({ group: groupId })
-    .then((sgs) => {
-      return res.status(200).json({
-        msg: "List sub groups by group id successfully",
-        sgs: sgs,
-      });
-    })
-    .catch((err) => {
-      return res.status(500).json({
-        msg: "Can not list sub groups by group id",
-        error: new Error(err),
-      });
-    });
+  let sgs = await SubGroup.find({ group: groupId }).select("name");
+  return res.status(200).json({
+    msg: `Load subgroups by groupid successfully!`,
+    sgs
+  })
 });
 
 router.post("/", authenticateToken, async (req, res) => {
@@ -79,7 +69,7 @@ router.post("/", authenticateToken, async (req, res) => {
 
     ReduceImageSize(req.files.thumbnail[0])
       .then((fileName) => {
-        let { group,type, name, metatitle, description } = req.body;
+        let { group, type, name, metatitle, description } = req.body;
         let thumbnail = THUMBNAIL_LOCATION + fileName;
         let banner = BANNER_LOCATION + req.files.banner[0].filename;
 
@@ -230,14 +220,14 @@ router.delete("/", authenticateToken, (req, res) => {
         });
       } else {
         Group
-        .findByIdAndUpdate(
-          sg.group,
-          { $pull: { subs: sg._id } },
-          { new: true },
-          (err, sg) => {
-            console.log(sg);
-          }
-        );
+          .findByIdAndUpdate(
+            sg.group,
+            { $pull: { subs: sg._id } },
+            { new: true },
+            (err, sg) => {
+              console.log(sg);
+            }
+          );
 
         return res.status(200).json({
           msg: "Delete sub group successfully!",

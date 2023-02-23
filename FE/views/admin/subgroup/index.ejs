@@ -152,7 +152,7 @@
         success: function (data) {
           $("#group").empty();
           data.groups.forEach((gr) => {
-            let opt = '<option value="' + gr._id + '">' + gr.name + "</option>";
+            let opt = '<option value="' + gr._id + '">' + gr.name.toUpperCase() + "</option>";
             $("#group").append(opt);
           });
         },
