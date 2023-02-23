@@ -34,15 +34,8 @@ const subGroupSchema = new Schema({
             type:Schema.Types.ObjectId,
             ref:'post'
         }
-    ],
-    type: {
-        /*
-            -1 if single
-            0 if compare
-            1 video
-        */
-        type: Number
-    },    
+    ]
+    
 });
 
 

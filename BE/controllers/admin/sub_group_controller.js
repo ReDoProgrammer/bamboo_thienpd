@@ -52,7 +52,7 @@ router.get("/list", authenticateToken, (req, res) => {
 
 router.get("/listById", authenticateToken, async (req, res) => {
   let { groupId } = req.query;
-  let sgs = await SubGroup.find({ group: groupId }).select("name");
+  let sgs = await SubGroup.find({ group: groupId }).select("name type");
   return res.status(200).json({
     msg: `Load subgroups by groupid successfully!`,
     sgs

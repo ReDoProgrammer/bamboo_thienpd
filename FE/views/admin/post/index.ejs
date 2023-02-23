@@ -165,7 +165,7 @@
             $("#slSubGroups").empty();
             if (data.sgs.length > 0) {
               data.sgs.forEach((sg) => {
-                let opt = '<option value = "' + sg._id + '">' + sg.name + "</option>";
+                let opt = '<option value = "' + sg._id + '" data-type="'+sg.type+'">' + sg.name + "</option>";
                 $("#slSubGroups").append(opt);
               });
               loadPosts($("#slSubGroups").val(), page, search);

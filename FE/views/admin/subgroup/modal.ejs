@@ -11,36 +11,26 @@
         </button>
       </div>
       <div class="modal-body">
-        <div class="row">
-          <div class="form-group  col-md-6">
-            <label for="">Group</label>
-            <select name="group" id="group" class="form-control"></select>
-          </div>
-  
-          <div class="form-group col-md-6">
-            <label for="">Type</label>
-            <select name="" id="sType" class="form-control">
-              <option value="-1">Single</option>
-              <option value="0">Compare</option>
-              <option value="1">Video</option>
-            </select>
-          </div>
+
+        <div class="form-group ">
+          <label for="">Group</label>
+          <select name="group" id="group" class="form-control"></select>
         </div>
 
 
         <div class="row">
           <div class="form-group col-md-6">
-            <label for="">Sub group name:</label>  
-            <input type="text" name="name" id="name" class="form-control" placeholder="Subgroup name" />           
+            <label for="">Sub group name:</label>
+            <input type="text" name="name" id="name" class="form-control" placeholder="Subgroup name" />
           </div>
 
           <div class="form-group col-md-6">
             <label for="">Metatitle</label>
             <input type="text" name="metatitle" id="metatitle" class="form-control mt-2"
-            placeholder="Subgroup metatitle" />
+              placeholder="Subgroup metatitle" />
           </div>
         </div>
-       
+
 
 
         <div class="form-group">
@@ -89,7 +79,7 @@
 
   $("#btnSaveSubGroup").on("click", async function (e) {
     let group = $('#group option:selected').val();
-    let type = $('#sType option:selected').val();
+    
     let name = $('#name').val();
     let metatitle = $('#metatitle').val();
     let description = $('#description').val();

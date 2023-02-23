@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const { authenticateToken } = require('../../middlewares/authenticate');
 const Group = require('../../models/group_model');
-const SubGroup = require('../../models/sub_group_model');
+
 
 
 router.get('/detail',authenticateToken,(req,res)=>{
@@ -36,34 +36,29 @@ router.get('/list', authenticateToken, async (req, res) => {
     })
 })
 
-router.put('/',authenticateToken,(req,res)=>{
-    let {id,name,metatitle,order} = req.body;
-    if(name.trim().length == 0){
-        return res.status(403).json({
-            msg:'Group name can not be blank!'
+router.put('/',authenticateToken,async (req,res)=>{
+    let {id,name,type,metatitle,order} = req.body;
+    
+    let g = await Group.findById(id);
+    if(!g){
+        return res.status(404).json({
+            msg:`Group not found!`
         })
     }
-    Group.findOneAndUpdate({_id:id},{
-        name,
-        metatitle,
-        order
-    },{
-        new:true
-    },(err,group)=>{
-        if(err){
-            return res.status(500).json({
-                msg:'Update group failed!',
-                error:new Error(err)
-            });
-        }
-        if(!group){
-            return res.status(404).json({
-                msg:'Group not found!'
-            })
-        }
+
+    g.name = name;
+    g.type = type;
+    g.metatitle = metatitle;
+    g.order =order;
+    await g.save()
+    .then(_=>{
         return res.status(200).json({
-            msg:'Update group successfully!',
-            group:group
+            msg:`The group has been updated successfully!`
+        })
+    })
+    .catch(err=>{
+        return res.status(500).json({
+            msg:`Can not update this group with error: ${new Error(err.message)}`
         })
     })
 })
@@ -94,11 +89,9 @@ router.delete('/',authenticateToken,(req,res)=>{
 })
 
 router.post('/',authenticateToken, async (req,res)=>{
-    let {name,metatitle,order} = req.body;
-    let g = new Group();
-    g.name = name;
-    g.metatitle = metatitle;
-    g.order = order;
+    let {name,type,metatitle,order} = req.body;
+    let g = new Group({name,type,metatitle,order});
+  
     await g.save()
     .then(_=>{
         return res.status(201).json({

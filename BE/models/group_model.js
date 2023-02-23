@@ -2,7 +2,7 @@ require('dotenv').config();
 
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const SubGroup = require('./sub_group_model');
+
 
 const groupSchema = new Schema({
     name: {
@@ -13,11 +13,11 @@ const groupSchema = new Schema({
         type: String,
         required: [true, 'Metatitle can not be blank!'],
         index: true,
-        unique:true
+        unique: true
     },
-    order:{
+    order: {
         type: Number,
-        default:1
+        default: 1
     },
     subs:
         [
@@ -25,10 +25,18 @@ const groupSchema = new Schema({
                 type: Schema.Types.ObjectId,
                 ref: 'sub_group'
             }
-        ]
+        ],
+    type: {
+        /*
+            -1 if single
+            0 if compare
+            1 video
+        */
+        type: Number
+    }
 
 });
 
 
 
-module.exports = mongoose.model('group',groupSchema);
+module.exports = mongoose.model('group', groupSchema);

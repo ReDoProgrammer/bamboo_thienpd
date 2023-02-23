@@ -13,9 +13,9 @@
     <tr>
       <th scope="col">#</th>
       <th scope="col">Name</th>
-      <th scope="col">Meta title</th>
+      <th scope="col">Type</th>
       <th scope="col">Order</th>
-      <th scope="col">Handle</th>
+      <th scope="col"></th>
     </tr>
   </thead>
   <tbody id="groups_list"></tbody>
@@ -33,10 +33,22 @@
       <div class="modal-body">
         <input type="text" name="name" id="name" class="form-control" placeholder="Group name" required />
         <input type="text" name="metatitle" id="metatitle" class="form-control mt-2" placeholder="Meta title" />
-        <div>
-          <input type="number" id="order" min="1" placeholder="order" data-bind="value:replyNumber"
-            class="form-control mt-2" />
+        <div class="row mt-2">
+          <div class="form-group col-md-6">
+            <label for="">Type</label>
+            <select name="" id="sType" class="form-control">
+              <option value="-1">Single</option>
+              <option value="0">Compare</option>
+              <option value="1">Video</option>
+            </select>
+          </div>
+          <div class="form-group col-md-6">
+            <label for="">Order</label>
+            <input type="number" id="order" min="1" placeholder="order" data-bind="value:replyNumber"
+              class="form-control" />
+          </div>
         </div>
+       
         <label id="group_error_msg" class="text-danger font-weight-bold mt-2"></label>
       </div>
       <div class="modal-footer">
@@ -74,6 +86,7 @@
   $("#btnSaveGroup").click(function () {
     let name = $("#name").val().trim();
     let metatitle = $("#metatitle").val().trim();
+    let type = $('#sType option:selected').val();
     let order = $('#order').val();
     let ACCESS_TOKEN = getACCESS_TOKEN();
     if (groupId.length == 0) {
@@ -85,6 +98,7 @@
         },
         data: {
           name,
+          type,
           metatitle,
           order
         },
@@ -112,6 +126,7 @@
         data: {
           id: groupId,
           name,
+          type,
           metatitle,
           order
         },
@@ -151,8 +166,8 @@
           tr += "<td>";
           tr += group.name;
           tr += "</td>";
-          tr += "<td>";
-          tr += group.metatitle;
+          tr += "<td class='font-weight-bold text-warning'>";
+          tr += group.type == -1?'Single':(group.type == 0?'Comparison':'Video');
           tr += "</td>";
           tr += "<td>";
           tr += group.order;
