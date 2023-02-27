@@ -135,14 +135,17 @@
           success: function (data) {
             console.log(data);
             $("#modalPostDetail").modal();
-            if (data.p.sub_group.group == -1) {
+            if (data.p.sub_group.group == -1) {//single
 
             } else
-              if (data.p.sub_group.group.type == 0) {
+              if (data.p.sub_group.group.type == 0) {//comparison
                 $("#img_before").attr("src", data.post.img_before);
                 $("#img_after").attr("src", data.post.img_after);
-              } else {
-
+              } else {//video
+                $('#mVideo').show();
+                $('#srcVideo').attr('src',data.p.video_url);
+                $('#mComparison').hide();
+                $('#mSingle').hide();
               }
           },
           error: function (jqXHR, textStatus, errorThrown) {
