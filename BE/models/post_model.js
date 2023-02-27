@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require("path");
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const SubGroup = require('./sub_group_model');
+const SubGroup =  require('./sub_group_model');
 
 const postSchema = new Schema({
     caption: {
@@ -43,6 +43,7 @@ const postSchema = new Schema({
 });
 postSchema.pre("save", async function(next) {
     var p = this;
+    console.log({p});
     let sub = await SubGroup.findById(p.sub_group);
     sub.posts.push(p._id);
     await sub.save()
@@ -56,6 +57,10 @@ postSchema.pre("save", async function(next) {
     })
    
 });
+
+
+
+module.exports = mongoose.model('post', postSchema);
 
 postSchema.pre("remove", async function(next) {
     var p = this;
@@ -83,5 +88,3 @@ postSchema.pre("remove", async function(next) {
     })
    
 });
-
-module.exports = mongoose.model('post', postSchema);

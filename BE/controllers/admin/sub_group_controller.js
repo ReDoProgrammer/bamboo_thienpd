@@ -5,7 +5,6 @@ const fs = require("fs");
 const sharp = require("sharp");
 const { authenticateToken } = require("../../middlewares/authenticate");
 const SubGroup = require("../../models/sub_group_model");
-const Group = require("../../models/group_model");
 const THUMBNAIL_LOCATION = "/images/upload/sub_groups/thumbnail/";
 const BANNER_LOCATION = "/images/upload/sub_groups/banner/";
 const MAX_SHOWN = 6;
@@ -21,6 +20,7 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage: storage });
+
 const uploadMultiple = upload.fields([
   { name: "thumbnail", maxCount: 1 },
   { name: "banner", maxCount: 1 },
