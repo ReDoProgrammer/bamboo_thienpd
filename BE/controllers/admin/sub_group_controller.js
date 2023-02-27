@@ -173,8 +173,10 @@ router.put("/change-shown-state", authenticateToken, (req, res) => {
 });
 
 router.delete("/", authenticateToken, async (req, res) => {
-  let { id } = req.body.id;
+  let { id } = req.body;
+  
   let s = await SubGroup.findById(id);
+  console.log({id,s});
   if (!s) {
     return res.status(404).json({
       msg: `Can not delete this sub group cause it not found!`

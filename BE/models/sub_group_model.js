@@ -4,6 +4,7 @@ const path = require("path");
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const Group = require('./group_model');
+const Post = require('./post_model');
 const subGroupSchema = new Schema({
     name: {
         type: String,
@@ -43,7 +44,6 @@ const subGroupSchema = new Schema({
 
 subGroupSchema.pre("save", async function (next) {
     var s = this;
-    console.log('pre saving',s)
     let g = await Group.findById(s.group);
     g.subs.push(s._id);
     await g.save()
@@ -59,12 +59,17 @@ subGroupSchema.pre("save", async function (next) {
 subGroupSchema.pre("remove", async function (next) {
     var s = this;
     console.log('delete',s);
-    fs.unlinkSync(path.join("public", s.thumbnail));
-    fs.unlinkSync(path.join("public", s.banner));
+    await Post.deleteMany({sub_group:s._id});   
 
     let g = await Group.findById(s.group);
     g.subs.pull(s._id);
     await g.save();
+
+    fs.unlinkSync(path.join("public", s.thumbnail));
+    fs.unlinkSync(path.join("public", s.banner));
+
+
+   
     next();
        
 
