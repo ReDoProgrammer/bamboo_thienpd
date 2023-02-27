@@ -70,6 +70,12 @@
 
       });
 
+
+      $(document).on("click", "button[name='btnUpdate']", function () {
+        let id = $(this).closest("tr").attr("id");
+        loadPostDetail(id);
+      })
+
       $(document).on("click", "button[name='btnView']", function () {
         loadPostDetail($(this).closest("tr").attr("id"));
       });
@@ -116,6 +122,7 @@
       })
 
       function loadPostDetail(postId) {
+        console.log(postId)
         $.ajax({
           url: "/admin/post/detail",
           type: "get",
@@ -123,13 +130,13 @@
             Authorization: "Bamboo " + getACCESS_TOKEN(),
           },
           data: {
-            postId,
+            postId
           },
           success: function (data) {
             console.log(data);
             $("#modalPostDetail").modal();
-            $("#img_before").attr("src", data.post.img_before);
-            $("#img_after").attr("src", data.post.img_after);
+            // $("#img_before").attr("src", data.post.img_before);
+            // $("#img_after").attr("src", data.post.img_after);
           },
           error: function (jqXHR, textStatus, errorThrown) {
             alert(jqXHR.responseJSON.msg);

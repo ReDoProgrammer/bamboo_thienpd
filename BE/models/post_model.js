@@ -58,10 +58,6 @@ postSchema.pre("save", async function(next) {
    
 });
 
-
-
-module.exports = mongoose.model('post', postSchema);
-
 postSchema.pre("remove", async function(next) {
     var p = this;
     if(p.img_before && p.img_before.trim().length>0){
@@ -88,3 +84,7 @@ postSchema.pre("remove", async function(next) {
     })
    
 });
+
+module.exports = mongoose.model('post', postSchema);
+
+

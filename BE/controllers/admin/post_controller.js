@@ -38,6 +38,7 @@ const upload_single = multer({ storage: storage_single }).single("img_Single");
 
 const { authenticateToken } = require("../../middlewares/authenticate");
 const Post = require("../../models/post_model");
+const { log } = require("console");
 
 router.get("/", (req, res) => {
   res.render("admin/post/index", {
@@ -76,42 +77,41 @@ router.get("/list", authenticateToken, (req, res) => {
 
 });
 
-router.get("/detail", authenticateToken, (req, res) => {
-  Post.findById(req.query.postId)
-    .populate('sub_group', 'name -_id')
-    .exec()
-    .then(post => {
-      if (post == null) {
-        return res.status(404).json({
-          msg: 'Post not found'
-        });
+router.get("/detail", authenticateToken, async (req, res) => {
+  let { postId } = req.query;
+  console.log(postId);
+  let p = await Post.findById(postId)
+    .populate({
+      path: 'sub_group',
+      populate: {
+        path: 'group'
       }
-      return res.status(200).json({
-        msg: 'Get post detail successfully!',
-        post: post
-      });
+    });
+  if (!p) {
+    return res.status(404).json({
+      msg: `Post not found!`
+    })
+  }
+  return res.status(200).json({
+    msg: `Get post detail successfully!`,
+    p
+  })
+});
+
+router.post('/video', authenticateToken, async (req, res) => {
+  let { sub_group, caption, description, video_url } = req.body;
+  let p = new Post({ caption, description, sub_group, video_url });
+  await p.save()
+    .then(_ => {
+      return res.status(201).json({
+        msg: `The post has been created!`
+      })
     })
     .catch(err => {
       return res.status(500).json({
-        msg: new Error(err.message)
-      });
-    });
-});
-
-router.post('/video',authenticateToken, async (req,res)=>{
-  let {sub_group,caption,description,video_url} = req.body;
-  let p = new Post({caption,description,sub_group,video_url});
-  await p.save()
-  .then(_=>{
-    return res.status(201).json({
-      msg:`The post has been created!`
+        msg: `Can not create new post with error: ${new Error(err.message)}`
+      })
     })
-  })
-  .catch(err=>{
-    return res.status(500).json({
-      msg:`Can not create new post with error: ${new Error(err.message)}`
-    })
-  })
 })
 
 router.post('/single', authenticateToken, async (req, res) => {
@@ -140,16 +140,16 @@ router.post('/single', authenticateToken, async (req, res) => {
     p.sub_group = sub_group;
 
     await p.save()
-    .then(_=>{
-      return res.status(201).json({
-        msg:`The post has been created!`
+      .then(_ => {
+        return res.status(201).json({
+          msg: `The post has been created!`
+        })
       })
-    })
-    .catch(err=>{
-      return res.status(500).json({
-        msg:`Can not create new post with error: ${new Error(err.message)}`
+      .catch(err => {
+        return res.status(500).json({
+          msg: `Can not create new post with error: ${new Error(err.message)}`
+        })
       })
-    })
 
 
   });
@@ -203,76 +203,61 @@ router.post("/comparison", authenticateToken, (req, res) => {
 
 
 
-router.put("/", authenticateToken, (req, res) => {
-  let { id, name, description } = req.body;
-  if (name.trim().length == 0) {
-    return res.status(403).json({
-      msg: "Group name can not be blank!",
-    });
+router.put("/", authenticateToken, async (req, res) => {
+  let { id, name, description, video_url, img_url, sub_group, img_before, img_after } = req.body;
+  let p = await Post.findById(id).populate('group');
+
+  if (!p) {
+    return res.status(404).json({
+      msg: `Can not update this post cause it not found!`
+    })
   }
-  Group.findOneAndUpdate(
-    { _id: id },
-    {
-      name,
-      description,
-    },
-    {
-      new: true,
-    },
-    (err, group) => {
-      if (err) {
-        return res.status(500).json({
-          msg: "Update group failed!",
-          error: new Error(err),
-        });
-      }
-      if (!group) {
-        return res.status(404).json({
-          msg: "Group not found!",
-        });
-      }
-      return res.status(200).json({
-        msg: "Update group successfully!",
-        group: group,
-      });
-    }
-  );
+  console.log(p)
+  if (p.name != name) p.name = name;
+  if (p.description != description) p.description = description;
+  if (p.sub_group != sub_group) p.sub_group = sub_group;
+  switch (p.group.type) {
+    case -1: break;
+    case 0: break;
+    case 1: break;
+  }
+
 });
 
-router.delete("/", authenticateToken, async(req, res) => {
+router.delete("/", authenticateToken, async (req, res) => {
   let id = req.body.id;
   let p = await Post.findById(id);
-  if(!p){
+  if (!p) {
     return res.status(404).json({
-      msg:`Post not found!`
+      msg: `Post not found!`
     })
   }
   await p.delete()
-  .then(_=>{
-    return res.status(200).json({
-      msg:`The post has been deleted!`
+    .then(_ => {
+      return res.status(200).json({
+        msg: `The post has been deleted!`
+      })
     })
-  })
-  .catch(err=>{
-    return res.status(500).json({
-      msg:`Can not delete this post with error: ${new Error(err.message)}`
+    .catch(err => {
+      return res.status(500).json({
+        msg: `Can not delete this post with error: ${new Error(err.message)}`
+      })
     })
-  })
 });
 
 
-router.post('/drop-collection', authenticateToken, (req, res) => {
-  try {
-    Post.collection.drop()
-    return res.status(200).json({
-      msg: `Drop Post collection successfully!`
-    })
-  } catch (error) {
-    return res.status(500).json({
-      msg: `Can not drop Post collection ${new Error(err.message)}`
-    })
-  }
-})
+// router.post('/drop-collection', authenticateToken, (req, res) => {
+//   try {
+//     Post.collection.drop()
+//     return res.status(200).json({
+//       msg: `Drop Post collection successfully!`
+//     })
+//   } catch (error) {
+//     return res.status(500).json({
+//       msg: `Can not drop Post collection ${new Error(err.message)}`
+//     })
+//   }
+// })
 
 
 const ReduceImageSize = (file) => {
