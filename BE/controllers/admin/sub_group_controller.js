@@ -34,7 +34,8 @@ router.get("/", (req, res) => {
 });
 
 router.get("/list", authenticateToken, async (req, res) => {
-  let sgs = await SubGroup.find({});
+  let sgs = await SubGroup.find({})
+    .populate('group', 'name');
   return res.status(200).json({
     msg: `Load sub groups list successfully!`,
     sgs
@@ -174,9 +175,9 @@ router.put("/change-shown-state", authenticateToken, (req, res) => {
 
 router.delete("/", authenticateToken, async (req, res) => {
   let { id } = req.body;
-  
+
   let s = await SubGroup.findById(id);
-  console.log({id,s});
+  console.log({ id, s });
   if (!s) {
     return res.status(404).json({
       msg: `Can not delete this sub group cause it not found!`
