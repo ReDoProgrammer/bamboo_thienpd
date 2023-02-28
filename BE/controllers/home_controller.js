@@ -10,7 +10,7 @@ const Pricing = require('../models/pricing');
 
 router.get('/', (req, res) => {
     res.render('home/index', {
-        layout: 'layouts/fe_layout',
+        layout: 'layouts/_layout',
         name: 'Homepage'
     });
 })
