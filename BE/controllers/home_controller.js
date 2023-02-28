@@ -34,7 +34,7 @@ router.get('/frequently-asked-questions',(req,res)=>{
 
 router.get('/why-choose-us',(req,res)=>{
     res.render('home/why-choose-us', {
-        layout: 'layouts/_layout',
+        layout: 'home/why-choose-us',
         name:'Blogs'
     });
 })
