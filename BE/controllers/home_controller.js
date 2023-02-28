@@ -14,6 +14,12 @@ router.get('/', (req, res) => {
         name: 'Homepage'
     });
 })
+router.get('/contact-us',(req,res)=>{
+    res.render('home/contact', {
+        layout: 'layouts/_layout',
+        name:'Contact and about'
+    });
+})
 
 
 router.get('/how-it-works',(req,res)=>{
