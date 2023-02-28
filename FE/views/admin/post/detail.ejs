@@ -8,20 +8,23 @@
         </button>
       </div>
       <div class="modal-body">
-        <div class="twenty-twenty" id="mComparison">
+
+        <div id="mComparison" class="twentytwenty-container">
           <img src="" id="img_before" class="modalImage">
           <img src="" id="img_after" class="modalImage">
         </div>
+
         <div id="mSingle">
-          <img src="" alt="">
+          <img src="" alt="" id="imgSingleInModal">
         </div>
+
         <div id="mVideo">
-          <iframe width="560" height="315" src="https://www.youtube.com/embed/kjXx_npNK8s" title="YouTube video player"
-            frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowfullscreen\ id="srcVideo">
-          </iframe>
+          <video controls="true">
+            <video data-yt2html5="https://www.youtube.com/watch?v=ityQ6KYCGEY&ab_channel=Heo"></video>
+            <!-- <source src="www.youtube.com/watch?v=3bGNuRtlqAQ" type="video/mp4" id="srcVideo" /> -->
+          </video>
         </div>
+
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -37,10 +40,10 @@
 <script src="/plugins/twenty-twenty/js/jquery.twentytwenty.min.js"></script>
 <script src="/plugins/twenty-twenty/js/jquery.event.move.min.js"></script>
 
-
 <script>
   $(function () {
-    $('#twenty-twenty').twentytwenty();
+    $('#mComparison').twentytwenty();
+
   })
   $(document).on('show.bs.modal', '#modalPostDetail', function () {
 
@@ -49,19 +52,27 @@
 
 
 <style>
-  .modalImage {
+  #mSingle #imgSingleInModal{
+    max-height: 400px;
     width: 100%;
-    min-height: 200px !important;
-    height: auto;
   }
-
   #mVideo {
     display: flex;
     justify-content: center;
-    margin: 0 auto;    
+    margin: 0 auto;
   }
 
-  #twenty-twenty {
+  #mVideo video {
+    width: 720px;
+  }
+
+  #mComparison {
     min-height: 410px;
+    max-height: 410px;
+  }
+
+  #mComparison img {
+    width: 100%;
+    height: auto;
   }
 </style>

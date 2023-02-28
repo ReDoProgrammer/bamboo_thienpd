@@ -140,6 +140,7 @@
             text: data.msg
           });
           $('#modalPost').modal('hide');
+          loadPosts($('#slGroups option:selected').val(), page, search)
         })
         .catch(function (error) {
           Swal.fire({

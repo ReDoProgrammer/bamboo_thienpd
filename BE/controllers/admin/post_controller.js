@@ -79,7 +79,6 @@ router.get("/list", authenticateToken, (req, res) => {
 
 router.get("/detail", authenticateToken, async (req, res) => {
   let { postId } = req.query;
-  console.log(postId);
   let p = await Post.findById(postId)
     .populate({
       path: 'sub_group',

@@ -48,6 +48,21 @@
 
       $("#btnAddPost").click(function () {
         type = $('#slGroups option:selected').data('type');
+        if (type == -1) {
+          $('#mSingle').show();
+          $('#mComparison').hide();
+          $('#mVideo').hide();
+        } else {
+          if (type == 0) {
+            $('#mSingle').hide();
+            $('#mComparison').show();
+            $('#mVideo').hide();
+          } else {
+            $('#mSingle').hide();
+            $('#mComparison').hide();
+            $('#mVideo').show();
+          }
+        }
         $("#modalPost").modal();
       });
 
@@ -122,7 +137,6 @@
       })
 
       function loadPostDetail(postId) {
-        console.log(postId)
         $.ajax({
           url: "/admin/post/detail",
           type: "get",
@@ -133,17 +147,23 @@
             postId
           },
           success: function (data) {
-            console.log(data);
+            console.log(data.p.sub_group.group.type);
             $("#modalPostDetail").modal();
-            if (data.p.sub_group.group == -1) {//single
-
+            if (data.p.sub_group.group.type == -1) {//single
+              $('#mSingle').show();
+              $('#mComparison').hide();
+              $('#mVideo').hide();
+              $("#imgSingleInModal").attr("src", data.p.img_url);
             } else
               if (data.p.sub_group.group.type == 0) {//comparison
-                $("#img_before").attr("src", data.post.img_before);
-                $("#img_after").attr("src", data.post.img_after);
+                $("#img_before").attr("src", data.p.img_before);
+                $("#img_after").attr("src", data.p.img_after);
+                $('#mSingle').hide();
+                $('#mComparison').show();
+                $('#mVideo').hide();
               } else {//video
                 $('#mVideo').show();
-                $('#srcVideo').attr('src',data.p.video_url);
+                $('#srcVideo').attr('src', data.p.video_url);
                 $('#mComparison').hide();
                 $('#mSingle').hide();
               }
