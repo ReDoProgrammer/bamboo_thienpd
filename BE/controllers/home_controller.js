@@ -14,6 +14,15 @@ router.get('/', (req, res) => {
         name: 'Homepage'
     });
 })
+
+router.get('/price',(req,res)=>{
+    res.render('home/pricing', {
+        layout: 'layouts/_layout',
+        name:'Photo editing price'
+    });
+})
+
+
 router.get('/contact-us',(req,res)=>{
     res.render('home/contact', {
         layout: 'layouts/_layout',
