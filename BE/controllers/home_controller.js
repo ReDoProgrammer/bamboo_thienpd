@@ -18,7 +18,7 @@ router.get('/', (req, res) => {
 
 router.get('/how-it-works',(req,res)=>{
     res.render('home/how-it-works', {
-        layout: 'layouts/fe_layout',
+        layout: 'layouts/_layout',
         name:'How it works'
     });
 })
@@ -27,7 +27,7 @@ router.get('/how-it-works',(req,res)=>{
 
 router.get('/frequently-asked-questions',(req,res)=>{
     res.render('home/frequently-asked-questions', {
-        layout: 'layouts/fe_layout',
+        layout: 'layouts/_layout',
         name:'FAQs'
     });
 })
@@ -35,7 +35,7 @@ router.get('/frequently-asked-questions',(req,res)=>{
 
 router.get('/blog',(req,res)=>{
     res.render('home/blog', {
-        layout: 'layouts/fe_layout',
+        layout: 'layouts/_layout',
         name:'Blogs'
     });
 })
@@ -63,7 +63,7 @@ router.get('/services/:group/:sub_group', (req, res) => {
                     }
 
                     res.render('post/index', {
-                        layout: 'layouts/fe_layout',
+                        layout: 'layouts/_layout',
                         sgId: sg._id
                     });
 
