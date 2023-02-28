@@ -32,6 +32,12 @@ router.get('/frequently-asked-questions',(req,res)=>{
     });
 })
 
+router.get('/why-choose-us',(req,res)=>{
+    res.render('home/why-choose-us', {
+        layout: 'layouts/_layout',
+        name:'Blogs'
+    });
+})
 
 router.get('/blog',(req,res)=>{
     res.render('home/blog', {
