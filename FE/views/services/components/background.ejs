@@ -1,0 +1,37 @@
+<div class="et_pb_section et_pb_section_0 et_pb_section_parallax et_pb_with_background et_section_regular">
+    <div class="et_parallax_bg_wrap">
+        <div class="et_parallax_bg_phone_exist et_parallax_bg_tablet_exist et_parallax_bg et_pb_parallax_css"
+            style="background-image: url(/uploads/2021/08/virtual-dusk-6.jpg);" id="services_background">
+        </div>
+    </div>
+    <div class="et_pb_row et_pb_row_0">
+        <div class="et_pb_column et_pb_column_4_4 et_pb_column_0  et_pb_css_mix_blend_mode_passthrough et-last-child">
+
+
+            <div class="et_pb_module et_pb_text et_pb_text_0  et_pb_text_align_left et_pb_bg_layout_light">
+
+
+                <div class="et_pb_text_inner">
+                    <h1>SERVICES</h1>
+                    <p><span>We provide photography services from retouching, twilight photography,
+                            virtual staging, and floorplans to panoramas and photo editing.</span></p>
+                </div>
+            </div> <!-- .et_pb_text -->
+        </div> <!-- .et_pb_column -->
+    </div> <!-- .et_pb_row -->
+</div> <!-- .et_pb_section -->
+<script>
+    $(document).ready(function () {
+        LoadServicesBackground();
+    })
+
+    function LoadServicesBackground() {
+        $.ajax({
+            url: '/services/get-backgroud',
+            type: 'get',
+            success: function (data) {
+                $('#services_background').css("background-image", "url(" + data.cf.value + ")");
+            }
+        })
+    }
+</script>
