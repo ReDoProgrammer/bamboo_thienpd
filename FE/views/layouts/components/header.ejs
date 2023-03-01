@@ -11,7 +11,7 @@
                             <div class="et_pb_menu__logo-wrap">
                                 <div class="et_pb_menu__logo">
                                     <img loading="lazy" src="/uploads/2021/06/image-1.png" alt="" height="auto"
-                                        width="auto" class="wp-image-81">
+                                        width="auto" class="wp-image-81" >
                                 </div>
                             </div>
                             <div class="et_pb_menu__wrap">
@@ -38,7 +38,7 @@
                                                 <div class="et_pb_menu__logo-wrap">
                                                     <div class="et_pb_menu__logo">
                                                         <img loading="lazy" src="/uploads/2021/06/image-1.png" alt=""
-                                                            height="auto" width="auto" class="wp-image-81">
+                                                            height="auto" width="auto" class="wp-image-81" id="logo">
                                                     </div>
                                                 </div>
                                             </li>
@@ -107,3 +107,24 @@
         </div> <!-- .et_pb_section -->
     </div><!-- .et_builder_inner_content -->
 </header><!-- .et-l -->
+<script>
+    $(document).ready(function () {
+      LoadLogo();
+    })
+  
+  
+    function LoadLogo() {
+      $.ajax({
+        url: '/load-logo',
+        type: 'get',
+        success: function (data) {
+          $('#logo').attr('src', data.logo.value)
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+          $('#logo').attr('src', '/images/GUI/logo.png')
+        }
+      })
+    }
+  
+  
+  </script>
