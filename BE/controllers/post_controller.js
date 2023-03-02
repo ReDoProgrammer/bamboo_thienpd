@@ -37,4 +37,12 @@ router.get('/',(req,res)=>{
     })
 })
 
+
+router.get('/list-6latest-posts',async (req,res)=>{
+    let posts = await Post
+    .find({})
+    .sort({created_date:-1})
+    .populate()
+})
+
 module.exports = router;

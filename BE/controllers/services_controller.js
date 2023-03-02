@@ -9,7 +9,6 @@ router.get('/',(req,res)=>{
 })
 
 router.get('/get-backgroud',async (req,res)=>{
-    console.log(1324)
     let cf = await Config.findOne({key:'services_background'});
     if(!cf){
         return res.status(404).json({
