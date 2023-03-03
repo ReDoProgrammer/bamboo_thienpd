@@ -17,7 +17,13 @@
     })
 
     function LoadPosts(){
-        
+        $.ajax({
+            url:'/post/list-6latest-posts',
+            type:'get',
+            success:function(data){
+                console.log(data)
+            }
+        })
     }
 </script>
 
