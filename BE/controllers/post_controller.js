@@ -79,6 +79,19 @@ router.get('/list-6latest-posts', async (req, res) => {
       }
     },
     {
+      $lookup: {
+        from: "sub_groups",
+        localField: "sub_groups._id",
+        foreignField: "_id",
+        as: "sub_group_details"
+      }
+    },
+    {
+      $addFields: {
+        "sub_groups.is_shown": { $arrayElemAt: ["$sub_group_details.is_shown", 0] }
+      }
+    },
+    {
       $sort: {
         "_id": 1,
         "sub_groups.name": 1
@@ -93,6 +106,7 @@ router.get('/list-6latest-posts', async (req, res) => {
         posts: {
           $push: "$sub_groups.posts"
         },
+        is_shown: { $first: "$sub_groups.is_shown" },
         type: { $first: "$type" }
       }
     },
@@ -101,6 +115,7 @@ router.get('/list-6latest-posts', async (req, res) => {
         _id: 0,
         group: "$_id.group",
         sub_group: "$_id.sub_group",
+        is_shown: 1,
         type: 1,
         posts: {
           $reduce: {
@@ -114,6 +129,7 @@ router.get('/list-6latest-posts', async (req, res) => {
       }
     }
   ]);
+  
   
 
 

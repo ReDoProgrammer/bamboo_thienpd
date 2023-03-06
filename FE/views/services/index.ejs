@@ -1,10 +1,10 @@
 <article id="post-19" class="post-19 page type-page status-publish hentry">
     <div class="entry-content">
         <div class="et-l et-l--post">
-            <div class="et_builder_inner_content et_pb_gutters3">
+            <div class="et_builder_inner_content et_pb_gutters3" id="divServicesContent">
                 <%-include('./components/background')%>
-                <%-include('./components/title')%>
-                <%-include('./components/photo-editing')%>
+                    <%-include('./components/title')%>
+
 
             </div><!-- .et_builder_inner_content -->
         </div><!-- .et-l -->
@@ -12,20 +12,56 @@
 </article> <!-- .et_pb_post -->
 
 <script>
-    $(document).ready(function(){
+    $(document).ready(function () {
         LoadPosts();
     })
 
-    function LoadPosts(){
+    function LoadPosts() {
         $.ajax({
-            url:'/post/list-6latest-posts',
-            type:'get',
-            success:function(data){
-               data.posts.map(p=>{
-                console.log(p)
-               })
+            url: '/post/list-6latest-posts',
+            type: 'get',
+            success: function (data) {
+                data.posts.map(g => {
+                    console.log(g);
+                    if (g.posts.length > 0) {
+                        let result = `<div class="et_pb_section et_pb_section_2 et_pb_with_background et_section_regular">`;
+                        result += `<div class="et_pb_row et_pb_row_2">`;
+                        result += `<div class="et_pb_column et_pb_column_4_4 et_pb_column_2  et_pb_css_mix_blend_mode_passthrough et-last-child">`;
+                        result += `<div class="et_pb_module et_pb_text et_pb_text_2  et_pb_text_align_left et_pb_bg_layout_light">`
+                        result += `<div class="et_pb_text_inner">`;
+                        result += `<p id="singleTypeTitle">${g.group}</p>`
+                        result += `</div>`;
+                        result += `</div>`;
+                        result += `</div>`;
+                        result += `</div>`;
+                        if (g.type == -1) {
+                            g.posts.map(p => {
+                                result += `<div class="et_pb_row et_pb_row_3">`
+                                result += `</div>`;
+                                result += `<div class="et_pb_column et_pb_column_1_3 et_pb_column_3  et_pb_css_mix_blend_mode_passthrough">`
+                                result += `<div class="et_pb_module et_pb_image et_pb_image_0">`
+                                result += `<a href="${p.img_url}"><span class="et_pb_image_wrap "><img loading="lazy"`
+                                result += `src="${p.img_url} alt="" title="photoediting0P6A9557"`
+                                result += `height="auto" width="auto"`
+                                result += `srcset="${p.img_url} 1000w, ${p.img_url} 980w, ${p.img_url}  480w"`
+                                result += `sizes="(min-width: 0px) and (max-width: 480px) 480px, (min-width: 481px) and (max-width: 980px) 980px, (min-width: 981px) 1000px, 100vw"`
+                                result += `class="wp-image-480"></span></a>`
+                                result += `</div>`
+                                result += `<div class="et_pb_module et_pb_text et_pb_text_3  et_pb_text_align_left et_pb_bg_layout_light">`
+                                result += `<div class="et_pb_text_inner">`
+                                result += `<p style="text-align: center;">${g.sub_group}</p>`
+                                result += `</div>`
+                                result += `</div>`
+                                result += `</div>`;
+                            })
+                        }
+
+                        result += `</div>`;
+                        $('#divServicesContent').append(result);
+                    }
+                })
+
             }
         })
     }
 </script>
-
