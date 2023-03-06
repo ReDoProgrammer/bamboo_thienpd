@@ -21,7 +21,9 @@
             url:'/post/list-6latest-posts',
             type:'get',
             success:function(data){
-                console.log(data)
+               data.posts.map(p=>{
+                console.log(p)
+               })
             }
         })
     }
