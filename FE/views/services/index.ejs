@@ -11,6 +11,9 @@
     </div> <!-- .entry-content -->
 </article> <!-- .et_pb_post -->
 
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+
+
 <script>
     $(document).ready(function () {
         LoadPosts();
@@ -25,149 +28,30 @@
                     // console.log(g);
                     if (g.posts.length > 0) {
                         if (g.type == -1) {
-                            let result = `<div class="et_pb_section et_pb_section_2 et_pb_with_background et_section_regular">`
-                            result += `<div class="et_pb_row et_pb_row_2">`
-                            result += `<div class="et_pb_column et_pb_column_4_4 et_pb_column_2  et_pb_css_mix_blend_mode_passthrough et-last-child">`;
-                            result += `<div class="et_pb_module et_pb_text et_pb_text_2  et_pb_text_align_left et_pb_bg_layout_light">`;
-                            result += `<div class="et_pb_text_inner">`;
-                            result += `<p>${g.group}</p>`;
-                            result += `</div>`;
-                            result += `</div>`;
-                            result += `</div>`;
-                            result += `</div>`;
+                            let result = `<div class="container">`
+                            result += `<div class="card">`
+                            result += `<div class="card-body">`
+                            result += `<h2 class="card-title text-primary">${g.group}</h2>`
+                            result += `<div class="row mt-2">`
 
-
-                            result += `<div class="et_pb_row et_pb_row_3">`;
-
-                            result += `<div class="et_pb_column et_pb_column_1_3 et_pb_column_3  et_pb_css_mix_blend_mode_passthrough">`
-
-                            if (g.posts[0]) {
-                                result += `<div class="et_pb_module et_pb_image et_pb_image_0">`
-                                result += `<a href="#"><span class="et_pb_image_wrap "><img loading="lazy"`
-                                result += `src="${g.posts[0].img_url}" alt="" title="photoediting0P6A9557"`
-                                result += `height="auto" width="auto"`
-                                result += `srcset="${g.posts[0].img_url} 1000w, ${g.posts[0].img_url} 980w, ${g.posts[0].img_url} 480w"`
-                                result += `sizes="(min-width: 0px) and (max-width: 480px) 480px, (min-width: 481px) and (max-width: 980px) 980px, (min-width: 981px) 1000px, 100vw"`
-                                result += `class="wp-image-480"></span></a>`
-                                result += `</div>`
-                                result += `<div class="et_pb_module et_pb_text et_pb_text_3  et_pb_text_align_left et_pb_bg_layout_light">`
-                                result += `<div class="et_pb_text_inner">`
-                                result += `<p style="text-align: center;">`
-                                result += g.is_shown ? g.sub_group : '';
-                                result += `</p>`
-                                result += `</div>`
-                                result += `</div>`
-                                result += `</div>`
-                            }
-
-
-                            if (g.posts[1]) {
-                                result += `<div class="et_pb_column et_pb_column_1_3 et_pb_column_4  et_pb_css_mix_blend_mode_passthrough">`
-                                result += `<div class="et_pb_module et_pb_image et_pb_image_1">`
-                                result += `<a href="#"><span class="et_pb_image_wrap "><img loading="lazy"`
-                                result += `src="${g.posts[1].img_url}" alt="" title="photoediting0P6A9559"`
-                                result += `height="auto" width="auto"`
-                                result += `srcset="${g.posts[1].img_url} 1000w, ${g.posts[1].img_url} 980w, ${g.posts[1].img_url} 480w"`
-                                result += `sizes="(min-width: 0px) and (max-width: 480px) 480px, (min-width: 481px) and (max-width: 980px) 980px, (min-width: 981px) 1000px, 100vw"`
-                                result += `class="wp-image-481"></span></a>`
-                                result += `</div>`
-                                result += `<div class="et_pb_module et_pb_text et_pb_text_4  et_pb_text_align_left et_pb_bg_layout_light">`
-                                result += `<div class="et_pb_text_inner">`
-                                result += `<p style="text-align: center;">`
-                                result += g.is_shown ? g.sub_group : '';
-                                result += `</p>`
-                                result += `</div>`
-                                result += `</div>`
-                                result += `</div>`
-                            }
-
-
-
-                            if (g.posts[2]) {
-                                result += `<div class="et_pb_column et_pb_column_1_3 et_pb_column_5  et_pb_css_mix_blend_mode_passthrough et-last-child">`
-                                result += `<div class="et_pb_module et_pb_image et_pb_image_2">`
-                                result += `<a href="#"><span class="et_pb_image_wrap "><img loading="lazy"`
-                                result += `src="${g.posts[2].img_url}" alt="" title="photoediting0P6A9568"`
-                                result += `height="auto" width="auto"`
-                                result += `srcset="${g.posts[2].img_url} 1000w, ${g.posts[2].img_url} 980w, ${g.posts[2].img_url} 480w"`
-                                result += `sizes="(min-width: 0px) and (max-width: 480px) 480px, (min-width: 481px) and (max-width: 980px) 980px, (min-width: 981px) 1000px, 100vw"`
-                                result += `class="wp-image-483"></span></a>`
-                                result += `</div>`
-                                result += `<div class="et_pb_module et_pb_text et_pb_text_5  et_pb_text_align_left et_pb_bg_layout_light">`
-                                result += `<div class="et_pb_text_inner">`
-                                result += `<p style="text-align: center;">`
-                                result += g.is_shown ? g.sub_group : '';
-                                result += `</p>`
-                                result += `</div>`
-                                result += `</div>`
-                                result += `</div>`
-                                result += `</div>`
-
-                            }
-
-                            if (g.posts[3]) {
-                                result += `<div class="et_pb_row et_pb_row_4">`
-                                result += `<div class="et_pb_column et_pb_column_1_3 et_pb_column_6  et_pb_css_mix_blend_mode_passthrough">`
-                                result += `<div class="et_pb_module et_pb_image et_pb_image_3">`
-                                result += `<a href="http://photoediting4u.com/photo-editing"><span class="et_pb_image_wrap "><img loading="lazy"`
-                                result += `src="${g.posts[3].img_url}" alt="" title="photoediting33 Caliza-7"`
-                                result += `height="auto" width="auto"`
-                                result += `srcset="${g.posts[3].img_url} 1000w, ${g.posts[3].img_url} 980w, ${g.posts[3].img_url} 480w"`
-                                result += `sizes="(min-width: 0px) and (max-width: 480px) 480px, (min-width: 481px) and (max-width: 980px) 980px, (min-width: 981px) 1000px, 100vw"`
-                                result += `class="wp-image-475"></span></a>`
-                                result += `</div>`
-                                result += `<div class="et_pb_module et_pb_text et_pb_text_6  et_pb_text_align_left et_pb_bg_layout_light">`
-                                result += `<div class="et_pb_text_inner">`
-                                result += `<p style="text-align: center;">`
-                                result += g.is_shown ? g.sub_group : '';
-                                result += `</p>`
-                                result += `</div>`
-                                result += `</div>`
-                                result += `</div>`
-                            }
-                            if (g.posts[4]) {
-                                result += `<div class="et_pb_column et_pb_column_1_3 et_pb_column_7  et_pb_css_mix_blend_mode_passthrough">`
-                                result += `<div class="et_pb_module et_pb_image et_pb_image_4">`
-                                result += `<a href="http://photoediting4u.com/photo-editing"><span class="et_pb_image_wrap "><img loading="lazy"`
-                                result += `src="${g.posts[4].img_url}" alt="" title="photoediting33 Caliza-60"`
-                                result += `height="auto" width="auto"`
-                                result += `srcset="${g.posts[4].img_url} 1000w, ${g.posts[4].img_url} 980w, ${g.posts[4].img_url} 480w"`
-                                result += `sizes="(min-width: 0px) and (max-width: 480px) 480px, (min-width: 481px) and (max-width: 980px) 980px, (min-width: 981px) 1000px, 100vw"`
-                                result += `class="wp-image-477"></span></a>`
-                                result += `</div>`
-                                result += `<div class="et_pb_module et_pb_text et_pb_text_7  et_pb_text_align_left et_pb_bg_layout_light">`
-                                result += `<div class="et_pb_text_inner">`
-                                result += `<p style="text-align: center;">`
-                                result += g.is_shown ? g.sub_group : '';
-                                result += `</p>`
-                                result += `</div>`
-                                result += `</div>`
-                                result += `</div>`
-                            }
-
-
-                            if (g.posts[5]) {
-                                result += `<div class="et_pb_column et_pb_column_1_3 et_pb_column_8  et_pb_css_mix_blend_mode_passthrough et-last-child">`
-                                result += `<div class="et_pb_module et_pb_image et_pb_image_5">`
-                                result += `<a href="http://photoediting4u.com/photo-editing"><span class="et_pb_image_wrap "><img loading="lazy"`
-                                result += `src="${g.posts[5].img_url}" alt=""`
-                                result += `title="photoediting33 Caliza-216" height="auto" width="auto"`
-                                result += `srcset="${g.posts[5].img_url} 1000w, ${g.posts[5].img_url} 980w, ${g.posts[5].img_url} 480w"`
-                                result += `sizes="(min-width: 0px) and (max-width: 480px) 480px, (min-width: 481px) and (max-width: 980px) 980px, (min-width: 981px) 1000px, 100vw"`
-                                result += `class="wp-image-479"></span></a>`
-                                result += `</div>`
-                                result += `<div class="et_pb_module et_pb_text et_pb_text_8  et_pb_text_align_left et_pb_bg_layout_light">`
-                                result += `<div class="et_pb_text_inner">`
-                                result += `<p style="text-align: center;">`
-                                result += g.is_shown ? g.sub_group : '';
-                                result += `</p>`
-                                result += `</div>`
-                                result += `</div>`
-                                result += `</div>`
-                            }
-
+                           
+                                g.posts.forEach(p=>{
+                                    result += `<div class="col-md-4 text-center">`
+                                    result += `<img src="${p.img_url}" class="img-fluid" style="width:300px; height: 200px;"/>`
+                                    result += `<h4 class="mt-2 text-primary">`
+                                    result += g.is_shown?g.sub_group:``;
+                                    result +=`</h4>`
+                                    result += `</div>`
+                            
+                                })
+                           
+                            
+                            
                             result += `</div>`
                             result += `</div>`
+                            result += `</div>`
+                            result += `</div>`
+
                             $('#divServicesContent').append(result);
                         }
                     }
