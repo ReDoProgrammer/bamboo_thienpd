@@ -21,7 +21,11 @@
                 authorization: "Bearer " + getACCESS_TOKEN(),
             },
             success: function (data) {              
-                $('#profileName').text(data.account.fullname);
+                if(data.code === 200){
+                    $('#profileName').text(data.account.fullname);
+                }else{
+                    window.location.replace(getBaseUrl() +'/admin/login');
+                }
             },
             error: function (request, status, error) {
                 // console.log(request.responseJSON);

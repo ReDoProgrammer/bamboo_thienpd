@@ -23,6 +23,7 @@ router.get('/detail', authenticateToken, async (req, res) => {
 
 router.get('/list', authenticateToken, async (req, res) => {
     let groups = await Group.find({});
+    console.log(groups)
     return res.status(200).json({
         msg: `Load services list successfully!`,
         groups
