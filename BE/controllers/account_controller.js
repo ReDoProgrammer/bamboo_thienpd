@@ -16,40 +16,33 @@ router.get('/check-token', authenticateToken, async (req, res) => {
   }
 })
 
-router.get("/init", (req, res) => {
-  Account.countDocuments(async (err, count) => {
-    if (err) {
-      return res.status(500).json({
-        msg: "count exists accounts failed",
-        error: new Error(err.message),
-      });
-    }
-    if (count > 0) {
-      return res.status(409).json({
-        msg: "root account has been already initialized!",
-      });
-    }
-    const hashedPassword = await bcrypt.hash("admin", 10);
-    var root = new Account({
-      username: "admin",
-      password: hashedPassword,
-      fullname: "Administrator",
+router.get("/init", async (req, res) => {
+  let count = await Account.countDocuments({});
+  if (count > 0) {
+    return res.status(409).json({
+      msg: "root account has been already initialized!",
     });
-    root
-      .save()
-      .then((admin) => {
-        return res.status(201).json({
-          msg: "Initialize root account successfully!",
-          root: admin,
-        });
-      })
-      .catch((err) => {
-        return res.status(500).json({
-          msg: `Can not initialize root account.`,
-          error: `${new Error(err)}`,
-        });
-      });
+  }
+  const hashedPassword = await bcrypt.hash("admin", 10);
+  var root = new Account({
+    username: "admin",
+    password: hashedPassword,
+    fullname: "Administrator",
   });
+  root
+    .save()
+    .then((admin) => {
+      return res.status(201).json({
+        msg: "Initialize root account successfully!",
+        root: admin,
+      });
+    })
+    .catch((err) => {
+      return res.status(500).json({
+        msg: `Can not initialize root account.`,
+        error: `${new Error(err)}`,
+      });
+    });
 });
 
 router.get("/login", (req, res) => {
