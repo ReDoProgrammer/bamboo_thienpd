@@ -126,7 +126,7 @@
                   title: 'Successfully!',
                   text: data.msg
                 });
-                loadPosts($('#slGroups option:selected').val(), page, search)
+                loadPosts($('#slSubGroups option:selected').val(), page, search)
               },
               error: function (jqXHR, textStatus, errorThrown) {
                 alert(jqXHR.responseJSON.msg);
@@ -175,7 +175,7 @@
       }
 
       $("#modalPost").on("hidden.bs.modal", function () {
-        loadPosts($("#slSubGroups").val(), page, search);
+        loadPosts($("#slSubGroups option:selected").val(), page, search);
       });
 
       function loadPosts(subGroupId, page, search) {
@@ -193,6 +193,7 @@
           success: function (data) {
             $("#posts_list").empty();
             let idx = 1;
+            console.log({subGroupId,page,search});
             data.posts.forEach((p) => {
               let tr = '<tr id="' + p._id + '">';
               tr += "<td>" + idx++ + "</td>";
@@ -259,7 +260,7 @@
                 let opt = '<option value = "' + sg._id + '">' + sg.name + "</option>";
                 $("#slSubGroups").append(opt);
               });
-              loadPosts($("#slSubGroups").val(), page, search);
+              loadPosts($("#slSubGroups option:selected").val(), page, search);
             }
           },
           error: function (jqXHR, textStatus, errorThrown) {

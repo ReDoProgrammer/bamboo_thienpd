@@ -41,7 +41,7 @@
       </div>
       <label id="group_error_msg" class="text-danger font-weight-bold mt-2"></label>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" id="btnSaveGroup" type="submit">
+        <button type="button" class="btn btn-primary" id="btnSavePost" type="submit">
           <i class="fa fa-floppy-o pr-2" aria-hidden="true"></i>
           Save changes
         </button>
@@ -60,7 +60,7 @@
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
 <script>
-  $("#btnSaveGroup").on("click", function (e) {
+  $("#btnSavePost").on("click", function (e) {
     let sub_group = $('#slSubGroups option:selected').val();
     let caption = $('#caption').val();
     let description = $('#description').val();
@@ -118,7 +118,6 @@
               text: data.msg
             });
             $('#modalPost').modal('hide');
-            loadPosts($('#slGroups option:selected').val(), page, search)
           }
         })
         .catch(function (error) {
@@ -140,7 +139,6 @@
             text: data.msg
           });
           $('#modalPost').modal('hide');
-          loadPosts($('#slGroups option:selected').val(), page, search)
         })
         .catch(function (error) {
           Swal.fire({
@@ -169,7 +167,6 @@
             text: data.msg
           });
           $('#modalPost').modal('hide');
-            loadPosts($('#slGroups option:selected').val(), page, search)
         },
         error: function (jqXHR, textStatus, errorThrown) {
           alert(jqXHR.responseJSON.msg);
@@ -177,6 +174,8 @@
       })
     }
 
+
+    loadPosts($("#slSubGroups option:selected").val(), page, search);
   });
 
 
