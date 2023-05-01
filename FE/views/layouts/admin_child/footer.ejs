@@ -21,7 +21,7 @@
                 authorization: "Bearer " + getACCESS_TOKEN(),
             },
             success: function (data) {              
-                if(data.code === 200){
+                if(data.account){
                     $('#profileName').text(data.account.fullname);
                 }else{
                     window.location.replace(getBaseUrl() +'/admin/login');
