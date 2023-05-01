@@ -12,6 +12,10 @@ const PricingSchema = new Schema({
    description:{
        type:String
    },
+   price:{
+    type:Number
+   },
+   
    thumbnail:{
        type:String,
        required:[true,'Please input pricing thumbnail']      

@@ -17,7 +17,18 @@
 <script>
     $(document).ready(function () {
         LoadPosts();
+        LoadServicesList();
     })
+
+    function LoadServicesList(){
+        $.ajax({
+            url:'/services/load-services',
+            type:'get',
+            success:function(data){
+                console.log(data);
+            }
+        })
+    }
 
     function LoadPosts() {
         $.ajax({

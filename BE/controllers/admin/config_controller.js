@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const { authenticateToken } = require('../../middlewares/authenticate');
 const Config = require('../../models/config_model');
+
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
@@ -620,6 +621,19 @@ router.get('/load-how-can-we-help',authenticateToken,(req,res)=>{
     })
 })
 
+router.get('/our-portfolio', (req, res) => {
+    res.render('admin/config/our-portfolio', {
+        name: 'Config Our portfolio',
+        layout: 'layouts/admin_layout'
+    });
+})
+
+router.get('/photo-editing-pricing', (req, res) => {
+    res.render('admin/config/pricing', {
+        name: 'Config photo editing pricing',
+        layout: 'layouts/admin_layout'
+    });
+})
 
 module.exports = router;
 
