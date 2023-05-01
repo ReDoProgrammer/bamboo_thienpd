@@ -67,6 +67,11 @@ router.post("/admin-login", async (req, res) => {
   }
 
   let account = await Account.findOne({ username });
+  if (!account) {
+    return res.status(404).json({
+      msg: `Account not found!`
+    })
+  }
   bcrypt.compare(password, account.password, function (err, usr) {
     if (err) {
       return res.status(500).json({
