@@ -51,7 +51,7 @@ router.get("/login", (req, res) => {
   });
 });
 
-router.post("/admin-login", (req, res) => {
+router.post("/admin-login", async (req, res) => {
   const { username, password } = req.body;
 
   if (username.trim().length == 0) {
@@ -66,43 +66,31 @@ router.post("/admin-login", (req, res) => {
     })
   }
 
-
-  Account.findOne({ username: username })
-    .then((user) => {
-      if (user == null) {
-        return res.status(401).json({
-          msg: 'Username is not exist!'
-        });
-      }
-
-      bcrypt.compare(password, user.password, function (err, usr) {
-        if (err) {
-          return res.status(500).json({
-            msg: "Login failed!",
-            error: new Error(err),
-          });
-        }
-        if (usr) {
-          const access_token = jwt.sign(
-            user._id.toString(),
-            process.env.ACCESS_TOKEN_SECRET
-          );
-          return res.status(200).json({
-            msg: "Login successfully!",
-            access_token,
-            url: '/admin'
-          });
-        } else {
-          return res.status(401).json({
-            msg: 'Account not exist!',
-            message: "passwords do not match",
-          });
-        }
+  let account = await Account.findOne({ username });
+  bcrypt.compare(password, account.password, function (err, usr) {
+    if (err) {
+      return res.status(500).json({
+        msg: "Login failed!",
+        error: new Error(err),
       });
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+    }
+    if (usr) {
+      const access_token = jwt.sign(
+        account._id.toString(),
+        process.env.ACCESS_TOKEN_SECRET
+      );
+      return res.status(200).json({
+        msg: "Login successfully!",
+        access_token,
+        url: '/admin'
+      });
+    } else {
+      return res.status(401).json({
+        msg: 'Account not exist!',
+        message: "passwords do not match",
+      });
+    }
+  });
 });
 
 router.put('/change-password', authenticateToken, (req, res) => {
