@@ -92,18 +92,19 @@
       $('#btnLogin').click(function(e){
         console.log($('#txtUsername').val())
         e.preventDefault();
-        $.ajax({
-          url:'/login',
-          type:'post',
-          data:{
-            username: $('#txtUsername').val(),
-            password:$('#txtPassword').val()
-          },
-          success:function(data){
-            localStorage.setItem('ACCESS_TOKEN',data.access_token);
-            window.location.replace(getBaseUrl() +data.url);
-          }
-        })
+        console.log(1234);
+        // $.ajax({
+        //   url:'/login',
+        //   type:'post',
+        //   data:{
+        //     username: $('#txtUsername').val(),
+        //     password:$('#txtPassword').val()
+        //   },
+        //   success:function(data){
+        //     localStorage.setItem('ACCESS_TOKEN',data.access_token);
+        //     window.location.replace(getBaseUrl() +data.url);
+        //   }
+        // })
       })
     </script>
 

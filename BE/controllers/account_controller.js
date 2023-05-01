@@ -6,14 +6,14 @@ require("dotenv").config();
 const { authenticateToken } = require("../middlewares/authenticate");
 
 router.get('/check-token', authenticateToken, async (req, res) => {
-  
-    var account = await Account.findById(req.user);
-    if(account){
-      return res.status(200).json({
-        msg:`Get account info successfully!`,
-        account
-      })
-    }
+
+  var account = await Account.findById(req.user);
+  if (account) {
+    return res.status(200).json({
+      msg: `Get account info successfully!`,
+      account
+    })
+  }
 })
 
 router.get("/init", (req, res) => {
@@ -58,10 +58,21 @@ router.get("/login", (req, res) => {
   });
 });
 
-router.post("/login", (req, res) => {
-  const {username,password} = req.body;
+router.post("/admin-login", (req, res) => {
+  const { username, password } = req.body;
 
-  console.log({username})
+  if (username.trim().length == 0) {
+    return res.status(400).json({
+      msg: `Username can not be blank!`
+    })
+  }
+
+  if (password.trim().length == 0) {
+    return res.status(400).json({
+      msg: `Password can not be blank!`
+    })
+  }
+
 
   Account.findOne({ username: username })
     .then((user) => {
@@ -71,7 +82,7 @@ router.post("/login", (req, res) => {
         });
       }
 
-      bcrypt.compare(req.body.password, user.password, function (err, usr) {
+      bcrypt.compare(password, user.password, function (err, usr) {
         if (err) {
           return res.status(500).json({
             msg: "Login failed!",
@@ -86,7 +97,7 @@ router.post("/login", (req, res) => {
           return res.status(200).json({
             msg: "Login successfully!",
             access_token,
-            url:'/admin'
+            url: '/admin'
           });
         } else {
           return res.status(401).json({
